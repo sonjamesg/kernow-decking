@@ -27,13 +27,13 @@ function respond($ok, $msg, $wantsJson, $thankYou) {
         http_response_code(400);
         header('Content-Type: text/html; charset=utf-8');
         echo '<!doctype html><meta charset="utf-8"><title>Form error</title><p style="font-family:sans-serif">'
-           . htmlspecialchars($msg) . ' <a href="index.html#contact">Go back</a></p>';
+           . htmlspecialchars($msg) . ' <a href="index.html#quote">Go back</a></p>';
     }
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: index.html#contact', true, 303);
+    header('Location: index.html#quote', true, 303);
     exit;
 }
 
@@ -55,6 +55,7 @@ $postcode = strtoupper(field('postcode', 10));
 $type     = field('project_type', 80);
 $message  = field('message', 3000);
 $consent  = field('consent', 5);
+$source   = field('source', 120);
 
 $errors = [];
 if ($name === '')                                  $errors[] = 'name';
@@ -70,14 +71,15 @@ if ($errors) respond(false, 'Please check: ' . implode(', ', $errors) . '.', $wa
 $safeName  = preg_replace('/[\r\n<>"]+/', ' ', $name);
 $safeEmail = preg_replace('/[\r\n]+/', '', $email);
 
-$subject = "New quote request: $type ($postcode)";
+$subject = "New decking quote request: $type ($postcode)";
 $body  = "New enquiry from the $SITE_NAME website\n";
 $body .= str_repeat('-', 40) . "\n";
 $body .= "Name:         $name\n";
 $body .= "Phone:        $phone\n";
 $body .= "Email:        $email\n";
 $body .= "Postcode:     $postcode\n";
-$body .= "Project type: $type\n\n";
+$body .= "Project type: $type\n";
+$body .= "Page:         $source\n\n";
 $body .= "Message:\n$message\n\n";
 $body .= str_repeat('-', 40) . "\n";
 $body .= 'Sent: ' . date('d/m/Y H:i') . ' | IP: ' . ($_SERVER['REMOTE_ADDR'] ?? '') . "\n";

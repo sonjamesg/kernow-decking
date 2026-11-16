@@ -1,0 +1,12 @@
+{
+  "_help": "Fill in the values, then run: python3 tools/build.py  — every page is regenerated with your details. Leave a value empty to keep the [PLACEHOLDER] text.",
+  "[PHONE]": "",
+  "[PHONE_INTL]": "",
+  "[EMAIL]": "",
+  "[DOMAIN]": "",
+  "[BASE_TOWN]": "",
+  "[POSTCODE]": "",
+  "[FACEBOOK_URL]": "",
+  "[INSTAGRAM_URL]": "",
+  "[GUARANTEE_YEARS]": ""
+}
