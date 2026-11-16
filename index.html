@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://kernowdecking.com/assets/img/kernow-decking-cornwall-og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Kernow Decking Co. – decking in Cornwall">
+<meta property="og:image:alt" content="Decking in Cornwall: a wooden deck looking out to a sunset sea and lighthouse">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -26,7 +26,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/ibm-plex-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/roboto-slab-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="assets/img/hero-deck-perspective-cornwall.webp">
+<link rel="preload" as="image" type="image/webp" imagesrcset="assets/img/decking-cornwall-newquay-sea-view-deck-768.webp 768w, assets/img/decking-cornwall-newquay-sea-view-deck-1280.webp 1280w, assets/img/decking-cornwall-newquay-sea-view-deck-1920.webp 1920w" imagesizes="100vw">
 <link rel="stylesheet" href="assets/css/styles.css">
 <script type="application/ld+json">{
  "@context": "https://schema.org",
@@ -219,9 +219,11 @@
   </div>
 </header>
 <main id="main">
-<section class="hero scene scene-home">
-  <div class="sky" aria-hidden="true"></div>
-  <div class="deck" aria-hidden="true"><img src="assets/img/hero-deck-perspective-cornwall.webp" alt="" width="1920" height="520" fetchpriority="high"></div>
+<section class="hero scene scene-home scene-photo">
+  <picture class="hero-photo">
+    <source type="image/webp" srcset="assets/img/decking-cornwall-newquay-sea-view-deck-768.webp 768w, assets/img/decking-cornwall-newquay-sea-view-deck-1280.webp 1280w, assets/img/decking-cornwall-newquay-sea-view-deck-1920.webp 1920w" sizes="100vw">
+    <img src="assets/img/decking-cornwall-newquay-sea-view-deck-1280.jpg" srcset="assets/img/decking-cornwall-newquay-sea-view-deck-1280.jpg 1280w, assets/img/decking-cornwall-newquay-sea-view-deck-1920.jpg 1920w" sizes="100vw" alt="Decking in Cornwall: a deck beside a glass garden room looking out to the sea at sunset, with a lighthouse on the headland" width="1920" height="1080" fetchpriority="high">
+  </picture>
   <div class="container hero-content"><p class="eyebrow">Decking Newquay &amp; Cornwall · Design • Supply • Install</p>
     <h1>Decking in Cornwall, <span>built for sea, salt &amp; sunsets.</span></h1>
     <p class="hero-lead">Kernow Decking Co. designs, supplies and installs composite and hardwood decking, glass balustrades and garden decks from our base in Newquay, built for Cornwall’s Atlantic weather and the best of every view.</p>
