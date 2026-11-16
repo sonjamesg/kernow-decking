@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /contact.php
 Disallow: /thank-you.html
+Disallow: /reviews-preview.html
 
 Sitemap: https://kernowdecking.com/sitemap.xml

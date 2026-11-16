@@ -13,9 +13,11 @@
   function lock() {
     if (locked) return; locked = true;
     savedY = window.scrollY || window.pageYOffset || 0;
+    if (savedY < 1 && lastY > 0) savedY = lastY;
     root.style.scrollBehavior = 'auto';
     body.style.top = (-savedY) + 'px';
     root.classList.add('nav-locked');
+    if (typeof updateChrome === 'function') updateChrome();
   }
   function unlock() {
     if (!locked) return; locked = false;
@@ -23,7 +25,7 @@
     body.style.top = '';
     try { window.scrollTo({ top: savedY, left: 0, behavior: 'instant' }); } catch (err) { window.scrollTo(0, savedY); }
     if (Math.abs((window.scrollY || 0) - savedY) > 1) window.scrollTo(0, savedY);
-    requestAnimationFrame(function () { root.style.scrollBehavior = ''; });
+    requestAnimationFrame(function () { root.style.scrollBehavior = ''; updateChrome(); });
   }
   function setMenu(open) {
     if (!toggle || !nav) return;
@@ -54,8 +56,32 @@
     window.addEventListener('resize', onMq);
   }
 
-  function onScroll() { if (mobileBar) mobileBar.classList.toggle('show', window.scrollY > window.innerHeight * 0.6); }
-  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  // Header logo shrink and mobile bar: use the pre-lock scroll position while
+  // the menu has body { position:fixed }, otherwise scrollY is 0 and the logo jumps back to full size.
+  var headerBar = document.querySelector('.site-header.oakbar');
+  var lastY = 0;
+  function pageScrollY() {
+    if (locked) {
+      var top = parseFloat(body.style.top);
+      if (!isNaN(top) && Math.abs(top) > 0) return Math.abs(top);
+      return lastY || savedY || 0;
+    }
+    return window.scrollY || window.pageYOffset || 0;
+  }
+  function updateChrome() {
+    var y = pageScrollY();
+    if (!locked) lastY = y;
+    if (headerBar) headerBar.classList.toggle('is-scrolled', y > 40);
+    if (mobileBar) mobileBar.classList.toggle('show', y > window.innerHeight * 0.6);
+  }
+  var chromeTick = false;
+  function onScroll() {
+    if (chromeTick) return;
+    chromeTick = true;
+    requestAnimationFrame(function () { updateChrome(); chromeTick = false; });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateChrome();
 
   // Reveal-on-scroll for process steps and cards (plank dividers are static)
   if ('IntersectionObserver' in window) {

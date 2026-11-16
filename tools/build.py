@@ -68,6 +68,113 @@ def service_ld(name, stype, slug, area):
     return {"@context": "https://schema.org", "@type": "Service", "name": name, "serviceType": stype, "url": url(slug),
             "provider": {"@id": SITE + "#business"}, "areaServed": a}
 
+def load_reviews():
+    """Normalise tools/site-config.json reviews. sample:true entries must never appear on public pages."""
+    out = []
+    raw = CFG.get('reviews') or []
+    if not isinstance(raw, list):
+        return out
+    for r in raw:
+        if not isinstance(r, dict):
+            continue
+        quote = (r.get('quote') or '').strip()
+        if not quote:
+            continue
+        try:
+            rating = int(r.get('rating') or 5)
+        except (TypeError, ValueError):
+            rating = 5
+        out.append({
+            'quote': quote,
+            'name': (r.get('name') or '').strip() or 'Customer',
+            'area': (r.get('area') or '').strip(),
+            'project': (r.get('project') or '').strip(),
+            'rating': max(1, min(5, rating)),
+            'sample': bool(r.get('sample')),
+        })
+    return out
+
+def published_reviews():
+    return [r for r in load_reviews() if not r['sample']]
+
+def review_url():
+    return (CFG.get('[GOOGLE_REVIEW_URL]') or CFG.get('reviews_url') or '').strip()
+
+def reviews_ld(items):
+    """AggregateRating / Review JSON-LD for genuine published reviews only."""
+    if not items:
+        return []
+    ratings = [r['rating'] for r in items]
+    return [{
+        "@context": "https://schema.org",
+        "@type": "HomeAndConstructionBusiness",
+        "@id": SITE + "#business",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": str(round(sum(ratings) / len(ratings), 1)),
+            "bestRating": "5",
+            "worstRating": "1",
+            "reviewCount": str(len(items)),
+        },
+        "review": [{
+            "@type": "Review",
+            "author": {"@type": "Person", "name": r['name']},
+            "reviewBody": r['quote'],
+            "reviewRating": {"@type": "Rating", "ratingValue": str(r['rating']), "bestRating": "5", "worstRating": "1"},
+        } for r in items],
+    }]
+
+def stars_html(n, of=5):
+    bits = []
+    for i in range(of):
+        fill = '#C9A66B' if i < n else 'none'
+        bits.append(
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="%s" stroke="#8A6A3C" stroke-width="1.2" '
+            'stroke-linejoin="round" d="M12 2.6l2.7 6.4 6.9.6-5.2 4.6 1.6 6.7L12 17.2 6 20.9l1.6-6.7-5.2-4.6 6.9-.6z"/></svg>' % fill
+        )
+    return '<p class="review-stars" aria-label="%s out of %s stars">%s</p>' % (n, of, ''.join(bits))
+
+def review_card(r, labelled_sample=False):
+    loc = e(r['name']) + (', ' + e(r['area']) if r['area'] else '')
+    tag = '<span class="review-tag">%s</span>' % e(r['project']) if r['project'] else ''
+    sample = '<span class="review-sample-tag">Sample</span>' if labelled_sample else ''
+    klass = 'review-card is-sample' if labelled_sample else 'review-card'
+    return (
+        '<article class="%s" role="listitem">'
+        '<div class="review-plank" aria-hidden="true"></div>%s'
+        '%s'
+        '<blockquote><span class="review-mark" aria-hidden="true">&ldquo;</span><p>%s</p></blockquote>'
+        '<footer class="review-by"><cite>%s</cite>%s</footer>'
+        '</article>'
+    ) % (klass, sample, stars_html(r['rating']), e(r['quote']), loc, tag)
+
+def reviews_cta():
+    href = review_url()
+    if href:
+        return (
+            '<p class="reviews-cta"><a class="btn btn-brass" href="%s" target="_blank" '
+            'rel="noopener nofollow">Leave us a review</a></p>' % e(href)
+        )
+    return '<p class="reviews-cta"><a class="btn btn-brass" href="#" aria-disabled="true">Leave us a review</a></p>'
+
+def reviews_section(items, labelled_samples=False):
+    if not items:
+        return ''
+    cards = '\n      '.join(review_card(r, labelled_sample=labelled_samples) for r in items)
+    return (
+        '<section class="section bg-navy reviews-section" id="reviews" aria-labelledby="reviews-title">\n'
+        '  <div class="container">\n'
+        '    <header class="section-head light"><p class="eyebrow">Customer reviews</p>\n'
+        '      <h2 id="reviews-title">What our decking customers say</h2></header>\n'
+        '    <div class="review-track" role="list">\n'
+        '      %s\n'
+        '    </div>\n'
+        '    %s\n'
+        '  </div>\n'
+        '</section>\n'
+    ) % (cards, reviews_cta())
+
+
 # ---------------------------------------------------------------- shared fragments
 ICONS = {
  'design': '<path d="M3 21h18M5 21V10l7-6 7 6v11"/><path d="M9 21v-6h6v6"/>',
@@ -313,6 +420,7 @@ def quote_section(source, title='Get a free decking quote', town=None):
 '''
 
 def footer():
+    reviews_link = '<li><a href="index.html#reviews">Reviews</a></li>' if published_reviews() else ''
     svc = ''.join(f'<li><a href="{href(s["slug"])}">{e(s["short"])} Cornwall</a></li>' for s in SERVICES)
     return f'''{planks('planks-footer')}<footer class="site-footer">
   <div class="container footer-grid">
@@ -335,7 +443,7 @@ def footer():
       </ul>
     </div>
     <div class="footer-col"><h2 class="f-h">Decking services</h2><ul class="footer-links">{svc}<li><a href="index.html#quote">Free decking quote</a></li></ul></div>
-    <div class="footer-col"><h2 class="f-h">Explore</h2><ul class="footer-links"><li><a href="index.html#process">How we work</a></li><li><a href="index.html#gallery">Decking gallery</a></li><li><a href="index.html#faq">Decking FAQs</a></li><li><a href="index.html#reviews">Reviews</a></li><li><a href="index.html#quote">Contact us</a></li></ul></div>
+    <div class="footer-col"><h2 class="f-h">Explore</h2><ul class="footer-links"><li><a href="index.html#process">How we work</a></li><li><a href="index.html#gallery">Decking gallery</a></li><li><a href="index.html#faq">Decking FAQs</a></li>{reviews_link}<li><a href="index.html#quote">Contact us</a></li></ul></div>
   </div>
   <div class="container footer-bottom">
     <p>© <span class="year">2026</span> Kernow Decking Co. · Decking Cornwall · Design • Supply • Install</p>
@@ -422,22 +530,14 @@ def home():
   </div>
 </section>
 '''
-    reviews = '''<section class="section bg-limed testimonials" id="reviews" aria-labelledby="reviews-title">
-  <div class="container">
-    <header class="section-head"><p class="eyebrow">Customer reviews</p><h2 id="reviews-title">What our decking customers say</h2>
-      <p class="placeholder-note">Example reviews: replace these with genuine customer reviews before launch.</p></header>
-    <!-- PLACEHOLDER TESTIMONIALS: replace with real reviews (names/towns with permission). -->
-    <div class="review-grid">''' + ''.join(f'''
-      <figure class="review board placeholder"><span class="ph-tag">Placeholder</span>
-        <blockquote>"[REVIEW {i}] Customer review text goes here, e.g. what we built, how the team was and how happy they are with their new deck."</blockquote>
-        <figcaption>[CUSTOMER NAME], [TOWN]</figcaption></figure>''' for i in (1, 2, 3)) + '''
-    </div>
-  </div>
-</section>
-'''
+    genuine = published_reviews()
+    reviews = reviews_section(genuine) if genuine else ''
+    home_ld = [faq_ld(HOME_FAQS)]
+    if genuine:
+        home_ld.extend(reviews_ld(genuine))
     body = (head('Decking Cornwall | Newquay Deck Builders | Kernow Decking Co.',
                  'Decking in Newquay and Cornwall by Kernow Decking Co.: composite and hardwood decking, garden decks, glass balustrades and deck repairs, designed, supplied and installed. Free quotes.',
-                 'index', [faq_ld(HOME_FAQS)], preload_hero=True)
+                 'index', home_ld, preload_hero=True)
             + header('index') + '<main id="main">\n' + hero + planks() + intro + services + planks() + process_section() + why
             + gallery + reviews + faq_section(HOME_FAQS, 'Decking in Cornwall: your questions answered')
             + quote_section('Home page') + '</main>\n' + footer())
@@ -520,9 +620,31 @@ def nav_options():
     hero = ('assets/img/' + HERO_NAME + '-1280.webp') if HERO_PHOTO else 'assets/img/cornish-sunset-sea.svg'
     return page(head('Navigation options | Kernow Decking Co.', 'Header design options for Kernow Decking Co.', 'nav-options', robots='noindex, nofollow'), SERVICES, hero, oak_header(nav_id='nav-opt-a', extra_cls=' oak-demo'))
 
+
+def reviews_preview_page():
+    """Noindex design preview. Renders sample reviews with a clear banner; never listed in the sitemap."""
+    samples = [r for r in load_reviews() if r['sample']]
+    items = samples or load_reviews()
+    banner = (
+        '<div class="sample-banner" role="status">'
+        '<strong>Sample layout &mdash; placeholder reviews, not real customers</strong>'
+        '</div>'
+    )
+    return (
+        head('Reviews section preview | Kernow Decking Co.',
+             'Internal preview of the reviews section layout. These are placeholder reviews, not real customers.',
+             'reviews-preview', robots='noindex, nofollow')
+        + header('reviews-preview')
+        + banner
+        + '<main id="main" class="reviews-preview-main">\n'
+        + reviews_section(items, labelled_samples=True)
+        + '</main>\n' + footer()
+    )
+
 def main():
     pages = {'index.html': home(), 'nav-options.html': nav_options(), 'credits.html': credits(),
-             'privacy.html': privacy(), 'thank-you.html': thanks(), '404.html': notfound()}
+             'privacy.html': privacy(), 'thank-you.html': thanks(), '404.html': notfound(),
+             'reviews-preview.html': reviews_preview_page()}
     for s in SERVICES: pages[s['slug'] + '.html'] = service_page(s)
     for n, h in pages.items(): write(n, h)
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']

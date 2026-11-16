@@ -1,5 +1,5 @@
 {
-  "_help": "Fill in the values, then run: python3 tools/build.py  \u2014 every page is regenerated with your details. Leave a value empty to keep the [PLACEHOLDER] text.",
+  "_help": "Fill in the values, then run: python3 tools/build.py — every page is regenerated with your details. Leave a value empty to keep the [PLACEHOLDER] text. reviews: add genuine customer reviews with sample set to false (first name, area, project type, rating 1–5, quote). Entries marked sample: true are for the reviews-preview.html layout only and are never rendered on public pages or in Review/AggregateRating JSON-LD (fake reviews are illegal in the UK). Set [GOOGLE_REVIEW_URL] to your public Google review / leave-a-review link.",
   "[PHONE]": "07700 900461",
   "[PHONE_INTL]": "+447700900461",
   "[EMAIL]": "info@kernowdecking.com",
@@ -12,5 +12,40 @@
   "social": {
     "facebook": "https://www.facebook.com/",
     "instagram": "https://www.instagram.com/"
-  }
+  },
+  "[GOOGLE_REVIEW_URL]": "",
+  "reviews": [
+    {
+      "quote": "They built us a composite deck off the kitchen that copes with the salt air and still looks smart after a winter of Cornish rain.",
+      "name": "Sarah",
+      "area": "Newquay",
+      "project": "Composite decking",
+      "rating": 5,
+      "sample": true
+    },
+    {
+      "quote": "From the first site visit to the last board, the work was tidy and the hardwood finish is beautiful.",
+      "name": "David",
+      "area": "Perranporth",
+      "project": "Hardwood decking",
+      "rating": 5,
+      "sample": true
+    },
+    {
+      "quote": "We needed a glass balustrade for a sea-view deck on a steep garden. They designed it so it feels open but safe.",
+      "name": "Emma",
+      "area": "Padstow",
+      "project": "Glass balustrade",
+      "rating": 5,
+      "sample": true
+    },
+    {
+      "quote": "Old boards were rotting and slippery. They repaired the frame and replaced the deck in a week.",
+      "name": "Tom",
+      "area": "St Columb",
+      "project": "Deck repairs",
+      "rating": 5,
+      "sample": true
+    }
+  ]
 }

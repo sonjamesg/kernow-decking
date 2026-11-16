@@ -505,6 +505,15 @@ h3,.h3,.board-card h3,.usp strong,.step-board h3,.faq-list summary{font-family:v
   filter:drop-shadow(0 10px 12px rgba(8,4,1,.5)) drop-shadow(0 2px 2px rgba(8,4,1,.45));transition:transform .25s ease,filter .25s ease}
 .oak-frame:hover{transform:translateY(-1px);filter:drop-shadow(0 14px 16px rgba(8,4,1,.5)) drop-shadow(0 2px 2px rgba(8,4,1,.45))}
 .oak-frame:focus-visible{outline:2px solid #E4CB96;outline-offset:4px}
+/* Shrink the hanging header logo on scroll (transform only — no layout shift). */
+.oakbar{--logo-shrink:.6}
+.oakbar .oak-frame{transform-origin:top left}
+.oakbar.is-scrolled .oak-frame,
+.oakbar.is-scrolled .oak-frame:hover{transform:scale(var(--logo-shrink))}
+@media (min-width:1080px){.oakbar{--logo-shrink:.7}}
+@media (prefers-reduced-motion:reduce){
+  .oakbar .oak-frame{transition:none}
+}
 .oak-panel{position:relative;display:flex;align-items:center;justify-content:center;height:100%;padding:0 12px;background:#fff;
   box-shadow:0 0 0 1px #8A6A3C,0 0 0 2px #D4B57E,inset 0 3px 6px rgba(40,24,12,.28),inset 0 0 0 1px rgba(40,24,12,.12)}
 .oak-panel img{height:calc(var(--fh) - 2*var(--T) - 10px);width:auto}
@@ -759,3 +768,31 @@ html.nav-locked .site-header{position:fixed;top:0!important;left:0;right:0}
 @media (min-width:700px){
   .quote-frame .oak-screws{--s:8px}
 }
+
+
+/* ---------- Reviews (live section + noindex preview) ---------- */
+.sample-banner{background:#7A1E12;color:#FFF6E8;text-align:center;padding:.9rem 1.4rem;font-family:var(--slab);font-weight:700;letter-spacing:.03em;line-height:1.35;z-index:40}
+@media (max-width:1079px){.sample-banner{padding-top:calc(var(--logo-hang, 5.1rem) + .4rem)}}
+.reviews-section{color:#F0E4C9}
+.reviews-section .section-head h2{color:#FFF8EC}
+.review-track{display:flex;gap:1.15rem;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:1.25rem;-webkit-overflow-scrolling:touch;padding:.35rem 0 1.1rem;margin-inline:-1.25rem;padding-inline:1.25rem;scrollbar-width:thin;scrollbar-color:#B8955E transparent}
+.review-card{position:relative;display:flex;flex-direction:column;flex:0 0 min(86vw,22.5rem);scroll-snap-align:start;background:#FAF7F2;color:var(--navy);padding:0 1.35rem 1.35rem;border-radius:1px;box-shadow:0 1px 0 #140C06,0 14px 28px rgba(8,4,1,.28);overflow:hidden}
+.review-plank{height:14px;margin:0 -1.35rem 1.15rem;background:var(--oak-bar-grad),var(--oak-bar-img) center top/1200px 100px repeat-x,#3B2A1E;border-bottom:1px solid #B8955E;box-shadow:0 1px 0 #140C06}
+.review-stars{display:flex;gap:.15rem;margin:0 0 .7rem;padding:0}
+.review-stars svg{width:18px;height:18px;display:block}
+.review-mark{display:block;font-family:var(--slab);font-weight:800;font-size:3.1rem;line-height:.7;color:#C9A66B;margin:0 0 .35rem}
+.review-card blockquote{margin:0;flex:1}
+.review-card blockquote p{margin:0;font-family:var(--slab);font-style:italic;font-weight:400;font-size:1.08rem;line-height:1.55;color:#2A1709}
+.review-by{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem .85rem;margin-top:1.15rem;padding-top:.9rem;border-top:1px solid rgba(184,149,94,.35)}
+.review-by cite{font-style:normal;font-family:var(--slab);font-weight:700;color:var(--navy);font-size:.95rem}
+.review-tag{display:inline-block;font-family:var(--slab);font-weight:700;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:#5C3D16;background:rgba(201,166,107,.22);border:1px solid rgba(184,149,94,.45);padding:.28rem .55rem}
+.review-sample-tag{position:absolute;top:22px;right:12px;background:#7A1E12;color:#FFF6E8;font-family:var(--slab);font-weight:700;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;padding:.28rem .5rem}
+.reviews-cta{margin:1.6rem 0 0;text-align:center}
+@media (min-width:820px){
+  .review-track{display:grid;grid-template-columns:repeat(2,1fr);overflow:visible;margin-inline:0;padding:0;scroll-snap-type:none;gap:1.4rem}
+  .review-card{flex:none;width:auto}
+}
+@media (min-width:1200px){
+  .review-track{grid-template-columns:repeat(2,minmax(0,1fr));max-width:52rem;margin-inline:auto}
+}
+.reviews-preview-main{padding:0 0 2rem}
