@@ -21,7 +21,7 @@
   --shadow:0 2px 0 rgba(0,0,0,.18),0 10px 24px rgba(20,10,4,.22);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 10px);-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 10px);-webkit-text-size-adjust:100%;color-scheme:light only}
 body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--limed);line-height:1.65;font-size:1rem;-webkit-font-smoothing:antialiased}
 img{max-width:100%;height:auto;display:block}
 a{color:#7A4A1E;text-underline-offset:3px}
@@ -59,25 +59,36 @@ p{margin:0 0 1em}
   --oak-bar-size:1200px 100px;
   --oak-bar-pos:center -12px;
   --oak-bar-fallback:#3B2A1E;
-  --plank-scr-top:6px;
-  --plank-scr-bot:6px;
+  /* Divider: two equal boards. Each board shows one seam-free face of tex-oak-bar
+     (source faces are 62px of the 204px texture, starting at y=71 and y=140). */
+  --plank-face-h:40px;
+  --plank-gap:3px;
+  --plank-tex-h:calc(204 / 62 * var(--plank-face-h));
+  --plank-tex-w:calc(2400 / 62 * var(--plank-face-h));
+  --plank-pos-a:calc(-71 / 62 * var(--plank-face-h));
+  --plank-pos-b:calc(-140 / 62 * var(--plank-face-h));
+  --plank-scr-inset:6px;
 }
-@media (min-width:600px) and (max-width:1079px){:root{--plank-scr-top:6px;--plank-scr-bot:9px}}
-@media (min-width:1080px){:root{--oak-bar-pos:center top;--plank-scr-top:12px;--plank-scr-bot:12px}}
+@media (min-width:1080px){:root{--oak-bar-pos:center top;--plank-face-h:48px;--plank-scr-inset:8px}}
 
-/* Plank divider: a static strip that matches the nav bar —
-   same height (--header-h + brass trim), same oak texture, size and position. */
-.planks{display:block;position:relative;z-index:1;height:calc(var(--header-h) + 1px);padding:0;border:0;background:transparent}
-.planks .plank{display:block;height:calc(var(--header-h) + 1px);width:100%;position:relative;
-  background:var(--oak-bar-grad),var(--oak-bar-img) var(--oak-bar-pos)/var(--oak-bar-size) repeat-x,var(--oak-bar-fallback);
+/* Plank divider: two equal-height boards of the same oak as the nav, stacked
+   with a dark gap. Texture is cropped per board so internal seams never show. */
+.planks{display:flex;flex-direction:column;gap:var(--plank-gap);position:relative;z-index:1;height:auto;padding:0;border:0;background:#140C06;box-shadow:0 10px 22px rgba(10,5,2,.22)}
+.planks .plank{display:block;height:var(--plank-face-h);width:100%;position:relative;flex:none;
+  background-color:#3B2A1E;
+  background-image:var(--oak-bar-grad),var(--oak-bar-img);
+  background-repeat:no-repeat,repeat-x;
+  background-size:auto,var(--plank-tex-w) var(--plank-tex-h);
   border-bottom:1px solid #B8955E;
-  box-shadow:0 1px 0 #140C06,0 10px 22px rgba(10,5,2,.22)}
-.planks .plank::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(255,232,196,.18);pointer-events:none}
-.planks .scr{position:absolute;width:9px;height:9px;background-repeat:no-repeat;background-size:contain;background-position:center;pointer-events:none}
-.planks .s1{left:10px;top:var(--plank-scr-top);background-image:url("../img/brass-screw-a.svg")}
-.planks .s2{left:10px;bottom:var(--plank-scr-bot);background-image:url("../img/brass-screw-b.svg")}
-.planks .s3{right:10px;top:var(--plank-scr-top);background-image:url("../img/brass-screw-c.svg")}
-.planks .s4{right:10px;bottom:var(--plank-scr-bot);background-image:url("../img/brass-screw-d.svg")}
+  box-shadow:0 1px 0 #0A0604}
+.planks .p1{background-position:0 0,0 var(--plank-pos-a)}
+.planks .p2{background-position:0 0,280px var(--plank-pos-b)}
+.planks .plank::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(255,232,196,.22);pointer-events:none}
+.planks .scr{position:absolute;width:8px;height:8px;background-repeat:no-repeat;background-size:contain;background-position:center;pointer-events:none}
+.planks .s1{left:8px;top:var(--plank-scr-inset);background-image:url("../img/brass-screw-a.svg")}
+.planks .s2{left:8px;bottom:var(--plank-scr-inset);background-image:url("../img/brass-screw-b.svg")}
+.planks .s3{right:8px;top:var(--plank-scr-inset);background-image:url("../img/brass-screw-c.svg")}
+.planks .s4{right:8px;bottom:var(--plank-scr-inset);background-image:url("../img/brass-screw-d.svg")}
 
 /* ---------- Buttons ---------- */
 .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.7rem;border-radius:4px;font-weight:750;font-size:.95rem;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .15s ease,box-shadow .2s ease,filter .2s;font-family:inherit;letter-spacing:.01em;line-height:1.2}
@@ -88,8 +99,8 @@ p{margin:0 0 1em}
 .btn-brass::before,.btn-brass::after{content:"";position:absolute;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#FFF2C8 0 1px,#B9842F 1.8px,#7A4E12 3.6px,transparent 4px)}
 .btn-brass::before{left:8px}.btn-brass::after{right:8px}
 .btn-brass:hover{filter:brightness(1.05);color:#1E1205}
-.btn-glass{background:linear-gradient(110deg,rgba(220,238,255,.22),rgba(220,238,255,.08) 40%,rgba(255,255,255,.2) 48%,rgba(220,238,255,.08) 56%);color:#fff;border:1px solid rgba(255,255,255,.65);border-left:5px solid #A9B4C0;border-right:5px solid #A9B4C0;backdrop-filter:blur(3px)}
-.btn-glass:hover{background:rgba(255,255,255,.95);color:var(--navy)}
+.btn-glass,.btn-secondary{background-color:#3B2A1E;color:#F0E4C9;border:1px solid #B8955E;backdrop-filter:none;-webkit-backdrop-filter:none;color-scheme:only light}
+.btn-glass:hover,.btn-secondary:hover{background-color:#3B2A1E;color:#FFF0CF}
 .btn-navy{background:var(--navy);color:#fff;border-color:#02101F;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 14px rgba(4,30,55,.3)}
 .btn-navy:hover{color:var(--gold-2)}
 
@@ -349,7 +360,7 @@ p{margin:0 0 1em}
   .scene-photo{justify-content:flex-start;min-height:0}
   .hero-photo img{inset:auto 0 0 0;height:clamp(260px,70vw,340px);object-position:70% 55%}
   .scene-photo::before{background:linear-gradient(180deg,#041E37 0%,#041E37 calc(100% - clamp(260px,70vw,340px) + 8px),rgba(4,30,55,.42) calc(100% - clamp(260px,70vw,340px) + 72px),rgba(4,30,55,.1) calc(100% - clamp(260px,70vw,340px) + 150px),rgba(4,30,55,0) 100%)}
-  .scene-photo .hero-content{padding-top:2.4rem;padding-bottom:clamp(260px,70vw,340px)}
+  .scene-photo .hero-content{padding-top:calc(var(--logo-hang));padding-bottom:clamp(260px,70vw,340px)}
 }
 
 /* =====================================================================
@@ -393,13 +404,15 @@ h3,.h3{letter-spacing:.01em}
 .btn-brass:hover::after{transform:rotate(45deg) translate(2px,-2px)}
 .btn-brass:active{transform:translateY(2px);filter:none;box-shadow:inset 0 1px 0 rgba(255,247,220,.45),inset 0 -1px 0 rgba(80,50,16,.35),0 1px 0 #140C06,0 2px 5px rgba(8,4,1,.25)}
 .btn-brass:active::after{transform:rotate(45deg)}
-.btn-glass{color:#F0D9A6;border:1px solid #B8955E;background-color:#2A1C13;
+.btn-glass,.btn-secondary{color:#F0E4C9;border:1px solid #B8955E;background-color:#3B2A1E;
   background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-0.webp");
   background-repeat:no-repeat,repeat-x;background-size:auto,2400px 100%;background-position:0 0,-120px 50%;
   box-shadow:inset 0 1px 0 rgba(255,236,204,.22),inset 0 -2px 2px rgba(8,4,1,.38),0 1px 0 #0A0604,0 7px 16px rgba(8,4,1,.35);
-  text-shadow:0 1px 0 rgba(0,0,0,.55);backdrop-filter:none;-webkit-backdrop-filter:none}
-.btn-glass:hover{color:#FFF0CF;filter:brightness(1.08)}
-.btn-glass:active{transform:translateY(2px);filter:none;box-shadow:inset 0 1px 0 rgba(255,236,204,.16),inset 0 -1px 1px rgba(8,4,1,.35),0 1px 0 #0A0604,0 2px 5px rgba(8,4,1,.25)}
+  text-shadow:0 1px 0 rgba(0,0,0,.55);backdrop-filter:none;-webkit-backdrop-filter:none;
+  forced-color-adjust:none;color-scheme:only light}
+.btn-glass:hover,.btn-glass:focus-visible,.btn-secondary:hover,.btn-secondary:focus-visible{
+  color:#FFF0CF;filter:brightness(1.08);background-color:#3B2A1E}
+.btn-glass:active,.btn-secondary:active{transform:translateY(2px);filter:none;background-color:#3B2A1E;box-shadow:inset 0 1px 0 rgba(255,236,204,.16),inset 0 -1px 1px rgba(8,4,1,.35),0 1px 0 #0A0604,0 2px 5px rgba(8,4,1,.25)}
 .btn-navy{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 0 #02101F,0 7px 16px rgba(4,30,55,.28)}
 .btn-navy:hover{color:var(--brass-2)}
 .btn-navy:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 1px 0 #02101F,0 2px 5px rgba(4,30,55,.25)}
@@ -562,10 +575,13 @@ h3,.h3,.board-card h3,.usp strong,.step-board h3,.faq-list summary{font-family:v
 
 /* --- mobile & tablet --- */
 @media (max-width:1079px){
-  .oakbar{--T:10px;--fh:88px;--bar:76px}
-  .oakbar .header-inner{gap:.6rem}
-  .oak-frame{margin-top:7px}
-  .oak-panel{padding:0 8px}
+   :root{--logo-hang:5.1rem}
+  .scene .hero-content{padding-top:var(--logo-hang)}
+  .oakbar{--T:7px;--fh:auto;--bar:76px;--logo-w:180px}
+  .oakbar .header-inner{gap:.55rem}
+  .oakbar .oak-frame{margin-top:6px;height:auto}
+  .oakbar .oak-panel{padding:3px 5px;height:auto}
+  .oakbar .oak-panel img{width:var(--logo-w);height:auto;max-width:100%}
   .oak-screws{--s:6px}
   .oakbar .header-phone{width:46px;height:46px;justify-content:center;border:5px solid transparent;border-radius:1px;
     background:linear-gradient(180deg,#2A1C13,#1C120B) padding-box,linear-gradient(180deg,rgba(255,236,204,.22),rgba(10,5,2,.35)) border-box,url("../img/tex-oak-frame-h.webp") -120px 0/300px 100% border-box;
@@ -631,8 +647,9 @@ h3,.h3,.board-card h3,.usp strong,.step-board h3,.faq-list summary{font-family:v
   .oakbar .nav-cta{display:flex;width:100%;padding:1rem;margin-top:.1rem;flex:none}
 }
 
-@media (max-width:399px){.oakbar .nt-label{display:none}.nav-toggle{padding:0 .75rem}.oakbar{--fh:84px}}
-@media (min-width:600px) and (max-width:1079px){.oakbar{--T:12px;--fh:98px;--bar:82px}:root{--header-h:82px}}
+@media (max-width:379px){.oakbar{--logo-w:170px}}
+@media (max-width:399px){.oakbar .nt-label{display:none}.nav-toggle{padding:0 .75rem}}
+@media (min-width:600px) and (max-width:1079px){.oakbar{--T:8px;--bar:82px;--logo-w:190px}:root{--header-h:82px}}
 html.nav-locked,html.nav-locked body{overflow:hidden}
 html.nav-locked body{position:fixed;left:0;right:0;width:100%;padding-top:calc(var(--header-h) + 1px)}
 html.nav-locked .site-header{position:fixed;top:0!important;left:0;right:0}

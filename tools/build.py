@@ -95,6 +95,8 @@ def head(title, desc, slug, extra_ld=(), robots='index, follow', preload_hero=Fa
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
 <title>{e(title)}</title>
 <meta name="description" content="{e(desc)}">
 <meta name="robots" content="{robots}">
@@ -133,7 +135,7 @@ def oak_header(current='', nav_id='main-nav', extra_cls=''):
   <div class="container header-inner">
     <a class="oak-frame" href="index.html" aria-label="Kernow Decking Co. – decking Cornwall, home">
       <span class="fr fr-t" aria-hidden="true"></span><span class="fr fr-r" aria-hidden="true"></span><span class="fr fr-b" aria-hidden="true"></span><span class="fr fr-l" aria-hidden="true"></span>
-      <span class="oak-panel"><picture><source srcset="assets/img/logo-360.webp 1x, assets/img/logo-720.webp 2x" type="image/webp"><img src="assets/img/logo-360.png" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="360" height="232"></picture></span>
+      <span class="oak-panel"><picture><source type="image/webp" srcset="assets/img/logo-360.webp 360w, assets/img/logo-720.webp 720w" sizes="(max-width:1079px) 180px, 155px"><img src="assets/img/logo-720.png" srcset="assets/img/logo-360.png 360w, assets/img/logo-720.png 720w" sizes="(max-width:1079px) 180px, 155px" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="720" height="465"></picture></span>
       <span class="oak-screws" aria-hidden="true"></span>
     </a>
     <nav class="main-nav" id="{nav_id}" aria-label="Main">
@@ -161,8 +163,10 @@ def header(current):
 
 def planks(cls=''):
     klass = 'planks ' + cls if cls else 'planks'
-    screws = ''.join(f'<i class="scr s{i}"></i>' for i in range(1, 5))
-    return f'<div class="{klass}" aria-hidden="true"><span class="plank">{screws}</span></div>\n'
+    def board(n):
+        screws = ''.join(f'<i class="scr s{i}"></i>' for i in range(1, 5))
+        return f'<span class="plank p{n}">{screws}</span>'
+    return f'<div class="{klass}" aria-hidden="true">{board(1)}{board(2)}</div>\n'
 
 
 def photo_scene(content):
@@ -199,7 +203,7 @@ def page_hero(items, kicker, h1, lead, cta2=None):
     <p class="eyebrow">{e(kicker)}</p>
     <h1>{e(h1)}</h1>
     <p class="hero-lead">{e(lead)}</p>
-    <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free decking quote</a><a class="btn btn-glass btn-lg" href="{c2[1]}">{e(c2[0])}</a></div>''', 'scene-page')
+    <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free decking quote</a><a class="btn btn-glass btn-secondary btn-lg" href="{c2[1]}">{e(c2[0])}</a></div>''', 'scene-page')
 
 def card_text(s):
     t = s['desc'].split('. ')[1] if '. ' in s['desc'] else s['desc']
@@ -315,7 +319,7 @@ def footer():
     <div class="footer-brand">
       <a class="oak-frame footer-frame" href="index.html" aria-label="Kernow Decking Co. – decking Cornwall, home">
         <span class="fr fr-t" aria-hidden="true"></span><span class="fr fr-r" aria-hidden="true"></span><span class="fr fr-b" aria-hidden="true"></span><span class="fr fr-l" aria-hidden="true"></span>
-        <span class="oak-panel"><picture><source srcset="assets/img/logo-360.webp 1x, assets/img/logo-720.webp 2x" type="image/webp"><img src="assets/img/logo-360.png" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="360" height="232" loading="lazy"></picture></span>
+        <span class="oak-panel"><picture><source type="image/webp" srcset="assets/img/logo-360.webp 360w, assets/img/logo-720.webp 720w" sizes="(max-width:1079px) 180px, 155px"><img src="assets/img/logo-720.png" srcset="assets/img/logo-360.png 360w, assets/img/logo-720.png 720w" sizes="(max-width:1079px) 180px, 155px" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="720" height="465" loading="lazy"></picture></span>
         <span class="oak-screws" aria-hidden="true"></span>
       </a>
       <p class="footer-eyebrow">Design · Supply · Install</p>
@@ -350,7 +354,7 @@ def home():
     hero = (photo_scene if HERO_PHOTO else lambda c: scene(c, 'scene-home'))('''<p class="eyebrow">Decking Newquay &amp; Cornwall · Design • Supply • Install</p>
     <h1>Proper decking in Cornwall. <span>Built to last.</span></h1>
     <p class="hero-lead">Kernow Decking Co. designs, supplies and installs composite and hardwood decking, glass balustrades and garden decks from our base in Newquay, built for Cornwall’s Atlantic weather and the best of every view.</p>
-    <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free quote</a><a class="btn btn-glass btn-lg" href="#services">Our decking services</a></div>
+    <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free quote</a><a class="btn btn-glass btn-secondary btn-lg" href="#services">Our decking services</a></div>
     <ul class="hero-badges"><li>Free site survey</li><li>Composite &amp; hardwood</li><li>Glass &amp; steel balustrades</li><li>Based in Newquay</li></ul>''')
     intro = f'''<section class="section bg-limed intro" aria-labelledby="intro-title">
   <div class="container intro-grid">
