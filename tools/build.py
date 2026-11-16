@@ -513,7 +513,7 @@ def home():
 '''
     gal = [('multi-level-garden-decking-cornwall.webp', 'Multi-level garden decking with steps and built-in planters – multi-level decking ideas for Cornwall', 'Multi-level garden decking', 1200, 900, 'g-big'),
            ('composite-decking-glass-balustrade-cornwall.webp', 'Long composite deck with a glass balustrade – composite decking in Cornwall', 'Composite decking & glass balustrade', 1100, 825, ''),
-           ('decking-installation-joists-cornwall.webp', 'Deck boards being fixed over a timber sub-frame of joists – decking installation in Cornwall', 'Decking installation', 1100, 825, ''),
+           ('decking-installation-hardwood-cornwall.webp', 'Freshly laid hardwood deck boards – decking installation in Cornwall', 'Decking installation', 1200, 900, ''),
            ('hardwood-deck-boards-grain-cornwall.webp', 'Close-up of rich brown hardwood deck boards and grain – hardwood decking Cornwall', 'Hardwood board grain', 853, 640, ''),
            ('timber-deck-steel-balustrade-cornwall.webp', 'Timber deck walkway with stainless steel balustrade towards the sea – coastal decking Cornwall', 'Steel balustrade decking', 720, 540, ''),
            ('deck-board-gaps-grain-cornwall.webp', 'Close-up of timber deck boards with even drainage gaps and natural grain – decking Cornwall', 'Board spacing & grain', 850, 638, ''),
@@ -584,7 +584,7 @@ def credits():
 <ul class="credits-list">
 <li>Multi-level garden decking: <a href="https://commons.wikimedia.org/wiki/File:Backyard_deck.JPG" rel="noopener">"Backyard deck"</a> by JDoorjam, <a href="https://creativecommons.org/licenses/by/2.5/" rel="noopener">CC BY 2.5</a>.</li>
 <li>Composite decking &amp; glass balustrade: <a href="https://commons.wikimedia.org/wiki/File:Deck-bois-composite.jpg" rel="noopener">"Deck bois composite"</a> by Ulysse17 (Geolam), <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a>.</li>
-<li>Decking installation: <a href="https://commons.wikimedia.org/wiki/File:Building_our_deck_2.JPG" rel="noopener">"Building our deck 2"</a> by Kenneth William Watkins, <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener">CC BY-SA 4.0</a>.</li>
+<li>Decking installation: <a href="https://www.flickr.com/photos/40888213@N00/5821718628" rel="noopener">"Ipe Deck"</a> by Brad L. (robinsend), <a href="https://creativecommons.org/licenses/by-sa/2.0/" rel="noopener">CC BY-SA 2.0</a>.</li>
 <li>Deck repairs: <a href="https://commons.wikimedia.org/wiki/File:Timber_Deck_Repairs.jpg" rel="noopener">"Timber Deck Repairs"</a> by Ridunwig, <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener">CC0 1.0</a>.</li>
 <li>Board close-ups, steel balustrade decks and coastal deck steps from <a href="https://stocksnap.io" rel="noopener">StockSnap.io</a> (CC0): <a href="https://stocksnap.io/photo/wood-texture-BJWPE8ABOZ">hardwood grain</a>, <a href="https://stocksnap.io/photo/wood-texture-CMLVPWCDSF">board spacing</a>, <a href="https://stocksnap.io/photo/blue-sky-8E7296FED5">steel balustrade walkway</a>, <a href="https://stocksnap.io/photo/sea-pier-GJ191GHM5D">coastal deck steps</a>.</li>
 </ul>''', 'index, follow')
