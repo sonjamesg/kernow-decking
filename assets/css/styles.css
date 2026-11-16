@@ -52,16 +52,25 @@ p{margin:0 0 1em}
   border-radius:var(--radius);box-shadow:var(--shadow);color:var(--ink)}
 .board p{color:var(--muted)}
 
-/* Plank divider: three boards with gaps that slide into place */
-.planks{display:grid;gap:3px;padding:3px 0;background:var(--gap);overflow:hidden}
-.planks span{display:block;height:34px;background:var(--tex-cedar) 0 -1px/450px auto;box-shadow:inset 0 2px 0 rgba(255,255,255,.12),inset 0 -2px 0 rgba(0,0,0,.25)}
-.planks span:nth-child(2){background-position:-150px -37px}
-.planks span:nth-child(3){background-position:-310px -73px}
-.js .planks.reveal span{transform:translateX(-101%);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
-.js .planks.reveal span:nth-child(2){transform:translateX(101%);transition-delay:.12s}
-.js .planks.reveal span:nth-child(3){transition-delay:.24s}
+/* Plank divider: four smoked-oak boards with grain, gaps, bevels and joist screws */
+.planks{display:grid;gap:4px;padding:5px 0 0;background:#120A05;overflow:hidden;
+  border-top:1px solid #0A0604;border-bottom:1px solid #B8955E;
+  box-shadow:0 10px 22px rgba(8,4,1,.2)}
+.planks span{display:block;height:28px;position:relative;
+  background-color:#2A1C13;
+  background-image:url("../img/brass-screw-row.svg"),linear-gradient(180deg,rgba(255,236,204,.14) 0,rgba(255,236,204,.04) 22%,rgba(8,4,1,.22) 100%),url("../img/tex-oak-menu-0.webp");
+  background-repeat:repeat-x,no-repeat,repeat-x;
+  background-size:240px 12px,auto,2400px 100%;
+  background-position:28px 50%,0 0,0 0;
+  box-shadow:inset 0 1px 0 rgba(255,236,204,.22),inset 0 -2px 2px rgba(8,4,1,.4)}
+.planks span:nth-child(2){background-image:url("../img/brass-screw-row.svg"),linear-gradient(180deg,rgba(255,236,204,.14) 0,rgba(255,236,204,.04) 22%,rgba(8,4,1,.22) 100%),url("../img/tex-oak-menu-1.webp");background-position:56px 50%,0 0,-420px 0}
+.planks span:nth-child(3){background-image:url("../img/brass-screw-row.svg"),linear-gradient(180deg,rgba(255,236,204,.14) 0,rgba(255,236,204,.04) 22%,rgba(8,4,1,.22) 100%),url("../img/tex-oak-menu-2.webp");background-position:34px 50%,0 0,-860px 0}
+.planks span:nth-child(4){background-image:url("../img/brass-screw-row.svg"),linear-gradient(180deg,rgba(255,236,204,.14) 0,rgba(255,236,204,.04) 22%,rgba(8,4,1,.22) 100%),url("../img/tex-oak-menu-0.webp");background-position:78px 50%,0 0,-1280px 0}
+.js .planks.reveal span{transform:translateX(-101%);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.js .planks.reveal span:nth-child(2){transform:translateX(101%);transition-delay:.1s}
+.js .planks.reveal span:nth-child(3){transition-delay:.2s}
+.js .planks.reveal span:nth-child(4){transform:translateX(101%);transition-delay:.3s}
 .js .planks.reveal.in span{transform:none}
-.planks-footer span{background-image:var(--tex-hard)}
 
 /* ---------- Buttons ---------- */
 .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.7rem;border-radius:4px;font-weight:750;font-size:.95rem;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .15s ease,box-shadow .2s ease,filter .2s;font-family:inherit;letter-spacing:.01em;line-height:1.2}
@@ -372,9 +381,7 @@ h3,.h3{letter-spacing:.01em}
 .btn-navy{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 0 #02101F,0 7px 16px rgba(4,30,55,.28)}
 .btn-navy:hover{color:var(--brass-2)}
 .btn-navy:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 1px 0 #02101F,0 2px 5px rgba(4,30,55,.25)}
-/* plank dividers: slim dark oak with brass hairlines */
-.planks{gap:2px;padding:2px 0;background:#140E09;border-top:1px solid var(--brass);border-bottom:1px solid var(--brass)}
-.planks span{height:16px;background-size:600px auto;box-shadow:none}
+/* plank dividers: dark oak rules live in the main .planks block above */
 /* cards and boards: flat white with a slim oak edge + brass hairline */
 .board{background:linear-gradient(var(--brass),var(--brass)) 0 6px/100% 1px no-repeat,var(--plank-cedar) 0 0/100% 6px no-repeat,var(--card);padding-top:6px;box-shadow:var(--shadow)}
 .board-card{background:linear-gradient(var(--brass),var(--brass)) 0 6px/100% 1px no-repeat,var(--plank-cedar) 0 0/100% 6px no-repeat,var(--card);padding-top:calc(1.9rem + 7px);border-radius:var(--radius);box-shadow:0 1px 0 rgba(0,0,0,.25),0 18px 36px rgba(0,0,0,.28)}
@@ -609,3 +616,83 @@ html.nav-locked body{position:fixed;left:0;right:0;width:100%;padding-top:calc(v
 html.nav-locked .site-header{position:fixed;top:0!important;left:0;right:0}
 /* nav-options demo copy of the live header */
 .oak-demo{position:relative;top:auto}
+
+/* ---------- Photo-to-boards fade at the foot of every hero ---------- */
+.scene::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40px;z-index:0;pointer-events:none;
+  background:linear-gradient(0deg,#120A05 0%,rgba(18,10,5,.55) 40%,rgba(18,10,5,0) 100%)}
+
+/* ---------- Enquiry form: white card in a mitred oak plank frame ---------- */
+.contact{overflow-x:clip}
+@media (max-width:759px){.contact{padding-bottom:calc(7rem + env(safe-area-inset-bottom))}}
+@media (max-width:599px){
+  .contact .container{width:min(100% - 1.5rem,var(--container))}
+}
+.quote-frame.oak-frame{--T:12px;height:auto;width:100%;max-width:100%;margin:0;align-self:stretch;flex:none;line-height:normal;z-index:1;box-sizing:border-box}
+.quote-frame.oak-frame:hover{transform:none}
+.quote-frame .quote-panel{display:block;height:auto;padding:0;text-align:left;background:#fff;line-height:1.65}
+.quote-form{padding:1.35rem 1.15rem 1.45rem;background:#fff;color:var(--navy);box-sizing:border-box}
+.quote-form .form-kicker{margin:0 0 .35rem;font-family:var(--slab);font-weight:700;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:#7C5E33}
+.quote-form .form-title{margin:0 0 .35rem;color:var(--navy);font-family:var(--slab);font-weight:800;font-size:clamp(1.35rem,4vw,1.7rem);line-height:1.15}
+.quote-form .form-micro{margin:0 0 1.35rem;color:#4C4339;font-size:.95rem}
+.quote-form label{display:flex;flex-direction:column;gap:.4rem;font-weight:600;font-size:.88rem;color:var(--navy)}
+.form-row{display:grid;gap:1rem;margin-bottom:1.05rem}
+@media (min-width:600px){.form-row.two{grid-template-columns:1fr 1fr}}
+.quote-form input,.quote-form select,.quote-form textarea{
+  font-family:var(--sans);font-weight:500;font-size:16px;line-height:1.3;color:var(--ink);
+  width:100%;min-height:48px;padding:.85rem 1rem;box-sizing:border-box;
+  border:1px solid #C9B9A0;border-radius:2px;background:#FFFDF9;
+  transition:border-color .2s,box-shadow .2s;appearance:none;-webkit-appearance:none}
+.quote-form textarea{min-height:140px;padding-top:.9rem;resize:vertical}
+.quote-form select{background:#FFFDF9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%238A6A3C' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round' d='M1.5 1.5 6 6l4.5-4.5'/%3E%3C/svg%3E") no-repeat right 1rem center/12px 8px;
+  padding-right:2.5rem;cursor:pointer}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{outline:none;border-color:#B8955E;box-shadow:0 0 0 3px rgba(184,149,94,.35);background:#fff}
+.quote-form .invalid{border-color:#B23A2B!important;box-shadow:0 0 0 3px rgba(178,58,43,.18)!important}
+.quote-form .consent{flex-direction:row;align-items:flex-start;gap:.75rem;font-weight:500;color:#4C4339;font-size:.9rem;margin:.15rem 0 1.25rem}
+.quote-form .consent input{appearance:none;-webkit-appearance:none;width:22px;height:22px;min-height:0;margin:.15rem 0 0;flex:none;padding:0;
+  border:1px solid #8A6A3C;border-radius:2px;background:#FFFDF9;cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+.quote-form .consent input:checked{background:#C9A66B url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='none' stroke='%231C140C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M2.5 7.2 5.6 10.2 11.5 3.8'/%3E%3C/svg%3E") center/12px 12px no-repeat;
+  border-color:#8A6A3C}
+.quote-form .consent input:focus-visible{outline:2px solid #B8955E;outline-offset:2px}
+.quote-form .consent a{color:#6E5230;text-underline-offset:2px}
+.quote-form .btn-block{width:100%}
+@media (min-width:700px){
+  .quote-frame.oak-frame{--T:16px}
+  .quote-form{padding:2rem 2.15rem 2.15rem}
+}
+/* Trust details on the dark hardwood panel */
+.contact-info>p{color:#E9E1D4}
+.contact-list{list-style:none;padding:0;margin:1.6rem 0 0;display:grid;gap:.15rem}
+.contact-list li{display:flex;gap:.9rem;align-items:center;padding:.85rem .2rem;border:0;border-bottom:1px solid rgba(212,181,126,.28);border-radius:0;background:transparent}
+.contact-list li:last-child{border-bottom:0}
+.contact-list small{display:block;color:var(--brass-2);font-family:var(--slab);font-size:.68rem;text-transform:uppercase;letter-spacing:.14em;font-weight:700}
+.contact-list a,.contact-list span{color:#fff;font-weight:700;text-decoration:none;word-break:break-word;font-size:1.02rem}
+.contact-list a:hover{color:var(--brass-2)}
+.ci-icon{width:44px;height:44px;flex:none;border-radius:50%;display:grid;place-items:center;background:transparent;border:1px solid var(--brass-2);box-sizing:border-box}
+.ci-icon svg{width:18px;height:18px;fill:none;stroke:var(--brass-2);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ci-icon svg path[d^="M6.6"]{fill:var(--brass-2);stroke:none}
+
+/* ---------- Footer: framed colour logo + brass social buttons ---------- */
+.footer-brand{display:flex;flex-direction:column;align-items:center;text-align:center}
+.footer-frame.oak-frame{--T:8px;--fh:96px;margin:0 0 1.1rem;align-self:center;z-index:1;line-height:0}
+.footer-frame .oak-panel{padding:0 8px}
+.footer-frame .oak-panel img,.footer-brand .footer-frame img{height:calc(var(--fh) - 2*var(--T) - 8px);width:auto;margin:0;max-width:none}
+.footer-social{display:flex!important;flex-direction:row;justify-content:center;gap:.65rem;list-style:none;padding:0;margin:.9rem 0 0!important}
+.footer-social li{margin:0}
+.soc{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;
+  color:#1C140C;text-decoration:none;border:1px solid #8A6A3C;
+  background:linear-gradient(180deg,#F4E2B6 0%,#E6C889 18%,#D4B57E 48%,#C9A66B 70%,#B8955E 100%);
+  box-shadow:inset 0 1px 0 rgba(255,247,220,.7),inset 0 -1px 0 rgba(80,50,16,.35),0 2px 0 #140C06,0 5px 12px rgba(0,0,0,.3);
+  transition:transform .15s ease,filter .2s,box-shadow .2s}
+.soc svg{width:18px;height:18px;display:block}
+.soc:hover{color:#1C140C;filter:brightness(1.06);transform:translateY(-1px)}
+.soc:focus-visible{outline:2px solid #F0D9A6;outline-offset:3px}
+.footer-contact{margin-top:1rem!important}
+@media (min-width:860px){
+  .footer-brand{align-items:flex-start;text-align:left}
+  .footer-frame.oak-frame{--T:10px;--fh:108px;align-self:flex-start}
+  .footer-social{justify-content:flex-start}
+}
+@media (min-width:700px){
+  .quote-frame .oak-screws{--s:8px}
+}

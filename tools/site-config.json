@@ -1,5 +1,5 @@
 {
-  "_help": "Fill in the values, then run: python3 tools/build.py  — every page is regenerated with your details. Leave a value empty to keep the [PLACEHOLDER] text.",
+  "_help": "Fill in the values, then run: python3 tools/build.py  \u2014 every page is regenerated with your details. Leave a value empty to keep the [PLACEHOLDER] text.",
   "[PHONE]": "07700 900461",
   "[PHONE_INTL]": "+447700900461",
   "[EMAIL]": "info@kernowdecking.com",
@@ -8,5 +8,9 @@
   "[POSTCODE]": "",
   "[FACEBOOK_URL]": "",
   "[INSTAGRAM_URL]": "",
-  "[GUARANTEE_YEARS]": ""
+  "[GUARANTEE_YEARS]": "",
+  "social": {
+    "facebook": "https://www.facebook.com/",
+    "instagram": "https://www.instagram.com/"
+  }
 }

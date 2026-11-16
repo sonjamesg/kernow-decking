@@ -13,8 +13,17 @@ CFG = json.load(open(os.path.join(os.path.dirname(__file__), 'site-config.json')
 TODAY = '2026-11-16'
 SITE = 'https://[DOMAIN]/'
 HERO_NAME = 'decking-cornwall-newquay-sea-view-deck'
-_soc = [f'<a href="{CFG[k]}" rel="noopener" target="_blank">{n}</a>' for k, n in (('[FACEBOOK_URL]', 'Facebook'), ('[INSTAGRAM_URL]', 'Instagram')) if CFG.get(k)]
-SOCIAL_LI = ('<li>' + ' · '.join(_soc) + '</li>') if _soc else ''
+def _social_url(name, placeholder):
+    """Prefer tools/site-config.json social.<name>; fall back to legacy [NAME_URL] keys."""
+    soc = CFG.get('social') if isinstance(CFG.get('social'), dict) else {}
+    u = (soc.get(name) or CFG.get('[%s_URL]' % name.upper()) or '').strip()
+    return u or placeholder
+FB_URL = _social_url('facebook', 'https://www.facebook.com/')
+IG_URL = _social_url('instagram', 'https://www.instagram.com/')
+_PLACEHOLDER_SOCIAL = {
+    'https://www.facebook.com/', 'https://www.facebook.com', 'https://facebook.com/', 'https://facebook.com',
+    'https://www.instagram.com/', 'https://www.instagram.com', 'https://instagram.com/', 'https://instagram.com',
+}
 HERO_PHOTO = os.path.exists(os.path.join(ROOT, 'assets', 'img', HERO_NAME + '-1920.webp'))
 HERO_ALT = 'Decking in Cornwall: a deck beside a glass garden room looking out to the sea at sunset, with a lighthouse on the headland'
 SVC = {s['slug']: s for s in SERVICES}
@@ -37,7 +46,7 @@ BUSINESS = {
  "address": {"@type": "PostalAddress", "addressLocality": "[BASE_TOWN]", "postalCode": "[POSTCODE]", "addressRegion": "Cornwall", "addressCountry": "GB"},
  "areaServed": [{"@type": "City", "name": "Newquay"}, {"@type": "AdministrativeArea", "name": "Cornwall"}],
  "knowsAbout": ["Decking", "Composite decking", "Hardwood decking", "Timber decking", "Garden decking", "Glass balustrades", "Deck repairs"],
- "sameAs": [u for u in (CFG.get("[FACEBOOK_URL]"), CFG.get("[INSTAGRAM_URL]")) if u],
+ "sameAs": [u for u in (FB_URL, IG_URL) if u and u.rstrip('/') not in {x.rstrip('/') for x in _PLACEHOLDER_SOCIAL}],
  "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "17:30"}],
  "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Decking services in Cornwall", "itemListElement": [
    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": s['h1'], "url": url(s['slug'])}} for s in SERVICES]}
@@ -151,7 +160,9 @@ def header(current):
     return oak_header(current)
 
 def planks(cls=''):
-    return f'<div class="planks {cls}" aria-hidden="true"><span></span><span></span><span></span></div>\n'
+    klass = 'planks ' + cls if cls else 'planks'
+    return f'<div class="{klass}" aria-hidden="true"><span></span><span></span><span></span><span></span></div>\n'
+
 
 def photo_scene(content):
     p = 'assets/img/' + HERO_NAME
@@ -258,7 +269,13 @@ def quote_section(source, title='Get a free decking quote', town=None):
         <li><span class="ci-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><small>Hours</small><span>Mon–Fri 8:00–17:30</span></div></li>
       </ul>
     </div>
-    <form class="quote-form board" action="contact.php" method="post" novalidate data-email="[EMAIL]">
+    <div class="oak-frame quote-frame">
+      <span class="fr fr-t" aria-hidden="true"></span><span class="fr fr-r" aria-hidden="true"></span><span class="fr fr-b" aria-hidden="true"></span><span class="fr fr-l" aria-hidden="true"></span>
+      <div class="oak-panel quote-panel">
+    <form class="quote-form" action="contact.php" method="post" novalidate data-email="[EMAIL]">
+      <p class="form-kicker">Your project</p>
+      <h3 class="form-title">Send an enquiry</h3>
+      <p class="form-micro">We usually reply within one working day.</p>
       <div class="form-row two">
         <label><span class="lbl">Name <b aria-hidden="true">*</b></span><input type="text" name="name" autocomplete="name" required maxlength="100"></label>
         <label><span class="lbl">Phone <b aria-hidden="true">*</b></span><input type="tel" name="phone" autocomplete="tel" required maxlength="30" inputmode="tel"></label>
@@ -283,6 +300,9 @@ def quote_section(source, title='Get a free decking quote', town=None):
       <button class="btn btn-brass btn-lg btn-block" type="submit">Send my enquiry</button>
       <p class="form-status" role="status" aria-live="polite"></p>
     </form>
+      </div>
+      <span class="oak-screws" aria-hidden="true"></span>
+    </div>
   </div>
 </section>
 '''
@@ -292,10 +312,17 @@ def footer():
     return f'''{planks('planks-footer')}<footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-brand">
-      <picture><source srcset="assets/img/logo-white-360.webp 1x, assets/img/logo-white-720.webp 2x" type="image/webp"><img src="assets/img/logo-white-360.png" alt="Kernow Decking Co. – decking Cornwall" width="360" height="232" loading="lazy"></picture>
+      <a class="oak-frame footer-frame" href="index.html" aria-label="Kernow Decking Co. – decking Cornwall, home">
+        <span class="fr fr-t" aria-hidden="true"></span><span class="fr fr-r" aria-hidden="true"></span><span class="fr fr-b" aria-hidden="true"></span><span class="fr fr-l" aria-hidden="true"></span>
+        <span class="oak-panel"><picture><source srcset="assets/img/logo-360.webp 1x, assets/img/logo-720.webp 2x" type="image/webp"><img src="assets/img/logo-360.png" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="360" height="232" loading="lazy"></picture></span>
+        <span class="oak-screws" aria-hidden="true"></span>
+      </a>
       <p>Decking design, supply and installation, based in Newquay, Cornwall.</p>
-      <ul class="footer-contact"><li><a href="tel:[PHONE_INTL]">[PHONE]</a></li><li><a href="mailto:[EMAIL]">[EMAIL]</a></li><li>[BASE_TOWN], Cornwall</li>
-{SOCIAL_LI}</ul>
+      <ul class="footer-social">
+        <li><a class="soc" href="{FB_URL}" target="_blank" rel="noopener" aria-label="Kernow Decking on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3l1-4h-4V9c0-.6.4-1 1-1z"/></svg></a></li>
+        <li><a class="soc" href="{IG_URL}" target="_blank" rel="noopener" aria-label="Kernow Decking on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm10 2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm-5 3.2A3.8 3.8 0 1 1 8.2 12 3.8 3.8 0 0 1 12 8.2zm0 1.8A2 2 0 1 0 14 12a2 2 0 0 0-2-2zM17.2 6.8a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/></svg></a></li>
+      </ul>
+      <ul class="footer-contact"><li><a href="tel:[PHONE_INTL]">[PHONE]</a></li><li><a href="mailto:[EMAIL]">[EMAIL]</a></li><li>[BASE_TOWN], Cornwall</li></ul>
     </div>
     <div><h2 class="f-h">Decking services</h2><ul>{svc}<li><a href="index.html#quote">Free decking quote</a></li></ul></div>
     <div><h2 class="f-h">Explore</h2><ul><li><a href="index.html#process">How we work</a></li><li><a href="index.html#gallery">Decking gallery</a></li><li><a href="index.html#faq">Decking FAQs</a></li><li><a href="index.html#reviews">Reviews</a></li><li><a href="index.html#quote">Contact us</a></li></ul></div>
