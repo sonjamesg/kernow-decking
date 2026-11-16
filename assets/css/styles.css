@@ -344,15 +344,34 @@ h3,.h3{letter-spacing:.01em}
 .bg-hardwood{background:linear-gradient(180deg,#2E2118,#231912);color:#F1E8DA}
 .bg-hardwood p,.bg-navy p{color:#E9E1D4}
 .bg-cedar{background:var(--tex-hard) 0 0/900px auto,var(--hard)}
-/* buttons: brushed brass, restrained */
-.btn{border-radius:2px;font-weight:650;letter-spacing:.1em;text-transform:uppercase;font-size:.8rem;padding:.95rem 1.8rem}
-.btn-lg{font-size:.84rem;padding:1.1rem 2.2rem}
-.btn-brass{background:var(--brush),var(--brass-grad);color:#1C140C;border:1px solid #8A6A3C;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 18px rgba(0,0,0,.18)}
-.btn-brass::before,.btn-brass::after{display:none}
-.btn-brass:hover{filter:brightness(1.06);color:#1C140C}
-.btn-glass{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.7);border-left-width:1px;border-right-width:1px;backdrop-filter:blur(2px)}
-.btn-navy{box-shadow:0 8px 18px rgba(4,30,55,.2)}
+/* buttons: raised brushed-brass plate + smoked-oak plank secondary */
+.btn{border-radius:2px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;padding:.85rem 1.8rem;min-height:48px;box-sizing:border-box}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(2px)}
+.btn-lg{font-size:.84rem;padding:1rem 2.15rem;min-height:52px}
+.btn-brass{color:#1C140C;border:1px solid #8A6A3C;background-color:#C9A66B;
+  background-image:url("../img/brass-screw-a.svg"),url("../img/brass-screw-c.svg"),var(--brush),linear-gradient(180deg,#F4E2B6 0%,#E6C889 14%,#D4B57E 40%,#C9A66B 58%,#B8955E 82%,#8F6E3E 100%);
+  background-repeat:no-repeat,no-repeat,repeat,no-repeat;
+  background-size:8px 8px,8px 8px,auto,auto;
+  background-position:10px 50%,calc(100% - 10px) 50%,0 0,0 0;
+  box-shadow:inset 0 1px 0 rgba(255,247,220,.75),inset 0 -2px 0 rgba(80,50,16,.4),inset 1px 0 0 rgba(255,236,204,.25),inset -1px 0 0 rgba(80,50,16,.22),0 1px 0 #140C06,0 7px 16px rgba(8,4,1,.32);
+  padding-left:2.1rem;padding-right:2.2rem;text-shadow:0 1px 0 rgba(255,247,220,.35)}
+.btn-brass::before{content:none;display:none;background:none}
+.btn-brass::after{content:"";display:block;position:static;top:auto;right:auto;left:auto;width:.42em;height:.42em;margin:0 0 0 .2em;border-radius:0;background:none;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg);transition:transform .2s ease;flex:none}
+.btn-brass:hover{filter:brightness(1.05);color:#1C140C}
+.btn-brass:hover::after{transform:rotate(45deg) translate(2px,-2px)}
+.btn-brass:active{transform:translateY(2px);filter:none;box-shadow:inset 0 1px 0 rgba(255,247,220,.45),inset 0 -1px 0 rgba(80,50,16,.35),0 1px 0 #140C06,0 2px 5px rgba(8,4,1,.25)}
+.btn-brass:active::after{transform:rotate(45deg)}
+.btn-glass{color:#F0D9A6;border:1px solid #B8955E;background-color:#2A1C13;
+  background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-0.webp");
+  background-repeat:no-repeat,repeat-x;background-size:auto,2400px 100%;background-position:0 0,-120px 50%;
+  box-shadow:inset 0 1px 0 rgba(255,236,204,.22),inset 0 -2px 2px rgba(8,4,1,.38),0 1px 0 #0A0604,0 7px 16px rgba(8,4,1,.35);
+  text-shadow:0 1px 0 rgba(0,0,0,.55);backdrop-filter:none;-webkit-backdrop-filter:none}
+.btn-glass:hover{color:#FFF0CF;filter:brightness(1.08)}
+.btn-glass:active{transform:translateY(2px);filter:none;box-shadow:inset 0 1px 0 rgba(255,236,204,.16),inset 0 -1px 1px rgba(8,4,1,.35),0 1px 0 #0A0604,0 2px 5px rgba(8,4,1,.25)}
+.btn-navy{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 0 #02101F,0 7px 16px rgba(4,30,55,.28)}
 .btn-navy:hover{color:var(--brass-2)}
+.btn-navy:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 1px 0 #02101F,0 2px 5px rgba(4,30,55,.25)}
 /* plank dividers: slim dark oak with brass hairlines */
 .planks{gap:2px;padding:2px 0;background:#140E09;border-top:1px solid var(--brass);border-bottom:1px solid var(--brass)}
 .planks span{height:16px;background-size:600px auto;box-shadow:none}
@@ -476,7 +495,7 @@ h3,.h3,.board-card h3,.usp strong,.step-board h3,.faq-list summary{font-family:v
 .oakbar .nav-phone svg,.oakbar .header-phone svg{width:17px;height:17px;fill:#D4B57E;flex:none}
 .oakbar .nav-phone:hover{color:#FFF0CF}
 .oakbar .main-nav a.nav-phone{display:inline-flex}
-.oakbar .nav-cta{padding:.85rem 1.35rem;font-size:.74rem;letter-spacing:.14em;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.2),0 2px 0 #140C06,0 8px 16px rgba(0,0,0,.3)}
+.oakbar .nav-cta{padding:.7rem 1.75rem;font-size:.74rem;letter-spacing:.14em;white-space:nowrap;min-height:48px;background-size:7px 7px,7px 7px,auto,auto;background-position:8px 50%,calc(100% - 8px) 50%,0 0,0 0}
 .oakbar .header-actions{display:flex;align-items:center;gap:.55rem;margin-left:auto}
 
 /* --- menu toggle: a small oak-framed button to match the logo frame --- */
