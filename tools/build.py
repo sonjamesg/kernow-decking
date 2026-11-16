@@ -161,7 +161,8 @@ def header(current):
 
 def planks(cls=''):
     klass = 'planks ' + cls if cls else 'planks'
-    return f'<div class="{klass}" aria-hidden="true"><span></span><span></span><span></span><span></span></div>\n'
+    board = '<span class="plank">' + ''.join(f'<i class="scr s{i}"></i>' for i in range(1, 5)) + '</span>'
+    return f'<div class="{klass}" aria-hidden="true">{board}{board}<b class="planks-dust"></b></div>\n'
 
 
 def photo_scene(content):
