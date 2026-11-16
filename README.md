@@ -26,10 +26,10 @@ Opening hours (Mon–Fri 8:00–17:30) are a suggestion, so please confirm them.
 (Or find-and-replace the tokens across all files.)
 
 ## Contact form
-`contact.php` emails enquiries (set `$TO_EMAIL` / `$FROM_EMAIL` — use a mailbox on your domain) and redirects to `thank-you.html`. If PHP isn't available (e.g. GitHub Pages) the form falls back to opening the visitor's email app (`mailto:`).
+`contact.php` sends enquiries over authenticated SMTP (PHPMailer, `smtp.hostinger.com:465` SSL) and redirects to `thank-you.html`. Credentials are read from `smtp-config.php`, which is gitignored. Copy `smtp-config.example.php` and set the mailbox password. If PHP isn't available (e.g. GitHub Pages) the form falls back to opening the visitor's email app (`mailto:`).
 
 ## Deploying to Hostinger
-Upload everything to `public_html` **except** `tools/`, `README.md` and `.git`. Then update `[DOMAIN]`, rebuild, and submit `https://yourdomain/sitemap.xml` in Google Search Console.
+Upload everything to `public_html` **except** `tools/`, `README.md`, `.git` and `smtp-config.php`. Place `smtp-config.php` one directory above `public_html` (recommended) or inside it — `.htaccess` blocks HTTP access if it is in the web root. The password file is not in git, so it has to be uploaded separately when the site first goes live. Then submit `https://yourdomain/sitemap.xml` in Google Search Console.
 
 ## Home page hero photo
 Run `python3 tools/hero_photo.py /path/to/photo.jpg` then `python3 tools/build.py`. This writes responsive WebP (768/1280/1920) + JPG fallbacks named `decking-cornwall-newquay-sea-view-deck-*` and the Open Graph image; the build switches the home hero to the photo automatically when those files exist (otherwise it uses the illustrated deck and sunset).

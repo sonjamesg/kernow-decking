@@ -1,0 +1,2 @@
+# Mailbox password and SMTP credentials — never commit
+smtp-config.php
