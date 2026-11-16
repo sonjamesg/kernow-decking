@@ -326,8 +326,6 @@ p{margin:0 0 1em}
 .page .page-board{max-width:860px;padding:clamp(1.6rem,5vw,3rem)}
 .page h1{font-size:clamp(1.8rem,5vw,2.6rem)}
 .page h2{font-size:1.3rem;margin-top:1.8rem}
-.credits-list{padding-left:1.2rem}
-.credits-list li{margin-bottom:.7rem;color:var(--muted)}
 
 /* Reveal */
 .js .reveal-up{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}

@@ -447,7 +447,7 @@ def footer():
   </div>
   <div class="container footer-bottom">
     <p>© <span class="year">2026</span> Kernow Decking Co. · Decking Cornwall · Design • Supply • Install</p>
-    <p><a href="privacy.html">Privacy</a> · <a href="credits.html">Photo credits</a> · <a href="sitemap.xml">Sitemap</a></p>
+    <p><a href="privacy.html">Privacy</a> · <a href="sitemap.xml">Sitemap</a></p>
   </div>
 </footer>
 <div class="mobile-bar" aria-label="Quick contact"><a href="tel:[PHONE_INTL]" class="mb-call">Call us</a><a href="#quote" class="mb-quote">Free quote</a></div>
@@ -578,17 +578,6 @@ def simple_page(slug, title, body, robots='noindex'):
     return (head(f'{title} | Kernow Decking Co.', f'{title} – Kernow Decking Co., decking Cornwall.', slug, robots=robots)
             + header(slug) + f'<main id="main" class="section bg-limed page"><div class="container prose board page-board">{body}</div></main>\n' + footer())
 
-def credits():
-    return simple_page('credits', 'Photo credits', '''<p class="eyebrow">Credits</p><h1>Photo credits</h1>
-<p>Example decking photography is used until Kernow Decking Co. project photos are added. Images were downloaded, resized and cropped (modified) for this site. Images marked CC BY-SA are shared under the same licence. Wood textures, the service-page deck and the sunset illustration were created for this site.''' + (' The home page hero photo was supplied by Kernow Decking Co.' if HERO_PHOTO else '') + '''</p>
-<ul class="credits-list">
-<li>Multi-level garden decking: <a href="https://commons.wikimedia.org/wiki/File:Backyard_deck.JPG" rel="noopener">"Backyard deck"</a> by JDoorjam, <a href="https://creativecommons.org/licenses/by/2.5/" rel="noopener">CC BY 2.5</a>.</li>
-<li>Composite decking &amp; glass balustrade: <a href="https://commons.wikimedia.org/wiki/File:Deck-bois-composite.jpg" rel="noopener">"Deck bois composite"</a> by Ulysse17 (Geolam), <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a>.</li>
-<li>Decking installation: <a href="https://www.flickr.com/photos/40888213@N00/5821718628" rel="noopener">"Ipe Deck"</a> by Brad L. (robinsend), <a href="https://creativecommons.org/licenses/by-sa/2.0/" rel="noopener">CC BY-SA 2.0</a>.</li>
-<li>Deck repairs: <a href="https://commons.wikimedia.org/wiki/File:Timber_Deck_Repairs.jpg" rel="noopener">"Timber Deck Repairs"</a> by Ridunwig, <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener">CC0 1.0</a>.</li>
-<li>Board close-ups, steel balustrade decks and coastal deck steps from <a href="https://stocksnap.io" rel="noopener">StockSnap.io</a> (CC0): <a href="https://stocksnap.io/photo/wood-texture-BJWPE8ABOZ">hardwood grain</a>, <a href="https://stocksnap.io/photo/wood-texture-CMLVPWCDSF">board spacing</a>, <a href="https://stocksnap.io/photo/blue-sky-8E7296FED5">steel balustrade walkway</a>, <a href="https://stocksnap.io/photo/sea-pier-GJ191GHM5D">coastal deck steps</a>.</li>
-</ul>''', 'index, follow')
-
 def privacy():
     return simple_page('privacy', 'Privacy notice', '''<p class="eyebrow">Privacy</p><h1>Privacy notice</h1>
 <p><em>Placeholder privacy notice: please review and adapt it to how your business actually handles data before launch.</em></p>
@@ -642,13 +631,13 @@ def reviews_preview_page():
     )
 
 def main():
-    pages = {'index.html': home(), 'nav-options.html': nav_options(), 'credits.html': credits(),
+    pages = {'index.html': home(), 'nav-options.html': nav_options(),
              'privacy.html': privacy(), 'thank-you.html': thanks(), '404.html': notfound(),
              'reviews-preview.html': reviews_preview_page()}
     for s in SERVICES: pages[s['slug'] + '.html'] = service_page(s)
     for n, h in pages.items(): write(n, h)
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    order = [('index', '1.0')] + [(s['slug'], '0.9') for s in SERVICES] + [('credits', '0.1')]
+    order = [('index', '1.0')] + [(s['slug'], '0.9') for s in SERVICES]
     for slug, p in order:
         sm.append(f'  <url><loc>{url(slug)}</loc><lastmod>{TODAY}</lastmod><priority>{p}</priority></url>')
     sm.append('</urlset>')

@@ -7,7 +7,7 @@ Preview (GitHub Pages): https://sonjamesg.github.io/kernow-decking/
 ## Pages (10)
 - `index.html`: home (decking in Newquay & Cornwall)
 - Services: `composite-decking-cornwall.html`, `hardwood-decking-cornwall.html`, `balustrades-cornwall.html`, `deck-repairs-cornwall.html`, `decking-design-cornwall.html`
-- `credits.html`, `privacy.html`, `thank-you.html`, `404.html`, plus `sitemap.xml` and `robots.txt`
+- `privacy.html`, `thank-you.html`, `404.html`, plus `sitemap.xml` and `robots.txt`
 
 SEO: unique titles and meta descriptions, canonical and Open Graph tags, HomeAndConstructionBusiness JSON-LD (based in Newquay; areaServed Newquay and Cornwall), Service, FAQPage and BreadcrumbList schema, keyword-led image filenames and alt text, and internal links between services.
 The earlier town and area pages were removed; `.htaccess` 301-redirects their old URLs to the home page.
@@ -18,7 +18,7 @@ Filled in via `tools/site-config.json`: domain `kernowdecking.com`, email `info@
 > **⚠️ TEMPORARY PHONE NUMBER:** `07700 900461` (+447700900461) is an Ofcom drama/fiction number that does not connect. It **must be replaced** with the real business number in `tools/site-config.json` (`[PHONE]` and `[PHONE_INTL]`), then rebuild, before launch.
 
 Still to fill in: `[POSTCODE]`, `[GUARANTEE_YEARS]`, `[FACEBOOK_URL]`, `[INSTAGRAM_URL]` (social links stay hidden until set), plus review text `[REVIEW 1–3]` / `[CUSTOMER NAME]` / `[TOWN]`.
-Opening hours (Mon–Fri 8:00–17:30) are a suggestion, so please confirm them. Gallery/project photos are labelled "Example image" stock photos (see `credits.html`); replace them with your own work.
+Opening hours (Mon–Fri 8:00–17:30) are a suggestion, so please confirm them. Gallery/project photos are labelled "Example image" stock photos; replace them with your own work.
 
 ### Fill them in (recommended)
 1. Edit `tools/site-config.json` with your real values.
