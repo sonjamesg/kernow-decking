@@ -340,7 +340,7 @@ def home():
 '''
     why = '''<section class="section bg-limed why" id="why" aria-labelledby="why-title">
   <div class="container why-grid">
-    <figure class="why-media framed"><img src="assets/img/hardwood-timber-decking-garden-room-cornwall.webp" alt="Timber deck with seating outside a garden room – garden decking ideas for Cornwall homes" width="1200" height="800" loading="lazy"><figcaption>Example image</figcaption></figure>
+    <figure class="why-media framed"><img src="assets/img/coastal-decking-steps-sunset-cornwall.webp" alt="Coastal timber decking with steps and handrails built to face the Atlantic – decking Cornwall" width="960" height="720" loading="lazy"><figcaption>Example image</figcaption></figure>
     <div class="why-copy">
       <p class="eyebrow">Why choose Kernow Decking Co.</p>
       <h2 id="why-title">Decks that stand up to the Atlantic</h2>
@@ -358,14 +358,14 @@ def home():
   </div>
 </section>
 '''
-    gal = [('sea-view-decking-cornwall.webp', 'Sea-view deck with seating – sea-view decking inspiration for Cornwall', 'Sea-view decking', 868, 651, 'g-big'),
-           ('garden-decking-terrace-cornwall.webp', 'Garden terrace with dining table – garden decking ideas for Cornwall', 'Garden decking', 848, 636, ''),
-           ('evening-deck-seating-cornwall.webp', 'Deck with lounge chairs at dusk – evening decking ideas', 'Evening deck seating', 853, 640, ''),
-           ('timber-porch-decking-cornwall.webp', 'Timber porch deck with countryside view – timber decking inspiration', 'Timber porch decking', 960, 720, ''),
-           ('covered-decking-seating-area-cornwall.webp', 'Covered deck with outdoor sofa – covered decking ideas', 'Covered decking', 853, 640, ''),
-           ('pergola-over-decking-cornwall.webp', 'Pergola with festoon lights over a deck – decking with pergola ideas', 'Pergola & lighting', 853, 640, ''),
-           ('back-garden-decking-cornwall.webp', 'Back garden deck with planting – back garden decking inspiration', 'Back garden decking', 848, 636, ''),
-           ('deck-repairs-cornwall.webp', 'Timber deck boards being repaired – deck repairs in Cornwall', 'Deck repairs', 960, 720, 'g-wide')]
+    gal = [('multi-level-garden-decking-cornwall.webp', 'Multi-level garden decking with steps and built-in planters – multi-level decking ideas for Cornwall', 'Multi-level garden decking', 1200, 900, 'g-big'),
+           ('composite-decking-glass-balustrade-cornwall.webp', 'Long composite deck with a glass balustrade – composite decking in Cornwall', 'Composite decking & glass balustrade', 1100, 825, ''),
+           ('decking-installation-joists-cornwall.webp', 'Deck boards being fixed over a timber sub-frame of joists – decking installation in Cornwall', 'Decking installation', 1100, 825, ''),
+           ('hardwood-deck-boards-grain-cornwall.webp', 'Close-up of rich brown hardwood deck boards and grain – hardwood decking Cornwall', 'Hardwood board grain', 853, 640, ''),
+           ('timber-deck-steel-balustrade-cornwall.webp', 'Timber deck walkway with stainless steel balustrade towards the sea – coastal decking Cornwall', 'Steel balustrade decking', 720, 540, ''),
+           ('deck-board-gaps-grain-cornwall.webp', 'Close-up of timber deck boards with even drainage gaps and natural grain – decking Cornwall', 'Board spacing & grain', 850, 638, ''),
+           ('coastal-decking-steps-sunset-cornwall.webp', 'Timber decking with steps and handrails leading to the sea at sunset – coastal deck steps Cornwall', 'Coastal deck steps', 960, 720, ''),
+           ('deck-repairs-cornwall.webp', 'Timber deck boards being replaced – deck repairs in Cornwall', 'Deck repairs', 960, 720, 'g-wide')]
     figs = '\n'.join(f'<figure class="g-item {c}"><a href="assets/img/{f}"><img src="assets/img/{f}" alt="{e(a)}" width="{w}" height="{h}" loading="lazy"></a><figcaption>{e(cap)}</figcaption></figure>' for f, a, cap, w, h, c in gal)
     gallery = f'''<section class="section bg-cedar gallery" id="gallery" aria-labelledby="gallery-title">
   <div class="container">
@@ -435,11 +435,13 @@ def simple_page(slug, title, body, robots='noindex'):
 
 def credits():
     return simple_page('credits', 'Photo credits', '''<p class="eyebrow">Credits</p><h1>Photo credits</h1>
-<p>Placeholder photography is used until Kernow Decking Co. project photos are added. Images were downloaded, resized and cropped (modified) for this site. Wood textures, the service-page deck and the sunset illustration were created for this site.''' + (' The home page hero photo was supplied by Kernow Decking Co.' if HERO_PHOTO else '') + '''</p>
+<p>Example decking photography is used until Kernow Decking Co. project photos are added. Images were downloaded, resized and cropped (modified) for this site. Images marked CC BY-SA are shared under the same licence. Wood textures, the service-page deck and the sunset illustration were created for this site.''' + (' The home page hero photo was supplied by Kernow Decking Co.' if HERO_PHOTO else '') + '''</p>
 <ul class="credits-list">
-<li>Garden room deck: <a href="https://commons.wikimedia.org/w/index.php?curid=189656077" rel="noopener">"Outdoor bar features wooden deck with bean bag seating and lush plants"</a> by Shixart1985, <a href="https://creativecommons.org/licenses/by/2.0/" rel="noopener">CC BY 2.0</a>.</li>
-<li>Deck repairs: <a href="https://commons.wikimedia.org/w/index.php?curid=152193340" rel="noopener">"Timber Deck Repairs"</a> by Ridunwig, <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener">CC0 1.0</a>.</li>
-<li>Gallery images from <a href="https://stocksnap.io" rel="noopener">StockSnap.io</a> (CC0): <a href="https://stocksnap.io/photo/patio-chairs-2941B634A6">Skitter Photo</a>, <a href="https://stocksnap.io/photo/patio-furniture-6CA109EECC">Jay Mantri</a>, <a href="https://stocksnap.io/photo/patio-furniture-ZIU3AC46X4">Matt Bango</a>, <a href="https://stocksnap.io/photo/porch-deck-93B4A12AD0">Sonja Guina</a>, <a href="https://stocksnap.io/photo/patio-furniture-69HGCEWOIR">Matt Bango</a>, <a href="https://stocksnap.io/photo/outdoor-patio-K3I9NUCRFT">Matt Bango</a>, <a href="https://stocksnap.io/photo/patio-backyard-F1AFB213E7">Jay Mantri</a>.</li>
+<li>Multi-level garden decking: <a href="https://commons.wikimedia.org/wiki/File:Backyard_deck.JPG" rel="noopener">"Backyard deck"</a> by JDoorjam, <a href="https://creativecommons.org/licenses/by/2.5/" rel="noopener">CC BY 2.5</a>.</li>
+<li>Composite decking &amp; glass balustrade: <a href="https://commons.wikimedia.org/wiki/File:Deck-bois-composite.jpg" rel="noopener">"Deck bois composite"</a> by Ulysse17 (Geolam), <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a>.</li>
+<li>Decking installation: <a href="https://commons.wikimedia.org/wiki/File:Building_our_deck_2.JPG" rel="noopener">"Building our deck 2"</a> by Kenneth William Watkins, <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener">CC BY-SA 4.0</a>.</li>
+<li>Deck repairs: <a href="https://commons.wikimedia.org/wiki/File:Timber_Deck_Repairs.jpg" rel="noopener">"Timber Deck Repairs"</a> by Ridunwig, <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener">CC0 1.0</a>.</li>
+<li>Board close-ups, steel balustrade decks and coastal deck steps from <a href="https://stocksnap.io" rel="noopener">StockSnap.io</a> (CC0): <a href="https://stocksnap.io/photo/wood-texture-BJWPE8ABOZ">hardwood grain</a>, <a href="https://stocksnap.io/photo/wood-texture-CMLVPWCDSF">board spacing</a>, <a href="https://stocksnap.io/photo/blue-sky-8E7296FED5">steel balustrade walkway</a>, <a href="https://stocksnap.io/photo/sea-pier-GJ191GHM5D">coastal deck steps</a>.</li>
 </ul>''', 'index, follow')
 
 def privacy():

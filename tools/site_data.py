@@ -8,7 +8,7 @@ SERVICES = [
   desc='Composite decking in Cornwall, designed, supplied and installed. Slip-resistant, rot-proof boards that stand up to salt air, rain and Atlantic wind. Free quotes.',
   h1='Composite decking in Cornwall', kicker='Low maintenance, made for the coast',
   lead='Composite decking gives you the warmth of a timber deck without the yearly sanding, staining and splinters. For Cornish homes that face salt spray, driving rain and long damp winters, it is often the most practical choice we can recommend.',
-  img='sea-view-decking-cornwall.webp', img_alt='Sea-view deck with seating, an example of composite decking ideas for Cornwall',
+  img='composite-decking-glass-balustrade-cornwall.webp', img_alt='Long composite deck with glass balustrade, an example of low-maintenance composite decking in Cornwall',
   serviceType='Composite decking installation',
   sections=[
    ('Why composite decking suits Cornwall', [
@@ -33,7 +33,7 @@ SERVICES = [
   desc='Hardwood and timber decking in Cornwall. Natural, durable decks in quality hardwoods and treated softwood, built on solid sub-frames by local deck builders. Free quotes.',
   h1='Hardwood & timber decking in Cornwall', kicker='Natural timber, built properly',
   lead='Nothing quite matches the look, feel and smell of a real timber deck. We design and build hardwood and softwood decks in Cornwall, choosing timber, fixings and finishes that suit your home and how exposed it is to the weather.',
-  img='hardwood-timber-decking-garden-room-cornwall.webp', img_alt='Timber deck with relaxed seating outside a garden room, hardwood decking inspiration for Cornwall',
+  img='hardwood-deck-boards-grain-cornwall.webp', img_alt='Close-up of rich hardwood deck boards showing the natural grain, hardwood decking in Cornwall',
   serviceType='Hardwood and timber decking installation',
   sections=[
    ('Hardwood or softwood?', [
@@ -56,7 +56,7 @@ SERVICES = [
   desc='Glass, stainless steel and timber balustrades for decks and terraces in Cornwall. Keep the sea view and stay safe with balustrading designed for coastal conditions.',
   h1='Glass & steel balustrades in Cornwall', kicker='Keep the view, stay safe',
   lead='In Cornwall the view is often the whole point of a deck. Our glass, stainless steel and wire balustrades keep raised decks, steps and terraces safe without blocking sea, harbour or countryside views.',
-  img='sea-view-decking-cornwall.webp', img_alt='Deck overlooking the sea, showing why open balustrading matters for Cornwall sea views',
+  img='timber-deck-steel-balustrade-cornwall.webp', img_alt='Timber deck with a stainless steel balustrade keeping the sea view open, balustrades in Cornwall',
   serviceType='Glass and steel balustrade installation',
   sections=[
    ('Balustrade options', [
@@ -79,7 +79,7 @@ SERVICES = [
   desc='Deck repairs, restoration and maintenance in Cornwall. Rotten boards and joists replaced, unsafe railings fixed, tired decking cleaned and re-oiled. Free quotes.',
   h1='Deck repairs, restoration & maintenance in Cornwall', kicker='Bring your deck back to life',
   lead='Years of Cornish rain, salt and shade can leave a deck soft, slippery or unsafe. We repair and restore existing decks in Cornwall, and offer maintenance to keep new and old decks looking their best.',
-  img='deck-repairs-cornwall.webp', img_alt='Timber deck boards being repaired, an example of deck repairs in Cornwall',
+  img='deck-repairs-cornwall.webp', img_alt='Rotten timber deck boards being replaced with new hardwood boards, deck repairs in Cornwall',
   serviceType='Deck repair, restoration and maintenance',
   sections=[
    ('Deck repairs', [
@@ -101,7 +101,7 @@ SERVICES = [
   desc='Bespoke decking design in Cornwall: free site survey, layouts for sloping gardens and sea views, multi-level decks, steps and lighting. Design, supply and install.',
   h1='Bespoke decking design in Cornwall', kicker='Designed around your home and your view',
   lead='Good decking starts with good design. We visit your home, look at levels, aspect, shelter and views, and design a garden deck that makes the most of your outdoor space, whether that is a sun trap, an evening terrace or a sea-view platform.',
-  img='garden-decking-terrace-cornwall.webp', img_alt='Garden terrace with dining furniture, an example of garden decking design ideas for Cornwall',
+  img='multi-level-garden-decking-cornwall.webp', img_alt='Multi-level garden deck with steps and planters, an example of bespoke decking design in Cornwall',
   serviceType='Decking design',
   sections=[
    ('Designed for Cornish gardens', [
