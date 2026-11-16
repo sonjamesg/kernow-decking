@@ -62,6 +62,9 @@ def main():
     save(fp, 'tex-oak-frame-h.webp', 85)
     fv = board(1400, 44, np.random.default_rng(33), 0.0, 1.6, 1.9)
     save(np.transpose(fv, (1, 0, 2))[:, ::-1], 'tex-oak-frame-v.webp', 85)
+    # mobile menu boards: 2400 x 96 (2x for ~48px CSS rows), same smoked-oak family, not lighter
+    for i, (seed, tone) in enumerate(((41, -0.02), (52, -0.05), (63, 0.0))):
+        save(board(2400, 96, np.random.default_rng(seed), tone, 1.25, 1.12), f'tex-oak-menu-{i}.webp', 82)
 
 if __name__ == '__main__':
     main()

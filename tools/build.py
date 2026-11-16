@@ -315,7 +315,7 @@ def footer():
 def home():
     crumbs = [('Home', 'index')]
     hero = (photo_scene if HERO_PHOTO else lambda c: scene(c, 'scene-home'))('''<p class="eyebrow">Decking Newquay &amp; Cornwall · Design • Supply • Install</p>
-    <h1>Decking in Cornwall, <span>built for sea, salt &amp; sunsets.</span></h1>
+    <h1>Proper decking in Cornwall. <span>Built to last.</span></h1>
     <p class="hero-lead">Kernow Decking Co. designs, supplies and installs composite and hardwood decking, glass balustrades and garden decks from our base in Newquay, built for Cornwall’s Atlantic weather and the best of every view.</p>
     <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free quote</a><a class="btn btn-glass btn-lg" href="#services">Our decking services</a></div>
     <ul class="hero-badges"><li>Free site survey</li><li>Composite &amp; hardwood</li><li>Glass &amp; steel balustrades</li><li>Based in Newquay</li></ul>''')

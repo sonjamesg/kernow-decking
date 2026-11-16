@@ -36,7 +36,7 @@ def page(head_html, services, hero_img, header_a=None):
   <div class="opt-label container"><p class="eyebrow">{label}</p><h2 id="opt-{opt}-t">{e(name)}</h2><p>{e(desc)}</p></div>
   <div class="opt-frame">
     {header_a if (opt == 'a' and header_a) else nav_markup(opt, services)}
-    <div class="opt-hero" style="background-image:linear-gradient(90deg,rgba(4,30,55,.9),rgba(4,30,55,.45) 55%,rgba(4,30,55,.1)),url('{hero_img}')"><div class="container"><p class="eyebrow">Decking Newquay &amp; Cornwall</p><p class="opt-h">Decking in Cornwall, <em>built for sea, salt &amp; sunsets.</em></p></div></div>
+    <div class="opt-hero" style="background-image:linear-gradient(90deg,rgba(4,30,55,.9),rgba(4,30,55,.45) 55%,rgba(4,30,55,.1)),url('{hero_img}')"><div class="container"><p class="eyebrow">Decking Newquay &amp; Cornwall</p><p class="opt-h">Proper decking in Cornwall. <em>Built to last.</em></p></div></div>
   </div>
 </section>''')
     js = '''<script>

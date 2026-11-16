@@ -300,7 +300,6 @@ p{margin:0 0 1em}
   .hero-ctas .btn{flex:1 1 100%}
   .step-board{padding:1.2rem 1.4rem 1.2rem 1.6rem;gap:1rem}
   .footer-grid{grid-template-columns:1fr}
-  .scene h1 span{display:inline}
   .hero-badges{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}.js .reveal-up,.js .step-board.reveal,.js .planks.reveal span{opacity:1!important;transform:none!important}}
@@ -526,25 +525,66 @@ h3,.h3,.board-card h3,.usp strong,.step-board h3,.faq-list summary{font-family:v
   html.nav-locked .oakbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:100vh;background:rgba(3,12,24,.6);z-index:0}
   .oakbar .header-phone svg{width:19px;height:19px}
   .oakbar .main-nav{z-index:1;position:absolute;left:0;right:0;top:100%;max-height:calc(100vh - var(--header-h));max-height:calc(100dvh - var(--header-h));overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
-    padding:2.1rem max(1.25rem,calc((100% - 640px)/2)) 1.6rem;
-    background:linear-gradient(180deg,rgba(22,13,7,.86),rgba(22,13,7,.93)),url("../img/tex-oak-bar.webp") center top/1200px 100px,#1E140D;
-    border-bottom:6px solid #3B2A1E;border-image:url("../img/tex-oak-frame-h.webp") 0 0 44 0 stretch;
+    padding:1.25rem max(1rem,calc((100% - 640px)/2)) 1.25rem;
+    background:#120A05;
+    border-bottom:1px solid #B8955E;
     box-shadow:inset 0 1px 0 #B8955E,0 24px 40px rgba(8,4,1,.45);
     transform:translateY(-8px);opacity:0;visibility:hidden;transition:transform .28s ease,opacity .22s ease,visibility .28s}
   .oakbar .main-nav.open{transform:none;opacity:1;visibility:visible}
-  .oakbar .m-head{display:flex;align-items:center;gap:.8rem;margin:0 0 .4rem;color:#B8955E;font-family:var(--slab);font-weight:700;font-size:.66rem;letter-spacing:.28em;text-transform:uppercase}
+  .oakbar .m-head{display:flex;align-items:center;gap:.8rem;margin:0 .15rem .55rem;color:#B8955E;font-family:var(--slab);font-weight:700;font-size:.66rem;letter-spacing:.28em;text-transform:uppercase}
   .oakbar .m-head::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(184,149,94,.6),rgba(184,149,94,0))}
-  .oakbar .main-nav>ul>li>a:not(.btn){padding:1rem 0;font-size:.86rem;letter-spacing:.18em;border-bottom:1px solid rgba(184,149,94,.22)}
-  .oakbar .has-sub>a{color:#B8955E!important;font-size:.7rem!important;letter-spacing:.24em!important;border-bottom:0!important;padding-bottom:.35rem!important}
-  .oakbar .sub{padding:0 0 .6rem;border-bottom:1px solid rgba(184,149,94,.22)}
-  .oakbar .sub a:not(.btn){position:relative;font-family:var(--sans);text-transform:none;letter-spacing:.01em;font-weight:500;font-size:1rem;color:#F1E6D3;padding:.62rem 0 .62rem 1.3rem;text-shadow:none}
-  .oakbar .sub a::before{content:"";position:absolute;left:.15rem;top:50%;width:5px;height:5px;margin-top:-2.5px;background:#B8955E;transform:rotate(45deg)}
-  .oakbar .sub a[aria-current="page"]{color:#fff}
-  .oakbar .nav-phone{margin:1.3rem 0 .9rem;font-size:1.05rem;color:#F0D9A6}
-  .oakbar .nav-cta{display:flex;width:100%;padding:1rem}
+  /* DECKING SERVICES stays a label, not a board */
+  .oakbar .has-sub>a{color:#B8955E!important;font-size:.7rem!important;letter-spacing:.24em!important;border:0!important;background:none!important;box-shadow:none!important;min-height:0!important;border-radius:0!important;padding:.1rem .15rem .45rem!important;margin:0!important}
+  .oakbar .has-sub>a::after{content:none}
+  .oakbar .sub{padding:0 0 .55rem;border:0}
+  /* Each link sits on its own smoked-oak deck board */
+  .oakbar .sub a:not(.btn),
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn),
+  .oakbar .nav-phone{
+    position:relative;display:flex;align-items:center;width:100%;box-sizing:border-box;
+    min-height:48px;margin:0 0 5px;padding:.7rem 2.05rem;border:0;border-radius:3px;
+    background-color:#2A1C13;
+    background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-0.webp");
+    background-repeat:no-repeat,repeat-x;
+    background-size:auto,2400px 100%;
+    background-position:0 0,-80px 0;
+    box-shadow:inset 0 1px 0 rgba(255,236,204,.22),inset 0 -2px 2px rgba(8,4,1,.38),inset 7px 0 8px -7px rgba(8,4,1,.5),inset -7px 0 8px -7px rgba(8,4,1,.5),0 2px 0 #0A0604;
+    text-shadow:0 1px 0 rgba(0,0,0,.55)}
+  .oakbar .sub a:not(.btn)::after,
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn)::after,
+  .oakbar .nav-phone::after{
+    content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+    background:url("../img/brass-screw-a.svg") left 8px center/8px 8px no-repeat,url("../img/brass-screw-c.svg") right 8px center/8px 8px no-repeat}
+  .oakbar .sub a:not(.btn){font-family:var(--sans);text-transform:none;letter-spacing:.01em;font-weight:500;font-size:1rem;color:#F1E6D3;padding-left:2.35rem}
+  .oakbar .sub a::before{content:"";position:absolute;left:1.7rem;top:50%;width:5px;height:5px;margin-top:-2.5px;background:#B8955E;transform:rotate(45deg);z-index:1}
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn){font-size:.86rem;letter-spacing:.18em}
+  .oakbar .nav-phone{margin:.35rem 0 .8rem;font-size:1.05rem;color:#F0D9A6}
+  .oakbar .main-nav a.nav-phone{display:flex}
+  /* staggered grain + screw rotation so neighbouring boards are not identical */
+  .oakbar .sub li:nth-child(2) a:not(.btn),.oakbar .main-nav>ul>li:nth-child(3)>a:not(.btn){background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-1.webp");background-position:0 0,-420px 0}
+  .oakbar .sub li:nth-child(3) a:not(.btn),.oakbar .main-nav>ul>li:nth-child(4)>a:not(.btn),.oakbar .nav-phone{background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-2.webp");background-position:0 0,-860px 0}
+  .oakbar .sub li:nth-child(4) a:not(.btn){background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-0.webp");background-position:0 0,-1280px 0}
+  .oakbar .sub li:nth-child(5) a:not(.btn),.oakbar .main-nav>ul>li:nth-child(2)>a:not(.btn){background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-1.webp");background-position:0 0,-1640px 0}
+  .oakbar .sub li:nth-child(2) a::after,.oakbar .main-nav>ul>li:nth-child(3)>a::after{background-image:url("../img/brass-screw-b.svg"),url("../img/brass-screw-d.svg")}
+  .oakbar .sub li:nth-child(3) a::after,.oakbar .nav-phone::after{background-image:url("../img/brass-screw-c.svg"),url("../img/brass-screw-a.svg")}
+  .oakbar .sub li:nth-child(4) a::after,.oakbar .main-nav>ul>li:nth-child(4)>a::after{background-image:url("../img/brass-screw-d.svg"),url("../img/brass-screw-b.svg")}
+  .oakbar .sub li:nth-child(5) a::after,.oakbar .main-nav>ul>li:nth-child(2)>a::after{background-image:url("../img/brass-screw-a.svg"),url("../img/brass-screw-d.svg")}
+  /* pressed / current: slightly lifted face + brass edge */
+  .oakbar .sub a:not(.btn):active,
+  .oakbar .sub a[aria-current="page"],
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn):active,
+  .oakbar .main-nav>ul>li:not(.has-sub)>a[aria-current="page"],
+  .oakbar .nav-phone:active{
+    color:#FFF0CF;
+    box-shadow:inset 0 1px 0 rgba(255,236,204,.3),inset 0 -2px 2px rgba(8,4,1,.28),inset 0 0 0 1px #B8955E,0 2px 0 #0A0604}
+  .oakbar .sub a:not(.btn):focus-visible,
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn):focus-visible,
+  .oakbar .nav-phone:focus-visible{outline:2px solid #F0D9A6;outline-offset:2px}
+  .oakbar .nav-cta{display:flex;width:100%;padding:1rem;margin-top:.1rem;flex:none}
 }
+
 @media (max-width:399px){.oakbar .nt-label{display:none}.nav-toggle{padding:0 .75rem}.oakbar{--fh:84px}}
-@media (min-width:600px) and (max-width:1079px){.oakbar{--T:12px;--fh:98px;--bar:82px}:root{--header-h:82px}.oakbar .main-nav{background-position:0 0,center -9px,0 0}}
+@media (min-width:600px) and (max-width:1079px){.oakbar{--T:12px;--fh:98px;--bar:82px}:root{--header-h:82px}}
 html.nav-locked,html.nav-locked body{overflow:hidden}
 html.nav-locked body{position:fixed;left:0;right:0;width:100%;padding-top:calc(var(--header-h) + 1px)}
 html.nav-locked .site-header{position:fixed;top:0!important;left:0;right:0}
