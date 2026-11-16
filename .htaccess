@@ -2,6 +2,26 @@
 ErrorDocument 404 /404.html
 DirectoryIndex index.html
 
+# Old area pages (removed) -> home page
+<IfModule mod_alias.c>
+  Redirect 301 /decking-areas-cornwall.html /
+  Redirect 301 /decking-newquay.html /
+  Redirect 301 /decking-truro.html /
+  Redirect 301 /decking-st-austell.html /
+  Redirect 301 /decking-falmouth.html /
+  Redirect 301 /decking-penzance.html /
+  Redirect 301 /decking-st-ives.html /
+  Redirect 301 /decking-bodmin.html /
+  Redirect 301 /decking-padstow.html /
+  Redirect 301 /decking-redruth.html /
+  Redirect 301 /decking-camborne.html /
+  Redirect 301 /decking-bude.html /
+  Redirect 301 /decking-launceston.html /
+  Redirect 301 /decking-liskeard.html /
+  Redirect 301 /decking-wadebridge.html /
+  Redirect 301 /decking-helston.html /
+</IfModule>
+
 # Force HTTPS (enable once the SSL certificate is active in hPanel)
 # RewriteEngine On
 # RewriteCond %{HTTPS} off

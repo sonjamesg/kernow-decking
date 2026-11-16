@@ -6,15 +6,13 @@ details in tools/site-config.json. No dependencies beyond Python 3. The generate
 so the site can be uploaded as-is without running this."""
 import json, os, re
 from html import escape as e
-from site_data import SERVICES, TOWNS, HOME_FAQS
+from site_data import SERVICES, HOME_FAQS
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 CFG = json.load(open(os.path.join(os.path.dirname(__file__), 'site-config.json')))
 TODAY = '2026-11-16'
 SITE = 'https://[DOMAIN]/'
 SVC = {s['slug']: s for s in SERVICES}
-TOWN = {t['slug']: t for t in TOWNS}
-TOWN_IMGS = ['sea-view-decking-cornwall.webp', 'garden-decking-terrace-cornwall.webp', 'back-garden-decking-cornwall.webp', 'evening-deck-seating-cornwall.webp', 'timber-porch-decking-cornwall.webp', 'covered-decking-seating-area-cornwall.webp', 'pergola-over-decking-cornwall.webp']
 
 def url(slug):
     return SITE if slug == 'index' else SITE + slug + '.html'
@@ -28,11 +26,11 @@ def ld(obj):
 BUSINESS = {
  "@context": "https://schema.org", "@type": "HomeAndConstructionBusiness", "@id": SITE + "#business",
  "name": "Kernow Decking Co.", "slogan": "Design • Supply • Install",
- "description": "Decking design, supply and installation across Cornwall: composite decking, hardwood and timber decking, glass and steel balustrades, deck repairs, restoration and maintenance.",
+ "description": "Decking design, supply and installation in Newquay and Cornwall: composite decking, hardwood and timber decking, glass and steel balustrades, deck repairs, restoration and maintenance.",
  "url": SITE, "logo": SITE + "assets/img/logo-720.png", "image": SITE + "assets/img/kernow-decking-cornwall-og.jpg",
  "telephone": "[PHONE_INTL]", "email": "[EMAIL]", "priceRange": "££",
  "address": {"@type": "PostalAddress", "addressLocality": "[BASE_TOWN]", "postalCode": "[POSTCODE]", "addressRegion": "Cornwall", "addressCountry": "GB"},
- "areaServed": [{"@type": "AdministrativeArea", "name": "Cornwall"}] + [{"@type": "City", "name": t['name']} for t in TOWNS],
+ "areaServed": [{"@type": "City", "name": "Newquay"}, {"@type": "AdministrativeArea", "name": "Cornwall"}],
  "knowsAbout": ["Decking", "Composite decking", "Hardwood decking", "Timber decking", "Garden decking", "Glass balustrades", "Deck repairs"],
  "sameAs": ["[FACEBOOK_URL]", "[INSTAGRAM_URL]"],
  "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "17:30"}],
@@ -110,13 +108,12 @@ def header(current):
     return f'''<header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="index.html" aria-label="Kernow Decking Co. – decking Cornwall, home">
-      <picture><source srcset="assets/img/logo-white-360.webp 1x, assets/img/logo-white-720.webp 2x" type="image/webp"><img src="assets/img/logo-white-360.png" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="360" height="232"></picture>
+      <picture><source srcset="assets/img/logo-360.webp 1x, assets/img/logo-720.webp 2x" type="image/webp"><img src="assets/img/logo-360.png" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="360" height="232"></picture>
     </a>
     <nav class="main-nav" id="main-nav" aria-label="Main">
       <ul>
         <li class="has-sub"><a href="index.html#services">Decking services</a>
           <ul class="sub">{svc_items}</ul></li>
-        <li><a href="decking-areas-cornwall.html"{cur("decking-areas-cornwall")}>Areas</a></li>
         <li><a href="index.html#process">Process</a></li>
         <li><a href="index.html#gallery">Gallery</a></li>
         <li><a href="index.html#faq">FAQ</a></li>
@@ -159,6 +156,13 @@ def page_hero(items, kicker, h1, lead, cta2=None):
     <p class="hero-lead">{e(lead)}</p>
     <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free decking quote</a><a class="btn btn-glass btn-lg" href="{c2[1]}">{e(c2[0])}</a></div>''', 'scene-page')
 
+def card_text(s):
+    t = s['desc'].split('. ')[1] if '. ' in s['desc'] else s['desc']
+    if len(t) < 40:
+        t = s['desc'].split(': ', 1)[-1].split('. ')[0]
+        t = t[0].upper() + t[1:] + '.'
+    return t
+
 def service_cards(exclude=None, town=None):
     out = []
     for s in SERVICES:
@@ -167,20 +171,20 @@ def service_cards(exclude=None, town=None):
         out.append(f'''<a class="board-card" href="{href(s["slug"])}">
   <span class="bc-icon">{icon(s["icon"])}</span>
   <h3>{e(label)}</h3>
-  <p>{e(s["desc"].split(". ")[1] if ". " in s["desc"] else s["desc"])}</p>
+  <p>{e(card_text(s))}</p>
   <span class="bc-more">Find out more <span aria-hidden="true">→</span></span>
 </a>''')
     if not exclude and not town:
         out.append(f'''<a class="board-card" href="#quote">
   <span class="bc-icon">{icon("supply")}</span>
   <h3>Decking supply</h3>
-  <p>Boards, framing, fixings, lighting and balustrade kits supplied across Cornwall for DIY and trade projects.</p>
+  <p>Boards, framing, fixings, lighting and balustrade kits supplied in Newquay and Cornwall for DIY and trade projects.</p>
   <span class="bc-more">Ask for a price <span aria-hidden="true">→</span></span>
 </a>''')
     return '<div class="card-grid">' + '\n'.join(out) + '</div>'
 
 def process_section(town=None):
-    where = f' in {town}' if town else ' across Cornwall'
+    where = f' in {town}' if town else ' in Newquay and Cornwall'
     return f'''<section class="section bg-navy process" id="process" aria-labelledby="process-title">
   <div class="container">
     <header class="section-head light"><p class="eyebrow">How we build your deck</p>
@@ -195,10 +199,6 @@ def process_section(town=None):
 </section>
 '''
 
-def town_tags(exclude=None, title='Decking installers across Cornwall'):
-    tags = ''.join(f'<li><a class="tag" href="{href(t["slug"])}">Decking {e(t["name"])}</a></li>' for t in TOWNS if t['slug'] != exclude)
-    return f'<ul class="town-tags" aria-label="{e(title)}">{tags}</ul>'
-
 def faq_section(faqs, title, intro=''):
     items = '\n'.join(f'<details{" open" if i == 0 else ""}><summary>{e(q)}</summary><p>{e(a)}</p></details>' for i, (q, a) in enumerate(faqs))
     return f'''<section class="section bg-limed faq" id="faq" aria-labelledby="faq-title">
@@ -211,7 +211,7 @@ def faq_section(faqs, title, intro=''):
 '''
 
 def quote_section(source, title='Get a free decking quote', town=None):
-    where = f'in {town}' if town else 'anywhere in Cornwall'
+    where = f'in {town}' if town else 'in Newquay or nearby in Cornwall'
     return f'''<section class="section bg-hardwood contact" id="quote" aria-labelledby="quote-title">
   <div class="container contact-grid">
     <div class="contact-info">
@@ -256,17 +256,16 @@ def quote_section(source, title='Get a free decking quote', town=None):
 
 def footer():
     svc = ''.join(f'<li><a href="{href(s["slug"])}">{e(s["short"])} Cornwall</a></li>' for s in SERVICES)
-    towns = ''.join(f'<li><a href="{href(t["slug"])}">Decking {e(t["name"])}</a></li>' for t in TOWNS)
     return f'''{planks('planks-footer')}<footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-brand">
       <picture><source srcset="assets/img/logo-white-360.webp 1x, assets/img/logo-white-720.webp 2x" type="image/webp"><img src="assets/img/logo-white-360.png" alt="Kernow Decking Co. – decking Cornwall" width="360" height="232" loading="lazy"></picture>
-      <p>Decking design, supply and installation across Cornwall.</p>
+      <p>Decking design, supply and installation, based in Newquay, Cornwall.</p>
       <ul class="footer-contact"><li><a href="tel:[PHONE_INTL]">[PHONE]</a></li><li><a href="mailto:[EMAIL]">[EMAIL]</a></li><li>[BASE_TOWN], Cornwall</li>
       <li><a href="[FACEBOOK_URL]" rel="noopener" target="_blank">Facebook</a> · <a href="[INSTAGRAM_URL]" rel="noopener" target="_blank">Instagram</a></li></ul>
     </div>
     <div><h2 class="f-h">Decking services</h2><ul>{svc}<li><a href="index.html#quote">Free decking quote</a></li></ul></div>
-    <div class="f-towns"><h2 class="f-h"><a href="decking-areas-cornwall.html">Areas we cover</a></h2><ul class="cols">{towns}</ul></div>
+    <div><h2 class="f-h">Explore</h2><ul><li><a href="index.html#process">How we work</a></li><li><a href="index.html#gallery">Decking gallery</a></li><li><a href="index.html#faq">Decking FAQs</a></li><li><a href="index.html#reviews">Reviews</a></li><li><a href="index.html#quote">Contact us</a></li></ul></div>
   </div>
   <div class="container footer-bottom">
     <p>© <span class="year">2026</span> Kernow Decking Co. · Decking Cornwall · Design • Supply • Install</p>
@@ -282,11 +281,11 @@ def footer():
 # ---------------------------------------------------------------- pages
 def home():
     crumbs = [('Home', 'index')]
-    hero = scene('''<p class="eyebrow">Decking Cornwall · Design • Supply • Install</p>
+    hero = scene('''<p class="eyebrow">Decking Newquay &amp; Cornwall · Design • Supply • Install</p>
     <h1>Decking in Cornwall, <span>built for sea, salt &amp; sunsets.</span></h1>
-    <p class="hero-lead">Kernow Decking Co. designs, supplies and installs composite and hardwood decking, glass balustrades and garden decks across Cornwall, made to handle Atlantic weather and to make the most of every view.</p>
+    <p class="hero-lead">Kernow Decking Co. designs, supplies and installs composite and hardwood decking, glass balustrades and garden decks from our base in Newquay, built for Cornwall’s Atlantic weather and the best of every view.</p>
     <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free quote</a><a class="btn btn-glass btn-lg" href="#services">Our decking services</a></div>
-    <ul class="hero-badges"><li>Free site survey</li><li>Composite &amp; hardwood</li><li>Glass &amp; steel balustrades</li><li>All of Cornwall</li></ul>''', 'scene-home')
+    <ul class="hero-badges"><li>Free site survey</li><li>Composite &amp; hardwood</li><li>Glass &amp; steel balustrades</li><li>Based in Newquay</li></ul>''', 'scene-home')
     intro = f'''<section class="section bg-limed intro" aria-labelledby="intro-title">
   <div class="container intro-grid">
     <div>
@@ -294,7 +293,7 @@ def home():
       <h2 id="intro-title">Local deck builders who know Cornish weather</h2>
       <p>Cornwall is one of the most beautiful places in Britain to sit outside, and one of the toughest on outdoor timber. Salt air, driving rain, Atlantic gales and steep gardens all shape how a deck should be designed and built.</p>
       <p>We are a Cornish decking company offering design, supply and installation under one roof. Whether you want low-maintenance <a href="composite-decking-cornwall.html">composite decking</a>, natural <a href="hardwood-decking-cornwall.html">hardwood decking</a>, a sea-view terrace with <a href="balustrades-cornwall.html">glass balustrades</a> or <a href="deck-repairs-cornwall.html">repairs to an existing deck</a>, we will design it around your home, your garden and your view.</p>
-      <p>Searching for <strong>decking near me</strong>? We cover the whole county, from <a href="decking-bude.html">Bude</a> to <a href="decking-penzance.html">Penzance</a>.</p>
+      <p>Searching for <strong>decking near me</strong>? We are based in [BASE_TOWN]. <a href="#quote">Send us your postcode</a> for a free site survey and quote.</p>
     </div>
     <ul class="usp">
       <li class="board"><strong>Design, supply &amp; install</strong><span>One team and one clear, itemised price.</span></li>
@@ -353,18 +352,6 @@ def home():
   </div>
 </section>
 '''
-    areas = f'''<section class="section bg-navy areas" id="areas" aria-labelledby="areas-title">
-  <div class="container areas-grid">
-    <div>
-      <p class="eyebrow">Areas we cover</p>
-      <h2 id="areas-title">Decking across Cornwall, from Bude to Penzance</h2>
-      <p>Based in [BASE_TOWN], we design and install decking right across the county. Every part of Cornwall has its own challenges, from exposed north-coast clifftops to damp valley gardens, so we have written a guide for each town.</p>
-      <a class="btn btn-brass" href="decking-areas-cornwall.html">See all areas we cover</a>
-    </div>
-    {town_tags()}
-  </div>
-</section>
-'''
     reviews = '''<section class="section bg-limed testimonials" id="reviews" aria-labelledby="reviews-title">
   <div class="container">
     <header class="section-head"><p class="eyebrow">Customer reviews</p><h2 id="reviews-title">What our decking customers say</h2>
@@ -378,11 +365,11 @@ def home():
   </div>
 </section>
 '''
-    body = (head('Decking Cornwall | Design, Supply & Install | Kernow Decking Co.',
-                 'Decking in Cornwall by Kernow Decking Co.: composite and hardwood decking, garden decks, glass balustrades and deck repairs, designed, supplied and installed across Cornwall. Free quotes.',
+    body = (head('Decking Cornwall | Newquay Deck Builders | Kernow Decking Co.',
+                 'Decking in Newquay and Cornwall by Kernow Decking Co.: composite and hardwood decking, garden decks, glass balustrades and deck repairs, designed, supplied and installed. Free quotes.',
                  'index', [faq_ld(HOME_FAQS)], preload_hero=True)
             + header('index') + '<main id="main">\n' + hero + planks() + intro + services + planks() + process_section() + why
-            + gallery + areas + reviews + faq_section(HOME_FAQS, 'Decking in Cornwall: your questions answered')
+            + gallery + reviews + faq_section(HOME_FAQS, 'Decking in Cornwall: your questions answered')
             + quote_section('Home page') + '</main>\n' + footer())
     return body
 
@@ -399,8 +386,8 @@ def service_page(s):
     </div>
     <aside class="svc-aside">
       <figure class="framed"><img src="assets/img/{s["img"]}" alt="{e(s["img_alt"])}" loading="lazy" width="960" height="720"><figcaption>Example image</figcaption></figure>
-      <div class="board aside-board"><h2 class="h3">{e(s["short"])} near you</h2><p>We install {e(s["short"].lower())} across Cornwall, including:</p>
-        <ul class="mini-links">{''.join(f'<li><a href="{href(t["slug"])}">{e(t["name"])}</a></li>' for t in TOWNS)}</ul></div>
+      <div class="board aside-board"><h2 class="h3">{e(s["short"])} near you</h2><p>We are a local decking team based in [BASE_TOWN], Cornwall. Searching for {e(s["short"].lower())} near you? Send us your postcode for a free site survey and quote.</p>
+        <p><a class="btn btn-brass" href="#quote">Get a free quote</a></p></div>
     </aside>
   </div>
 </section>
@@ -417,76 +404,6 @@ def service_page(s):
             + faq_section(s['faqs'], f'{s["short"]} in Cornwall: FAQs')
             + quote_section(s['h1'], f'Get a free {s["short"].lower()} quote') + '</main>\n' + footer())
 
-def town_page(t):
-    n = t['name']
-    t.setdefault('img', TOWN_IMGS[TOWNS.index(t) % len(TOWN_IMGS)])
-    crumbs = [('Home', 'index'), ('Areas we cover', 'decking-areas-cornwall'), (f'Decking {n}', t['slug'])]
-    title = f'Decking {n} | Composite & Timber Decks | Kernow Decking'
-    conds = '\n'.join(f'<li class="board cond"><h3>{e(h)}</h3><p>{e(p)}</p></li>' for h, p in t['conditions'])
-    nearby = ''.join(f'<li class="tag tag-plain">{e(x)}</li>' for x in t['nearby'])
-    related = ''.join(f'<li><a class="tag" href="{href(r)}">Decking {e(TOWN[r]["name"])}</a></li>' for r in t['related'])
-    intro = f'''<section class="section bg-limed town-intro" aria-labelledby="town-intro-title">
-  <div class="container svc-grid">
-    <div class="prose">
-      <h2 id="town-intro-title">Decking installers in {e(n)}</h2>
-      {''.join(f'<p>{e(p)}</p>' for p in t["intro"])}
-      <h2>Popular decking projects in {e(n)}</h2>
-      <p>{e(t["projects"])}</p>
-    </div>
-    <aside class="svc-aside">
-      <figure class="framed"><img src="assets/img/{t["img"]}" alt="{e(t.get("img_alt", f"Example deck design – decking ideas for {n} homes"))}" loading="lazy" width="960" height="720"><figcaption>Example image</figcaption></figure>
-      <div class="board aside-board"><h2 class="h3">Decking services in {e(n)}</h2>
-        <ul class="svc-links">{''.join(f'<li><a href="{href(s["slug"])}">{icon(s["icon"])}<span>{e(s["short"])} in {e(n)}</span></a></li>' for s in SERVICES)}</ul>
-        <p class="small">Area: {e(t["coast"])}</p></div>
-    </aside>
-  </div>
-</section>
-'''
-    cond = f'''<section class="section bg-hardwood conditions" aria-labelledby="cond-title">
-  <div class="container"><header class="section-head light"><p class="eyebrow">Local know-how</p>
-    <h2 id="cond-title">Building decks for {e(n)}’s conditions</h2>
-    <p>What we plan for when designing decking in and around {e(n)}.</p></header>
-    <ul class="cond-grid">{conds}</ul></div>
-</section>
-'''
-    near = f'''<section class="section bg-limed nearby" aria-labelledby="near-title">
-  <div class="container near-grid">
-    <div><p class="eyebrow">Around {e(n)}</p><h2 id="near-title">Decking near {e(n)}</h2>
-      <p>As well as {e(n)} itself, we design and install decking in the surrounding towns and villages, including:</p>
-      <ul class="town-tags">{nearby}</ul></div>
-    <div><h3>Nearby decking areas</h3><ul class="town-tags">{related}<li><a class="tag" href="decking-areas-cornwall.html">All Cornwall areas</a></li></ul></div>
-  </div>
-</section>
-'''
-    return (head(title, t['desc'], t['slug'], [crumbs_ld(crumbs), service_ld(f'Decking in {n}', 'Decking design, supply and installation', t['slug'], n), faq_ld(t['faqs'])])
-            + header(t['slug']) + '<main id="main">\n'
-            + page_hero(crumbs, f'Decking {n} · {t["coast"]}', f'Decking in {n}', t['lead'])
-            + planks() + intro + cond + process_section(n) + near + planks()
-            + faq_section(t['faqs'], f'Decking in {n}: FAQs')
-            + quote_section(f'Decking {n}', f'Get a free decking quote in {n}', n) + '</main>\n' + footer())
-
-def areas_page():
-    crumbs = [('Home', 'index'), ('Areas we cover', 'decking-areas-cornwall')]
-    cards = '\n'.join(f'''<li><a class="sign" href="{href(t["slug"])}"><span class="sign-coast">{e(t["coast"])}</span><strong>Decking {e(t["name"])}</strong><span class="sign-lead">{e(t["lead"])}</span></a></li>''' for t in TOWNS)
-    content = f'''<section class="section bg-limed" aria-labelledby="areas-list-title">
-  <div class="container">
-    <header class="section-head"><p class="eyebrow">Decking across Cornwall</p><h2 id="areas-list-title">Choose your area</h2>
-      <p>Every corner of Cornwall brings different challenges for a deck: salt and wind on the coast, frost and rain inland, steep gardens almost everywhere. Pick your town for local advice.</p></header>
-    <ul class="sign-grid">{cards}</ul>
-    <p class="center-note">Not listed? We cover the whole of Cornwall. <a href="#quote">Ask us with your postcode</a>.</p>
-  </div>
-</section>
-'''
-    faqs = [('Do you cover all of Cornwall?', 'Yes. We design, supply and install decking across the whole county, from Bude and Launceston in the north-east to Penzance and the Lizard in the west.'),
-            ('Is there an extra charge for remote locations?', 'Any travel or access costs are included clearly in your itemised quote, with no hidden extras.'),
-            ('Can you work on islands or properties with difficult access?', 'Tell us about your property and access and we will let you know what is possible.')]
-    return (head('Decking Areas in Cornwall | Decking Installers Near You',
-                 'Decking installers covering all of Cornwall: Newquay, Truro, St Austell, Falmouth, Penzance, St Ives, Bodmin, Padstow, Bude and more. Local advice for every area. Free quotes.',
-                 'decking-areas-cornwall', [crumbs_ld(crumbs), faq_ld(faqs)])
-            + header('decking-areas-cornwall') + '<main id="main">\n'
-            + page_hero(crumbs, 'Decking near me · Cornwall-wide', 'Decking installers across Cornwall', 'From exposed north-coast clifftops to sheltered south-coast creeks, we design, supply and install decking in every corner of Cornwall.')
-            + planks() + content + process_section() + faq_section(faqs, 'Areas we cover: FAQs') + quote_section('Areas page') + '</main>\n' + footer())
-
 def simple_page(slug, title, body, robots='noindex'):
     return (head(f'{title} | Kernow Decking Co.', f'{title} – Kernow Decking Co., decking Cornwall.', slug, robots=robots)
             + header(slug) + f'<main id="main" class="section bg-limed page"><div class="container prose board page-board">{body}</div></main>\n' + footer())
@@ -495,7 +412,6 @@ def credits():
     return simple_page('credits', 'Photo credits', '''<p class="eyebrow">Credits</p><h1>Photo credits</h1>
 <p>Placeholder photography is used until Kernow Decking Co. project photos are added. Images were downloaded, resized and cropped (modified) for this site. Wood textures, the hero deck and the sunset illustration were created for this site.</p>
 <ul class="credits-list">
-<li>Penzance page image: <a href="https://commons.wikimedia.org/w/index.php?curid=83370515" rel="noopener">"RB 20180726 St Michaels Mount Cornwall 54 (cropped)"</a> by Monster4711, <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener">CC0 1.0</a>.</li>
 <li>Garden room deck: <a href="https://commons.wikimedia.org/w/index.php?curid=189656077" rel="noopener">"Outdoor bar features wooden deck with bean bag seating and lush plants"</a> by Shixart1985, <a href="https://creativecommons.org/licenses/by/2.0/" rel="noopener">CC BY 2.0</a>.</li>
 <li>Deck repairs: <a href="https://commons.wikimedia.org/w/index.php?curid=152193340" rel="noopener">"Timber Deck Repairs"</a> by Ridunwig, <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener">CC0 1.0</a>.</li>
 <li>Gallery images from <a href="https://stocksnap.io" rel="noopener">StockSnap.io</a> (CC0): <a href="https://stocksnap.io/photo/patio-chairs-2941B634A6">Skitter Photo</a>, <a href="https://stocksnap.io/photo/patio-furniture-6CA109EECC">Jay Mantri</a>, <a href="https://stocksnap.io/photo/patio-furniture-ZIU3AC46X4">Matt Bango</a>, <a href="https://stocksnap.io/photo/porch-deck-93B4A12AD0">Sonja Guina</a>, <a href="https://stocksnap.io/photo/patio-furniture-69HGCEWOIR">Matt Bango</a>, <a href="https://stocksnap.io/photo/outdoor-patio-K3I9NUCRFT">Matt Bango</a>, <a href="https://stocksnap.io/photo/patio-backyard-F1AFB213E7">Jay Mantri</a>.</li>
@@ -515,7 +431,7 @@ def thanks():
     return simple_page('thank-you', 'Thank you', '<p class="eyebrow">Enquiry sent</p><h1>Thank you, we have your decking enquiry</h1><p>We will be in touch soon, usually within one working day. If it is urgent, call us on <a href="tel:[PHONE_INTL]">[PHONE]</a>.</p><p><a class="btn btn-navy" href="index.html">Back to the home page</a></p>')
 
 def notfound():
-    return simple_page('404', 'Page not found', '<p class="eyebrow">404</p><h1>Sorry, that board has gone missing</h1><p>The page you were looking for could not be found. Try our <a href="index.html">decking Cornwall home page</a>, our <a href="decking-areas-cornwall.html">areas</a> or our <a href="composite-decking-cornwall.html">composite decking</a> page.</p><p><a class="btn btn-navy" href="index.html">Back to the home page</a></p>')
+    return simple_page('404', 'Page not found', '<p class="eyebrow">404</p><h1>Sorry, that board has gone missing</h1><p>The page you were looking for could not be found. Try our <a href="index.html">decking Cornwall home page</a>, our <a href="composite-decking-cornwall.html">composite decking</a> or <a href="deck-repairs-cornwall.html">deck repairs</a> pages.</p><p><a class="btn btn-navy" href="index.html">Back to the home page</a></p>')
 
 def apply_cfg(html):
     for k, v in CFG.items():
@@ -528,13 +444,12 @@ def write(name, html):
         f.write(apply_cfg(html))
 
 def main():
-    pages = {'index.html': home(), 'decking-areas-cornwall.html': areas_page(), 'credits.html': credits(),
+    pages = {'index.html': home(), 'credits.html': credits(),
              'privacy.html': privacy(), 'thank-you.html': thanks(), '404.html': notfound()}
     for s in SERVICES: pages[s['slug'] + '.html'] = service_page(s)
-    for t in TOWNS: pages[t['slug'] + '.html'] = town_page(t)
     for n, h in pages.items(): write(n, h)
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    order = [('index', '1.0'), ('decking-areas-cornwall', '0.8')] + [(s['slug'], '0.9') for s in SERVICES] + [(t['slug'], '0.8') for t in TOWNS] + [('credits', '0.1')]
+    order = [('index', '1.0')] + [(s['slug'], '0.9') for s in SERVICES] + [('credits', '0.1')]
     for slug, p in order:
         sm.append(f'  <url><loc>{url(slug)}</loc><lastmod>{TODAY}</lastmod><priority>{p}</priority></url>')
     sm.append('</urlset>')
