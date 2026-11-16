@@ -47,23 +47,8 @@
 }
 @media (min-width:1080px){.nv-mobile{display:none!important}}
 
-/* ---------- Option A: smoked-oak plank bar, engraved brass lettering ---------- */
-.nv-a{background:linear-gradient(180deg,rgba(24,14,7,.30),rgba(24,14,7,.48)),url("../img/tex-cedar-deck-boards.webp") 0 -2px/1200px auto,#5A3E2B;border-bottom:1px solid #B8955E;box-shadow:0 1px 0 rgba(0,0,0,.4),0 10px 24px rgba(0,0,0,.25)}
-.nv-a .nv-logo{box-shadow:inset -1px 0 0 #B8955E,6px 0 18px rgba(0,0,0,.25)}
-.nv-a .nv-nav a{color:#E6CF9F;font-size:.8rem;font-weight:650;letter-spacing:.16em;text-transform:uppercase;padding:.6rem .9rem;position:relative;text-shadow:0 -1px 0 rgba(0,0,0,.65),0 1px 0 rgba(255,235,200,.12)}
-.nv-a .nv-nav>ul>li>a::before{content:"";position:absolute;left:.9rem;right:.9rem;bottom:.2rem;height:1px;background:linear-gradient(90deg,transparent,#E6CF9F,transparent);transform:scaleX(0);transition:transform .3s ease}
-.nv-a .nv-nav>ul>li>a:hover::before,.nv-a .nv-sub:hover>a::before{transform:scaleX(1)}
-.nv-a .nv-nav a:hover{color:#FFF1D2}
-.nv-a .nv-drop{background:#2A1D14;border-top:1px solid #B8955E;box-shadow:0 18px 34px rgba(0,0,0,.4)}
-.nv-a .nv-drop a{letter-spacing:.06em;text-transform:none;font-size:.86rem;text-shadow:none;color:#E9DCC4}
-.nv-a .nv-drop a:hover{background:rgba(184,149,94,.12);color:#fff}
-.nv-a .nv-phone{color:#E6CF9F}
-.nv-a .nv-toggle{background:transparent;border:1px solid #B8955E}.nv-a .nv-toggle span{background:#E6CF9F}
-@media (max-width:1079px){.nv-a .nv-phone{border:1px solid rgba(184,149,94,.6)}}
-.nv-a .nv-mobile{background:#2A1D14;border-top:1px solid #B8955E}
-.nv-a .nv-mobile li a{color:#E6CF9F;padding:.9rem 0;border-bottom:1px solid rgba(184,149,94,.25);letter-spacing:.14em;text-transform:uppercase;font-size:.82rem;font-weight:650}
-.nv-a .nv-mobile .nv-m-sub a{text-transform:none;letter-spacing:.03em;font-size:.95rem;font-weight:500;color:#EDE2CF;padding-left:1rem}
-.nv-a .nv-m-head{color:#B8955E}
+/* Option A is the live header (.oakbar in styles.css); shown here via .oak-demo */
+.opt-frame .oak-demo{z-index:6}
 
 /* ---------- Option B: individual oak board tabs with brass screws ---------- */
 .nv-b{background:#FAF7F2;border-bottom:1px solid #E6DDD0;box-shadow:0 8px 24px rgba(30,20,12,.08)}

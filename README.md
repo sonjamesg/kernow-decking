@@ -35,7 +35,9 @@ Upload everything to `public_html` **except** `tools/`, `README.md` and `.git`. 
 Run `python3 tools/hero_photo.py /path/to/photo.jpg` then `python3 tools/build.py`. This writes responsive WebP (768/1280/1920) + JPG fallbacks named `decking-cornwall-newquay-sea-view-deck-*` and the Open Graph image; the build switches the home hero to the photo automatically when those files exist (otherwise it uses the illustrated deck and sunset).
 
 ## Navigation options
-`nav-options.html` (noindex, not linked, not in the sitemap) shows three header designs (A, B and C) for choosing. Delete it once one is picked.
+**Header:** Option A was chosen and is live on every page: a smoked-oak plank bar with engraved brass lettering, and the logo on its white panel inside a mitred four-plank oak frame with brass screws (pure CSS + small WebP textures + 4 tiny SVG screws). The mobile menu locks page scrolling while open (works on iOS Safari and Android Chrome) and closes on link tap, Escape, or resizing to desktop.
+
+`nav-options.html` (noindex, not linked, not in the sitemap) still shows all three header designs (A, B and C) for comparison. It can be deleted any time.
 
 ## Design
 Dark smoked oak and walnut accents, brushed brass, navy and cream. Headings, nav and buttons: Roboto Slab 700/800 (the closest free match to the Unit Slab used by offermanwoodshop.com); body: IBM Plex Sans 400/600. Both are SIL Open Font License and self-hosted in `assets/fonts`. Text always sits on flat, high-contrast surfaces (WCAG AA).
@@ -43,6 +45,7 @@ Dark smoked oak and walnut accents, brushed brass, navy and cream. Headings, nav
 ## Tools (not needed on the server)
 - `tools/build.py` + `tools/site_data.py` — page generator and all copy (services, FAQs)
 - `tools/textures.py` — generates the procedural timber-board textures
+- `tools/frame_textures.py` — generates the smoked-oak header bar and logo-frame plank textures
 - `tools/hero_deck.py` renders the perspective hero deck
 - `tools/hero_photo.py` makes the hero photo sizes and the OG image
 - `tools/nav_options.py` builds `nav-options.html`

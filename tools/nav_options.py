@@ -24,18 +24,18 @@ def nav_markup(opt, services, phone='[PHONE]', phone_intl='[PHONE_INTL]'):
 </header>'''
 
 OPTIONS = [
- ('a', 'Option A', 'Smoked-oak plank bar', 'A full-width dark smoked-oak bar with the logo on an inset white panel. Menu items are engraved brass lettering, with a fine brass rule that draws in on hover.'),
+ ('a', 'Option A · chosen, now live', 'Smoked-oak plank bar with a framed logo', 'A full-width smoked-oak plank bar. The logo sits on its white panel inside a hand-made picture frame of four mitred smoked-oak planks with fine grain, bevelled edges, a brass slip and brushed-brass screws; it overhangs the bar slightly. Menu items are engraved brass lettering with a brass rule that draws in on hover.'),
  ('b', 'Option B', 'Oak board tabs', 'Each menu item is its own small dark oak board with fine grain and brass screw heads, lifting slightly on hover. The logo sits on a clean white panel.'),
  ('c', 'Option C', 'Floating oak shelf', 'A clean white bar. The menu sits on a slim floating dark-oak shelf held by brass pins, and a thin oak grain strip slides in under the hovered item.'),
 ]
 
-def page(head_html, services, hero_img):
+def page(head_html, services, hero_img, header_a=None):
     blocks = []
     for opt, label, name, desc in OPTIONS:
         blocks.append(f'''<section class="opt" id="option-{opt}" aria-labelledby="opt-{opt}-t">
   <div class="opt-label container"><p class="eyebrow">{label}</p><h2 id="opt-{opt}-t">{e(name)}</h2><p>{e(desc)}</p></div>
   <div class="opt-frame">
-    {nav_markup(opt, services)}
+    {header_a if (opt == 'a' and header_a) else nav_markup(opt, services)}
     <div class="opt-hero" style="background-image:linear-gradient(90deg,rgba(4,30,55,.9),rgba(4,30,55,.45) 55%,rgba(4,30,55,.1)),url('{hero_img}')"><div class="container"><p class="eyebrow">Decking Newquay &amp; Cornwall</p><p class="opt-h">Decking in Cornwall, <em>built for sea, salt &amp; sunsets.</em></p></div></div>
   </div>
 </section>''')
@@ -44,10 +44,14 @@ document.querySelectorAll('.nv').forEach(function(h){
   var b=h.querySelector('.nv-toggle'),m=h.querySelector('.nv-mobile');
   b.addEventListener('click',function(){var o=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',String(!o));m.hidden=o;h.classList.toggle('open',!o);});
 });
-document.querySelectorAll('.nv a').forEach(function(a){a.addEventListener('click',function(ev){ev.preventDefault();});});
+document.querySelectorAll('.oak-demo').forEach(function(h){
+  var b=h.querySelector('.nav-toggle'),m=h.querySelector('.main-nav');
+  b.addEventListener('click',function(){var o=m.classList.toggle('open');b.setAttribute('aria-expanded',String(o));b.setAttribute('aria-label',o?'Close menu':'Open menu');});
+});
+document.querySelectorAll('.nv a,.oak-demo a').forEach(function(a){a.addEventListener('click',function(ev){ev.preventDefault();});});
 </script>'''
     return (head_html + '''<link rel="stylesheet" href="assets/css/nav-options.css">
 <main id="main" class="opts">
   <div class="container opts-intro"><p class="eyebrow">For James · not linked from the site</p><h1>Navigation options</h1>
-  <p>Three header designs. Each one is live: hover the menu, open “Decking services”, and narrow the window (or open on your phone) to see the mobile menu. Links are disabled on this page. Pick A, B or C and we’ll roll it out across the site.</p></div>
+  <p>Three header designs. Each one is live: hover the menu, open “Decking services”, and narrow the window (or open on your phone) to see the mobile menu. Links are disabled on this page. Option A was chosen and is now the live header across the site; B and C are kept for comparison.</p></div>
 ''' + '\n'.join(blocks) + '\n</main>\n' + js + '\n</body>\n</html>\n')

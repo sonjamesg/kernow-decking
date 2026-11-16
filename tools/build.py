@@ -116,15 +116,19 @@ def head(title, desc, slug, extra_ld=(), robots='index, follow', preload_hero=Fa
 <a class="skip-link" href="#main">Skip to content</a>
 '''
 
-def header(current):
+def oak_header(current='', nav_id='main-nav', extra_cls=''):
+    """Live site header: smoked-oak plank bar + logo in a mitred plank frame (also used as Option A on nav-options.html)."""
     def cur(s): return ' aria-current="page"' if s == current else ''
     svc_items = ''.join(f'<li><a href="{href(s["slug"])}"{cur(s["slug"])}>{e(s["short"])}</a></li>' for s in SERVICES)
-    return f'''<header class="site-header">
+    return f'''<header class="site-header oakbar{extra_cls}">
   <div class="container header-inner">
-    <a class="brand" href="index.html" aria-label="Kernow Decking Co. – decking Cornwall, home">
-      <picture><source srcset="assets/img/logo-360.webp 1x, assets/img/logo-720.webp 2x" type="image/webp"><img src="assets/img/logo-360.png" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="360" height="232"></picture>
+    <a class="oak-frame" href="index.html" aria-label="Kernow Decking Co. – decking Cornwall, home">
+      <span class="fr fr-t" aria-hidden="true"></span><span class="fr fr-r" aria-hidden="true"></span><span class="fr fr-b" aria-hidden="true"></span><span class="fr fr-l" aria-hidden="true"></span>
+      <span class="oak-panel"><picture><source srcset="assets/img/logo-360.webp 1x, assets/img/logo-720.webp 2x" type="image/webp"><img src="assets/img/logo-360.png" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="360" height="232"></picture></span>
+      <span class="oak-screws" aria-hidden="true"></span>
     </a>
-    <nav class="main-nav" id="main-nav" aria-label="Main">
+    <nav class="main-nav" id="{nav_id}" aria-label="Main">
+      <p class="m-head" aria-hidden="true">Menu</p>
       <ul>
         <li class="has-sub"><a href="index.html#services">Decking services</a>
           <ul class="sub">{svc_items}</ul></li>
@@ -132,15 +136,19 @@ def header(current):
         <li><a href="index.html#gallery">Gallery</a></li>
         <li><a href="index.html#faq">FAQ</a></li>
       </ul>
-      <a class="btn btn-brass nav-cta" href="#quote">Get a free quote</a>
+      <a class="nav-phone" href="tel:[PHONE_INTL]" aria-label="Call Kernow Decking Co. on [PHONE]">{PHONE_SVG}<span>[PHONE]</span></a>
+      <a class="btn btn-brass nav-cta" href="index.html#quote">Get a free quote</a>
     </nav>
     <div class="header-actions">
-      <a class="header-phone" href="tel:[PHONE_INTL]" aria-label="Call Kernow Decking Co. on [PHONE]">{PHONE_SVG}<span>[PHONE]</span></a>
-      <button class="nav-toggle" aria-controls="main-nav" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>
+      <a class="header-phone" href="tel:[PHONE_INTL]" aria-label="Call Kernow Decking Co. on [PHONE]">{PHONE_SVG}</a>
+      <button class="nav-toggle" type="button" aria-controls="{nav_id}" aria-expanded="false" aria-label="Open menu"><span class="nt-bars" aria-hidden="true"><span></span><span></span><span></span></span><span class="nt-label">Menu</span></button>
     </div>
   </div>
 </header>
 '''
+
+def header(current):
+    return oak_header(current)
 
 def planks(cls=''):
     return f'<div class="planks {cls}" aria-hidden="true"><span></span><span></span><span></span></div>\n'
@@ -473,7 +481,7 @@ def write(name, html):
 def nav_options():
     from nav_options import page
     hero = ('assets/img/' + HERO_NAME + '-1280.webp') if HERO_PHOTO else 'assets/img/cornish-sunset-sea.svg'
-    return page(head('Navigation options | Kernow Decking Co.', 'Header design options for Kernow Decking Co.', 'nav-options', robots='noindex, nofollow'), SERVICES, hero)
+    return page(head('Navigation options | Kernow Decking Co.', 'Header design options for Kernow Decking Co.', 'nav-options', robots='noindex, nofollow'), SERVICES, hero, oak_header(nav_id='nav-opt-a', extra_cls=' oak-demo'))
 
 def main():
     pages = {'index.html': home(), 'nav-options.html': nav_options(), 'credits.html': credits(),
