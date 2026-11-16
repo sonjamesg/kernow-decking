@@ -57,12 +57,50 @@
   function onScroll() { if (mobileBar) mobileBar.classList.toggle('show', window.scrollY > window.innerHeight * 0.6); }
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
-  // Boards "laying down" as they scroll into view
+  // Plank slam: reserved-height divider, transform+opacity only. Must never stay hidden.
+  var plankReduce = false;
+  try { plankReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (err) {}
+  function plankVisibleRatio(el) {
+    var r = el.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    if (r.height <= 0) return 0;
+    var vis = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+    return vis / r.height;
+  }
+  function slamPlank(el) {
+    if (el.classList.contains('in')) return;
+    el.classList.add('in');
+  }
+  var plankEls = document.querySelectorAll('.planks');
+  if (plankReduce) {
+    plankEls.forEach(function (el) { el.classList.add('in'); });
+  } else {
+    var ioPlank = null;
+    if ('IntersectionObserver' in window) {
+      ioPlank = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { slamPlank(en.target); ioPlank.unobserve(en.target); }
+        });
+      }, { threshold: 0.4 });
+    }
+    plankEls.forEach(function (el) {
+      el.classList.add('reveal');
+      if (!ioPlank || plankVisibleRatio(el) >= 0.4) { slamPlank(el); return; }
+      ioPlank.observe(el);
+      // Fallback: never leave the plank at opacity 0 if IO misses (common on some Android WebViews).
+      setTimeout(function () { slamPlank(el); if (ioPlank) try { ioPlank.unobserve(el); } catch (err) {} }, 1600);
+    });
+    requestAnimationFrame(function () {
+      plankEls.forEach(function (el) { if (plankVisibleRatio(el) >= 0.4) slamPlank(el); });
+    });
+  }
+
+  // Other reveal-on-scroll (process steps, cards)
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
     }, { rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('.planks, .step-board').forEach(function (el) { el.classList.add('reveal'); io.observe(el); });
+    document.querySelectorAll('.step-board').forEach(function (el) { el.classList.add('reveal'); io.observe(el); });
     document.querySelectorAll('.board-card, .g-item, .review, .framed, .cond, .sign, .usp li').forEach(function (el) { el.classList.add('reveal-up'); io.observe(el); });
   }
 

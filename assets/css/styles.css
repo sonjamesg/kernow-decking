@@ -60,80 +60,43 @@ p{margin:0 0 1em}
   --oak-bar-fallback:#3B2A1E;
 }
 
-/* Plank divider: two chunky smoked-oak boards (same wood as the nav bar),
-   with a tight pair of brass screws at each board end (four at each end of the strip).
-   Boards slam down when scrolled into view; screws are then driven in. */
-.planks{--plank-h:52px;display:grid;gap:6px;padding:6px 0 0;position:relative;z-index:2;
-  background:#120A05;overflow:visible;
-  border-top:1px solid #0A0604;border-bottom:1px solid #B8955E;
-  box-shadow:0 10px 22px rgba(8,4,1,.2)}
-@media (min-width:760px){.planks{--plank-h:56px}}
-.planks .plank{display:block;height:var(--plank-h);position:relative;
+/* Plank divider: one smoked-oak plank (same wood as the nav bar),
+   four static brass screws in the corners, reserved height (no CLS).
+   The plank slams down with transform+opacity only. */
+.planks{--plank-h:60px;display:block;position:relative;z-index:1;
+  height:var(--plank-h);overflow-x:clip;overflow-y:visible;
+  background:transparent;padding:0;border:0}
+@media (min-width:760px){.planks{--plank-h:64px}}
+.planks .plank{display:block;height:var(--plank-h);width:100%;position:relative;
   background-color:var(--oak-bar-fallback);
   background-image:var(--oak-bar-grad),var(--oak-bar-img);
   background-repeat:no-repeat,repeat-x;
   background-size:auto,var(--oak-bar-size);
   background-position:0 0,center top;
-  box-shadow:inset 0 1px 0 rgba(255,232,196,.22),inset 0 -2px 3px rgba(10,5,2,.4);
-  transform-origin:50% 100%}
-.planks .plank:nth-child(2){background-position:0 0,center bottom}
-.planks .scr{position:absolute;width:16px;height:16px;background-repeat:no-repeat;background-size:contain;background-position:center;
-  filter:drop-shadow(0 1px 1px rgba(8,4,1,.7));pointer-events:none;z-index:2}
-.planks .s1{left:11px;top:7px;background-image:url("../img/brass-screw-a.svg")}
-.planks .s2{left:12px;bottom:7px;background-image:url("../img/brass-screw-b.svg")}
-.planks .s3{right:11px;top:7px;background-image:url("../img/brass-screw-c.svg")}
-.planks .s4{right:12px;bottom:7px;background-image:url("../img/brass-screw-d.svg")}
-.planks-dust{position:absolute;left:8%;right:8%;bottom:-4px;height:16px;margin:0;padding:0;font-weight:400;pointer-events:none;z-index:3;
-  background:radial-gradient(ellipse 42% 90% at 22% 50%,rgba(236,220,190,.38),transparent 70%),
-             radial-gradient(ellipse 55% 110% at 50% 40%,rgba(232,214,180,.44),transparent 72%),
-             radial-gradient(ellipse 40% 90% at 78% 50%,rgba(236,220,190,.32),transparent 70%);
-  filter:blur(1.5px);opacity:0;transform-origin:50% 100%}
+  box-shadow:inset 0 1px 0 rgba(255,232,196,.3),inset 0 -2px 3px rgba(10,5,2,.5),0 1px 0 #140C06,0 8px 18px rgba(8,4,1,.2);
+  transform-origin:50% 100%;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.planks .scr{position:absolute;width:9px;height:9px;background-repeat:no-repeat;background-size:contain;background-position:center;pointer-events:none}
+.planks .s1{left:7px;top:6px;background-image:url("../img/brass-screw-a.svg")}
+.planks .s2{left:7px;bottom:6px;background-image:url("../img/brass-screw-b.svg")}
+.planks .s3{right:7px;top:6px;background-image:url("../img/brass-screw-c.svg")}
+.planks .s4{right:7px;bottom:6px;background-image:url("../img/brass-screw-d.svg")}
 
+/* Hidden start-state only while JS is waiting to slam. Default (no JS / no .reveal) stays visible. */
 @media (prefers-reduced-motion:no-preference){
-  .js .planks.reveal .plank{opacity:0;transform:translateY(-40px) scale(1.04)}
-  .js .planks.reveal .scr{transform:scale(0);opacity:0}
-  .js .planks.reveal.in{animation:plank-thud .15s linear .16s both}
-  .js .planks.reveal.in .plank:nth-child(1){animation:plank-slam .34s linear both}
-  .js .planks.reveal.in .plank:nth-child(2){animation:plank-slam .34s linear .12s both}
-  .js .planks.reveal.in .planks-dust{animation:dust-puff .48s ease-out .16s both}
-  .js .planks.reveal.in .plank:nth-child(1) .s1{animation:screw-drive .2s cubic-bezier(.15,1.5,.4,1) .42s both}
-  .js .planks.reveal.in .plank:nth-child(1) .s2{animation:screw-drive .2s cubic-bezier(.15,1.5,.4,1) .48s both}
-  .js .planks.reveal.in .plank:nth-child(1) .s3{animation:screw-drive .2s cubic-bezier(.15,1.5,.4,1) .54s both}
-  .js .planks.reveal.in .plank:nth-child(1) .s4{animation:screw-drive .2s cubic-bezier(.15,1.5,.4,1) .60s both}
-  .js .planks.reveal.in .plank:nth-child(2) .s1{animation:screw-drive .2s cubic-bezier(.15,1.5,.4,1) .66s both}
-  .js .planks.reveal.in .plank:nth-child(2) .s2{animation:screw-drive .2s cubic-bezier(.15,1.5,.4,1) .72s both}
-  .js .planks.reveal.in .plank:nth-child(2) .s3{animation:screw-drive .2s cubic-bezier(.15,1.5,.4,1) .78s both}
-  .js .planks.reveal.in .plank:nth-child(2) .s4{animation:screw-drive .2s cubic-bezier(.15,1.5,.4,1) .84s both}
+  .js .planks.reveal:not(.in) .plank{opacity:0;transform:translate3d(0,-28px,0)}
+  .js .planks.reveal.in .plank{animation:plank-slam .55s linear both}
   @keyframes plank-slam{
-    0%{opacity:1;transform:translateY(-40px) scale(1.04)}
-    18%{opacity:1;transform:translateY(-32px) scale(1.035)}
-    36%{transform:translateY(-16px) scale(1.02)}
-    50%{transform:translateY(0) scale(1)}
-    58%{opacity:1;transform:translateY(2px) scaleX(1.03) scaleY(.94)}
-    74%{transform:translateY(-2px) scaleX(.995) scaleY(1.02)}
-    88%{transform:translateY(1px) scale(1)}
-    100%{opacity:1;transform:none}
-  }
-  @keyframes plank-thud{
-    0%,100%{transform:translate(0,0)}
-    18%{transform:translate(3px,2px)}
-    36%{transform:translate(-3px,-2px)}
-    54%{transform:translate(2px,2px)}
-    72%{transform:translate(-2px,1px)}
-    86%{transform:translate(1px,-1px)}
-  }
-  @keyframes dust-puff{
-    0%{opacity:0;transform:scaleX(.35) scaleY(.3)}
-    28%{opacity:.75;transform:scaleX(1.08) scaleY(1.25)}
-    100%{opacity:0;transform:scaleX(1.35) scaleY(.55) translateY(6px)}
-  }
-  @keyframes screw-drive{
-    0%{opacity:0;transform:scale(0) rotate(-48deg)}
-    62%{opacity:1;transform:scale(1.2) rotate(10deg)}
-    100%{opacity:1;transform:scale(1) rotate(0deg)}
+    0%{opacity:0;transform:translate3d(0,-28px,0)}
+    8%{opacity:1;transform:translate3d(0,-27px,0)}
+    22%{transform:translate3d(0,-22px,0)}
+    35%{transform:translate3d(0,-12px,0)}
+    47%{opacity:1;transform:translate3d(0,0,0)}
+    62%{transform:translate3d(0,0,0) scaleX(1.01) scaleY(.94)}
+    76%{transform:translate3d(0,-3px,0)}
+    100%{opacity:1;transform:translate3d(0,0,0)}
   }
 }
-
 
 /* ---------- Buttons ---------- */
 .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.7rem;border-radius:4px;font-weight:750;font-size:.95rem;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .15s ease,box-shadow .2s ease,filter .2s;font-family:inherit;letter-spacing:.01em;line-height:1.2}
@@ -389,7 +352,7 @@ p{margin:0 0 1em}
   .footer-grid{grid-template-columns:1fr}
   .hero-badges{display:none}
 }
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}.js .reveal-up,.js .step-board.reveal,.js .planks.reveal,.js .planks.reveal .plank,.js .planks.reveal .scr,.js .planks.reveal .planks-dust{opacity:1!important;transform:none!important}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}.js .reveal-up,.js .step-board.reveal,.js .planks,.js .planks .plank,.js .planks .scr{opacity:1!important;transform:none!important}}
 @media (max-width:599px){.section-head .eyebrow::before{display:none}.section-head .eyebrow{letter-spacing:.16em}}
 @media (min-width:1080px){.sub{pointer-events:none}.has-sub:hover .sub,.has-sub:focus-within .sub{pointer-events:auto}}
 
