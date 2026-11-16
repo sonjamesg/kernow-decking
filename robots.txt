@@ -3,4 +3,4 @@ Allow: /
 Disallow: /contact.php
 Disallow: /thank-you.html
 
-Sitemap: https://[DOMAIN]/sitemap.xml
+Sitemap: https://kernowdecking.com/sitemap.xml

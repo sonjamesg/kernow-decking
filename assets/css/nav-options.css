@@ -1,0 +1,113 @@
+/* Header design options (nav-options.html only) */
+.opts{background:#FAF7F2;padding-bottom:4rem}
+.opts-intro{padding:3.5rem 0 1rem;max-width:860px}
+.opts-intro h1{font-size:clamp(2.4rem,5vw,3.6rem)}
+.opts-intro p{color:var(--muted)}
+.opt{padding:3rem 0 0}
+.opt-label h2{font-size:clamp(1.8rem,3.5vw,2.4rem);margin-bottom:.3rem}
+.opt-label p:not(.eyebrow){color:var(--muted);max-width:70ch}
+.opt-frame{margin-top:1.4rem;border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);box-shadow:0 20px 40px rgba(30,20,12,.12)}
+.opt-hero{min-height:320px;display:flex;align-items:center;color:#fff;background:linear-gradient(90deg,rgba(4,30,55,.9),rgba(4,30,55,.45) 55%,rgba(4,30,55,.1)),#041E37;background-size:auto,cover;background-position:0 0,center 50%;background-repeat:no-repeat}
+.opt-h{font-family:var(--serif);font-size:clamp(2rem,4.4vw,3.4rem);font-weight:600;line-height:1.05;max-width:22ch;margin:0}
+.opt-h em{display:block;color:#E2C48E;font-weight:500}
+
+/* shared structure */
+.nv{position:relative;z-index:5;font-family:"Montserrat",sans-serif}
+.nv-inner{display:flex;align-items:center;gap:1.5rem;height:96px;padding:0 max(1.25rem,calc((100% - 1200px)/2))}
+.nv-logo{display:flex;align-items:center;justify-content:center;background:#fff;align-self:stretch;padding:0 1.4rem;line-height:0}
+.nv-logo img{height:74px;width:auto}
+.nv-nav{margin-left:auto}
+.nv-nav>ul{display:flex;align-items:center;gap:.4rem;list-style:none;margin:0;padding:0}
+.nv-nav a{display:block;text-decoration:none;white-space:nowrap}
+.nv-sub{position:relative}
+.nv-sub>a::after{content:"";display:inline-block;margin-left:.45rem;width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-3px) rotate(45deg)}
+.nv-drop{display:none;position:absolute;top:100%;left:0;min-width:260px;list-style:none;margin:0;padding:.5rem 0;z-index:10}
+.nv-sub:hover .nv-drop,.nv-sub:focus-within .nv-drop{display:block}
+.nv-drop a{padding:.7rem 1.2rem;font-size:.86rem;font-weight:550;letter-spacing:.02em}
+.nv-actions{display:flex;align-items:center;gap:1rem}
+.nv-phone{display:inline-flex;align-items:center;gap:.45rem;font-weight:650;font-size:.9rem;text-decoration:none;letter-spacing:.03em}
+.nv-phone svg{width:18px;height:18px;fill:currentColor}
+.nv-cta{padding:.8rem 1.3rem;font-size:.74rem}
+.nv-toggle{display:none;width:46px;height:46px;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer;border-radius:2px}
+.nv-toggle span{width:20px;height:1.5px;transition:transform .25s,opacity .2s}
+.nv-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nv-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nv-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.nv-mobile ul{list-style:none;margin:0 0 1.2rem;padding:0}
+.nv-mobile a{display:block;text-decoration:none}
+.nv-m-head{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;padding:.4rem 0 .5rem}
+@media (max-width:1079px){
+  .nv-inner{height:80px;gap:.75rem;padding-right:1rem;padding-left:0}
+  .nv-logo{padding:0 1rem}.nv-logo img{height:60px}
+  .nv-nav,.nv-cta,.nv-phone span{display:none}
+  .nv-actions{margin-left:auto;gap:.6rem}
+  .nv-phone{width:46px;height:46px;justify-content:center;border-radius:50%}
+  .nv-toggle{display:inline-flex}
+  .nv-mobile{padding:1rem 1.25rem 1.5rem}
+}
+@media (min-width:1080px){.nv-mobile{display:none!important}}
+
+/* ---------- Option A: smoked-oak plank bar, engraved brass lettering ---------- */
+.nv-a{background:linear-gradient(180deg,rgba(24,14,7,.30),rgba(24,14,7,.48)),url("../img/tex-cedar-deck-boards.webp") 0 -2px/1200px auto,#5A3E2B;border-bottom:1px solid #B8955E;box-shadow:0 1px 0 rgba(0,0,0,.4),0 10px 24px rgba(0,0,0,.25)}
+.nv-a .nv-logo{box-shadow:inset -1px 0 0 #B8955E,6px 0 18px rgba(0,0,0,.25)}
+.nv-a .nv-nav a{color:#E6CF9F;font-size:.8rem;font-weight:650;letter-spacing:.16em;text-transform:uppercase;padding:.6rem .9rem;position:relative;text-shadow:0 -1px 0 rgba(0,0,0,.65),0 1px 0 rgba(255,235,200,.12)}
+.nv-a .nv-nav>ul>li>a::before{content:"";position:absolute;left:.9rem;right:.9rem;bottom:.2rem;height:1px;background:linear-gradient(90deg,transparent,#E6CF9F,transparent);transform:scaleX(0);transition:transform .3s ease}
+.nv-a .nv-nav>ul>li>a:hover::before,.nv-a .nv-sub:hover>a::before{transform:scaleX(1)}
+.nv-a .nv-nav a:hover{color:#FFF1D2}
+.nv-a .nv-drop{background:#2A1D14;border-top:1px solid #B8955E;box-shadow:0 18px 34px rgba(0,0,0,.4)}
+.nv-a .nv-drop a{letter-spacing:.06em;text-transform:none;font-size:.86rem;text-shadow:none;color:#E9DCC4}
+.nv-a .nv-drop a:hover{background:rgba(184,149,94,.12);color:#fff}
+.nv-a .nv-phone{color:#E6CF9F}
+.nv-a .nv-toggle{background:transparent;border:1px solid #B8955E}.nv-a .nv-toggle span{background:#E6CF9F}
+@media (max-width:1079px){.nv-a .nv-phone{border:1px solid rgba(184,149,94,.6)}}
+.nv-a .nv-mobile{background:#2A1D14;border-top:1px solid #B8955E}
+.nv-a .nv-mobile li a{color:#E6CF9F;padding:.9rem 0;border-bottom:1px solid rgba(184,149,94,.25);letter-spacing:.14em;text-transform:uppercase;font-size:.82rem;font-weight:650}
+.nv-a .nv-mobile .nv-m-sub a{text-transform:none;letter-spacing:.03em;font-size:.95rem;font-weight:500;color:#EDE2CF;padding-left:1rem}
+.nv-a .nv-m-head{color:#B8955E}
+
+/* ---------- Option B: individual oak board tabs with brass screws ---------- */
+.nv-b{background:#FAF7F2;border-bottom:1px solid #E6DDD0;box-shadow:0 8px 24px rgba(30,20,12,.08)}
+.nv-b .nv-logo{border-right:1px solid #E6DDD0}
+.nv-b .nv-nav>ul{gap:.55rem}
+.nv-b .nv-nav>ul>li>a{position:relative;color:#FFF8EC;font-size:.8rem;font-weight:650;letter-spacing:.12em;text-transform:uppercase;padding:.75rem 1.5rem;border-radius:2px;
+  background:radial-gradient(circle at 45% 40%,#FFF0C2 0 .8px,#D4B57E 1.4px 2.2px,#7C5E33 2.8px,transparent 3.4px) left 6px center/8px 8px no-repeat,
+             radial-gradient(circle at 45% 40%,#FFF0C2 0 .8px,#D4B57E 1.4px 2.2px,#7C5E33 2.8px,transparent 3.4px) right 6px center/8px 8px no-repeat,
+             linear-gradient(180deg,rgba(255,240,215,.1),rgba(0,0,0,.12)),url("../img/tex-cedar-plank.webp") center/700px auto,#5A3E2B;
+  box-shadow:inset 0 1px 0 rgba(255,240,215,.18),inset 0 -2px 0 rgba(0,0,0,.25),0 2px 0 #2A1D14,0 6px 12px rgba(30,20,12,.18);transition:transform .2s,box-shadow .2s;text-shadow:0 1px 1px rgba(0,0,0,.4)}
+.nv-b .nv-nav>ul>li>a:hover,.nv-b .nv-sub:hover>a{transform:translateY(-3px);box-shadow:inset 0 1px 0 rgba(255,240,215,.18),inset 0 -2px 0 rgba(0,0,0,.25),0 3px 0 #2A1D14,0 12px 20px rgba(30,20,12,.26);color:#fff}
+.nv-b .nv-drop{background:#fff;border:1px solid #E6DDD0;border-top:3px solid #5A3E2B;margin-top:8px;box-shadow:0 18px 34px rgba(30,20,12,.16)}
+.nv-b .nv-drop a{color:#041E37}.nv-b .nv-drop a:hover{background:#F5EFE6}
+.nv-b .nv-phone{color:#041E37}.nv-b .nv-phone svg{fill:#8A6A3C}
+.nv-b .nv-toggle{background:url("../img/tex-cedar-plank.webp") center/400px auto,#5A3E2B;border:0;box-shadow:0 2px 0 #2A1D14}.nv-b .nv-toggle span{background:#FFF8EC}
+@media (max-width:1079px){.nv-b .nv-phone{background:#fff;border:1px solid #E6DDD0}}
+.nv-b .nv-mobile{background:#FAF7F2;border-top:1px solid #E6DDD0}
+.nv-b .nv-mobile ul{display:grid;gap:.5rem}
+.nv-b .nv-mobile li a{color:#FFF8EC;padding:.85rem 1.6rem;font-weight:650;letter-spacing:.1em;text-transform:uppercase;font-size:.8rem;border-radius:2px;text-shadow:0 1px 1px rgba(0,0,0,.4);
+  background:radial-gradient(circle at 45% 40%,#FFF0C2 0 .8px,#D4B57E 1.4px 2.2px,#7C5E33 2.8px,transparent 3.4px) left 8px center/8px 8px no-repeat,radial-gradient(circle at 45% 40%,#FFF0C2 0 .8px,#D4B57E 1.4px 2.2px,#7C5E33 2.8px,transparent 3.4px) right 8px center/8px 8px no-repeat,url("../img/tex-cedar-plank.webp") center/700px auto,#5A3E2B;box-shadow:0 2px 0 #2A1D14}
+.nv-b .nv-mobile .nv-m-sub a{text-transform:none;letter-spacing:.03em;font-size:.92rem;font-weight:550;margin-left:.8rem;background:#fff;color:#041E37;text-shadow:none;border:1px solid #E6DDD0;box-shadow:none;border-left:4px solid #5A3E2B}
+.nv-b .nv-m-head{color:#7C5E33}
+
+/* ---------- Option C: white bar, floating oak shelf with brass pins ---------- */
+.nv-c{background:#fff;border-bottom:1px solid #EDE6DB;box-shadow:0 6px 22px rgba(30,20,12,.06)}
+.nv-c .nv-nav{position:relative;padding:0 1.2rem 14px}
+.nv-c .nv-nav::after{content:"";position:absolute;left:0;right:0;bottom:0;height:9px;border-radius:1px;
+  background:radial-gradient(circle at 45% 40%,#FFF0C2 0 .8px,#D4B57E 1.4px 2.2px,#7C5E33 2.8px,transparent 3.4px) left 6px center/8px 8px no-repeat,
+             radial-gradient(circle at 45% 40%,#FFF0C2 0 .8px,#D4B57E 1.4px 2.2px,#7C5E33 2.8px,transparent 3.4px) right 6px center/8px 8px no-repeat,
+             linear-gradient(180deg,rgba(255,240,215,.18),rgba(0,0,0,.2)),url("../img/tex-hardwood-plank.webp") center/900px auto,#3B2A1E;
+  box-shadow:0 1px 0 #B8955E inset,0 6px 10px rgba(30,20,12,.28)}
+.nv-c .nv-nav>ul>li>a{color:#041E37;font-size:.84rem;font-weight:650;letter-spacing:.08em;text-transform:uppercase;padding:.6rem 1rem .75rem;position:relative}
+.nv-c .nv-nav>ul>li>a::before{content:"";position:absolute;left:1rem;right:1rem;bottom:0;height:3px;border-radius:2px;background:url("../img/tex-cedar-plank.webp") center/400px auto,#7A5638;transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+.nv-c .nv-nav>ul>li>a:hover::before,.nv-c .nv-sub:hover>a::before{transform:scaleX(1)}
+.nv-c .nv-nav>ul>li>a:hover{color:#5A3E2B}
+.nv-c .nv-drop{background:#fff;border:1px solid #EDE6DB;border-top:2px solid #B8955E;margin-top:14px;box-shadow:0 18px 34px rgba(30,20,12,.14)}
+.nv-c .nv-drop a{color:#041E37}.nv-c .nv-drop a:hover{background:#FAF7F2;color:#5A3E2B}
+.nv-c .nv-phone{color:#041E37}.nv-c .nv-phone svg{fill:#8A6A3C}
+.nv-c .nv-toggle{background:#fff;border:1px solid #E6DDD0;box-shadow:0 4px 0 -1px #3B2A1E}.nv-c .nv-toggle span{background:#041E37}
+@media (max-width:1079px){.nv-c .nv-phone{border:1px solid #E6DDD0}}
+.nv-c .nv-mobile{background:#fff;position:relative;border-top:9px solid #3B2A1E;border-image:url("../img/tex-hardwood-plank.webp") 30 stretch}
+.nv-c .nv-mobile li a{color:#041E37;padding:.9rem 0 .9rem .9rem;border-bottom:1px solid #EFE8DD;font-weight:650;letter-spacing:.08em;text-transform:uppercase;font-size:.82rem;position:relative}
+.nv-c .nv-mobile li a::before{content:"";position:absolute;left:0;top:50%;width:3px;height:1.1rem;margin-top:-.55rem;background:#7A5638;border-radius:1px}
+.nv-c .nv-mobile .nv-m-sub a{text-transform:none;letter-spacing:.02em;font-size:.95rem;font-weight:500;padding-left:1.6rem}
+.nv-c .nv-mobile .nv-m-sub a::before{left:.8rem;background:#B8955E;width:5px;height:5px;margin-top:-2.5px;transform:rotate(45deg)}
+.nv-c .nv-m-head{color:#7C5E33}
+.nv-mobile .btn{display:flex}

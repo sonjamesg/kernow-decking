@@ -12,6 +12,11 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 CFG = json.load(open(os.path.join(os.path.dirname(__file__), 'site-config.json')))
 TODAY = '2026-11-16'
 SITE = 'https://[DOMAIN]/'
+HERO_NAME = 'decking-cornwall-newquay-sea-view-deck'
+_soc = [f'<a href="{CFG[k]}" rel="noopener" target="_blank">{n}</a>' for k, n in (('[FACEBOOK_URL]', 'Facebook'), ('[INSTAGRAM_URL]', 'Instagram')) if CFG.get(k)]
+SOCIAL_LI = ('<li>' + ' · '.join(_soc) + '</li>') if _soc else ''
+HERO_PHOTO = os.path.exists(os.path.join(ROOT, 'assets', 'img', HERO_NAME + '-1920.webp'))
+HERO_ALT = 'Decking in Cornwall: a deck beside a glass garden room looking out to the sea at sunset, with a lighthouse on the headland'
 SVC = {s['slug']: s for s in SERVICES}
 
 def url(slug):
@@ -32,11 +37,14 @@ BUSINESS = {
  "address": {"@type": "PostalAddress", "addressLocality": "[BASE_TOWN]", "postalCode": "[POSTCODE]", "addressRegion": "Cornwall", "addressCountry": "GB"},
  "areaServed": [{"@type": "City", "name": "Newquay"}, {"@type": "AdministrativeArea", "name": "Cornwall"}],
  "knowsAbout": ["Decking", "Composite decking", "Hardwood decking", "Timber decking", "Garden decking", "Glass balustrades", "Deck repairs"],
- "sameAs": ["[FACEBOOK_URL]", "[INSTAGRAM_URL]"],
+ "sameAs": [u for u in (CFG.get("[FACEBOOK_URL]"), CFG.get("[INSTAGRAM_URL]")) if u],
  "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "17:30"}],
  "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Decking services in Cornwall", "itemListElement": [
    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": s['h1'], "url": url(s['slug'])}} for s in SERVICES]}
 }
+
+if not BUSINESS['sameAs']:
+    del BUSINESS['sameAs']
 
 def faq_ld(faqs):
     return {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
@@ -67,7 +75,12 @@ PHONE_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.5
 
 def head(title, desc, slug, extra_ld=(), robots='index, follow', preload_hero=False):
     lds = '\n'.join(ld(x) for x in [BUSINESS, *extra_ld])
-    pre = ('<link rel="preload" as="image" href="assets/img/hero-deck-perspective-cornwall.webp">\n' if preload_hero else '')
+    if preload_hero and HERO_PHOTO:
+        pre = (f'<link rel="preload" as="image" type="image/webp" imagesrcset="assets/img/{HERO_NAME}-768.webp 768w, assets/img/{HERO_NAME}-1280.webp 1280w, assets/img/{HERO_NAME}-1920.webp 1920w" imagesizes="100vw">\n')
+    elif preload_hero:
+        pre = '<link rel="preload" as="image" href="assets/img/hero-deck-perspective-cornwall.webp">\n'
+    else:
+        pre = ''
     return f'''<!doctype html>
 <html lang="en-GB">
 <head>
@@ -95,6 +108,7 @@ def head(title, desc, slug, extra_ld=(), robots='index, follow', preload_hero=Fa
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/montserrat-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-garamond-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 {pre}<link rel="stylesheet" href="assets/css/styles.css">
 {lds}
 </head>
@@ -130,6 +144,17 @@ def header(current):
 
 def planks(cls=''):
     return f'<div class="planks {cls}" aria-hidden="true"><span></span><span></span><span></span></div>\n'
+
+def photo_scene(content):
+    p = 'assets/img/' + HERO_NAME
+    return f'''<section class="hero scene scene-home scene-photo">
+  <picture class="hero-photo">
+    <source type="image/webp" srcset="{p}-768.webp 768w, {p}-1280.webp 1280w, {p}-1920.webp 1920w" sizes="100vw">
+    <img src="{p}-1280.jpg" srcset="{p}-1280.jpg 1280w, {p}-1920.jpg 1920w" sizes="100vw" alt="{e(HERO_ALT)}" width="1920" height="1080" fetchpriority="high">
+  </picture>
+  <div class="container hero-content">{content}</div>
+</section>
+'''
 
 def scene(content, cls=''):
     return f'''<section class="hero scene {cls}">
@@ -262,7 +287,7 @@ def footer():
       <picture><source srcset="assets/img/logo-white-360.webp 1x, assets/img/logo-white-720.webp 2x" type="image/webp"><img src="assets/img/logo-white-360.png" alt="Kernow Decking Co. – decking Cornwall" width="360" height="232" loading="lazy"></picture>
       <p>Decking design, supply and installation, based in Newquay, Cornwall.</p>
       <ul class="footer-contact"><li><a href="tel:[PHONE_INTL]">[PHONE]</a></li><li><a href="mailto:[EMAIL]">[EMAIL]</a></li><li>[BASE_TOWN], Cornwall</li>
-      <li><a href="[FACEBOOK_URL]" rel="noopener" target="_blank">Facebook</a> · <a href="[INSTAGRAM_URL]" rel="noopener" target="_blank">Instagram</a></li></ul>
+{SOCIAL_LI}</ul>
     </div>
     <div><h2 class="f-h">Decking services</h2><ul>{svc}<li><a href="index.html#quote">Free decking quote</a></li></ul></div>
     <div><h2 class="f-h">Explore</h2><ul><li><a href="index.html#process">How we work</a></li><li><a href="index.html#gallery">Decking gallery</a></li><li><a href="index.html#faq">Decking FAQs</a></li><li><a href="index.html#reviews">Reviews</a></li><li><a href="index.html#quote">Contact us</a></li></ul></div>
@@ -281,11 +306,11 @@ def footer():
 # ---------------------------------------------------------------- pages
 def home():
     crumbs = [('Home', 'index')]
-    hero = scene('''<p class="eyebrow">Decking Newquay &amp; Cornwall · Design • Supply • Install</p>
+    hero = (photo_scene if HERO_PHOTO else lambda c: scene(c, 'scene-home'))('''<p class="eyebrow">Decking Newquay &amp; Cornwall · Design • Supply • Install</p>
     <h1>Decking in Cornwall, <span>built for sea, salt &amp; sunsets.</span></h1>
     <p class="hero-lead">Kernow Decking Co. designs, supplies and installs composite and hardwood decking, glass balustrades and garden decks from our base in Newquay, built for Cornwall’s Atlantic weather and the best of every view.</p>
     <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free quote</a><a class="btn btn-glass btn-lg" href="#services">Our decking services</a></div>
-    <ul class="hero-badges"><li>Free site survey</li><li>Composite &amp; hardwood</li><li>Glass &amp; steel balustrades</li><li>Based in Newquay</li></ul>''', 'scene-home')
+    <ul class="hero-badges"><li>Free site survey</li><li>Composite &amp; hardwood</li><li>Glass &amp; steel balustrades</li><li>Based in Newquay</li></ul>''')
     intro = f'''<section class="section bg-limed intro" aria-labelledby="intro-title">
   <div class="container intro-grid">
     <div>
@@ -410,7 +435,7 @@ def simple_page(slug, title, body, robots='noindex'):
 
 def credits():
     return simple_page('credits', 'Photo credits', '''<p class="eyebrow">Credits</p><h1>Photo credits</h1>
-<p>Placeholder photography is used until Kernow Decking Co. project photos are added. Images were downloaded, resized and cropped (modified) for this site. Wood textures, the hero deck and the sunset illustration were created for this site.</p>
+<p>Placeholder photography is used until Kernow Decking Co. project photos are added. Images were downloaded, resized and cropped (modified) for this site. Wood textures, the service-page deck and the sunset illustration were created for this site.''' + (' The home page hero photo was supplied by Kernow Decking Co.' if HERO_PHOTO else '') + '''</p>
 <ul class="credits-list">
 <li>Garden room deck: <a href="https://commons.wikimedia.org/w/index.php?curid=189656077" rel="noopener">"Outdoor bar features wooden deck with bean bag seating and lush plants"</a> by Shixart1985, <a href="https://creativecommons.org/licenses/by/2.0/" rel="noopener">CC BY 2.0</a>.</li>
 <li>Deck repairs: <a href="https://commons.wikimedia.org/w/index.php?curid=152193340" rel="noopener">"Timber Deck Repairs"</a> by Ridunwig, <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener">CC0 1.0</a>.</li>
@@ -443,8 +468,13 @@ def write(name, html):
     with open(os.path.join(ROOT, name), 'w', encoding='utf-8') as f:
         f.write(apply_cfg(html))
 
+def nav_options():
+    from nav_options import page
+    hero = ('assets/img/' + HERO_NAME + '-1280.webp') if HERO_PHOTO else 'assets/img/cornish-sunset-sea.svg'
+    return page(head('Navigation options | Kernow Decking Co.', 'Header design options for Kernow Decking Co.', 'nav-options', robots='noindex, nofollow'), SERVICES, hero)
+
 def main():
-    pages = {'index.html': home(), 'credits.html': credits(),
+    pages = {'index.html': home(), 'nav-options.html': nav_options(), 'credits.html': credits(),
              'privacy.html': privacy(), 'thank-you.html': thanks(), '404.html': notfound()}
     for s in SERVICES: pages[s['slug'] + '.html'] = service_page(s)
     for n, h in pages.items(): write(n, h)

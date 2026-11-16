@@ -1,9 +1,9 @@
 {
   "_help": "Fill in the values, then run: python3 tools/build.py  — every page is regenerated with your details. Leave a value empty to keep the [PLACEHOLDER] text.",
-  "[PHONE]": "",
-  "[PHONE_INTL]": "",
-  "[EMAIL]": "",
-  "[DOMAIN]": "",
+  "[PHONE]": "07700 900461",
+  "[PHONE_INTL]": "+447700900461",
+  "[EMAIL]": "info@kernowdecking.com",
+  "[DOMAIN]": "kernowdecking.com",
   "[BASE_TOWN]": "Newquay",
   "[POSTCODE]": "",
   "[FACEBOOK_URL]": "",

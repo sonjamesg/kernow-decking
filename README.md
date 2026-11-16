@@ -12,9 +12,13 @@ Preview (GitHub Pages): https://sonjamesg.github.io/kernow-decking/
 SEO: unique titles and meta descriptions, canonical and Open Graph tags, HomeAndConstructionBusiness JSON-LD (based in Newquay; areaServed Newquay and Cornwall), Service, FAQPage and BreadcrumbList schema, keyword-led image filenames and alt text, and internal links between services.
 The earlier town and area pages were removed; `.htaccess` 301-redirects their old URLs to the home page.
 
-## Placeholders
-`[BASE_TOWN]` is set to Newquay in `tools/site-config.json`. Still to fill in: `[PHONE]`, `[PHONE_INTL]`, `[EMAIL]`, `[DOMAIN]`, `[POSTCODE]`, `[FACEBOOK_URL]`, `[INSTAGRAM_URL]`, `[GUARANTEE_YEARS]`, plus review text `[REVIEW 1–3]` / `[CUSTOMER NAME]` / `[TOWN]`.
-Opening hours (Mon–Fri 8:00–17:30) are a suggestion — confirm. Gallery/project photos are labelled "Example image" stock photos (see `credits.html`) — replace with your own work.
+## Contact details & placeholders
+Filled in via `tools/site-config.json`: domain `kernowdecking.com`, email `info@kernowdecking.com`, base town Newquay.
+
+> **⚠️ TEMPORARY PHONE NUMBER:** `07700 900461` (+447700900461) is an Ofcom drama/fiction number that does not connect. It **must be replaced** with the real business number in `tools/site-config.json` (`[PHONE]` and `[PHONE_INTL]`), then rebuild, before launch.
+
+Still to fill in: `[POSTCODE]`, `[GUARANTEE_YEARS]`, `[FACEBOOK_URL]`, `[INSTAGRAM_URL]` (social links stay hidden until set), plus review text `[REVIEW 1–3]` / `[CUSTOMER NAME]` / `[TOWN]`.
+Opening hours (Mon–Fri 8:00–17:30) are a suggestion, so please confirm them. Gallery/project photos are labelled "Example image" stock photos (see `credits.html`); replace them with your own work.
 
 ### Fill them in (recommended)
 1. Edit `tools/site-config.json` with your real values.
@@ -27,8 +31,19 @@ Opening hours (Mon–Fri 8:00–17:30) are a suggestion — confirm. Gallery/pro
 ## Deploying to Hostinger
 Upload everything to `public_html` **except** `tools/`, `README.md` and `.git`. Then update `[DOMAIN]`, rebuild, and submit `https://yourdomain/sitemap.xml` in Google Search Console.
 
+## Home page hero photo
+Run `python3 tools/hero_photo.py /path/to/photo.jpg` then `python3 tools/build.py`. This writes responsive WebP (768/1280/1920) + JPG fallbacks named `decking-cornwall-newquay-sea-view-deck-*` and the Open Graph image; the build switches the home hero to the photo automatically when those files exist (otherwise it uses the illustrated deck and sunset).
+
+## Navigation options
+`nav-options.html` (noindex, not linked, not in the sitemap) shows three header designs (A, B and C) for choosing. Delete it once one is picked.
+
+## Design
+Dark smoked oak and walnut accents, brushed brass, navy and cream. Headings: Cormorant Garamond; body: Montserrat (both SIL Open Font License, self-hosted in `assets/fonts`). Text always sits on flat, high-contrast surfaces (WCAG AA).
+
 ## Tools (not needed on the server)
 - `tools/build.py` + `tools/site_data.py` — page generator and all copy (services, FAQs)
 - `tools/textures.py` — generates the procedural timber-board textures
-- `tools/hero_deck.py` — renders the perspective hero deck
+- `tools/hero_deck.py` renders the perspective hero deck
+- `tools/hero_photo.py` makes the hero photo sizes and the OG image
+- `tools/nav_options.py` builds `nav-options.html`
 Requires Python 3 (+ numpy, Pillow for the image tools).

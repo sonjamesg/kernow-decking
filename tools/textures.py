@@ -35,7 +35,8 @@ def board(W, h, rng, base, contrast, ring_px):
     k = 41; ker = np.ones(k) / k                           # stretch noise along the grain (x)
     fib = np.real(np.fft.ifft(np.fft.fft(fib, axis=1) * np.fft.fft(np.pad(ker, (0, W - k)))[None, :], axis=1))
     fib = fib / (fib.std() + 1e-9)
-    shade = 1 - contrast * ring - 0.035 * fib + 0.05 * n2
+    sheen = 0.07 * np.exp(-((y / h - 0.32) ** 2) / 0.03) - 0.04 * (y / h)   # satin-oiled highlight
+    shade = 1 - contrast * ring - 0.025 * fib + 0.035 * n2 + sheen
     img = np.clip(base[None, None, :] * shade[..., None], 0, 255)
     # edge bevel
     bev = np.ones(h); bev[:3] = [0.72, 0.85, 0.94]; bev[-3:] = [0.94, 0.85, 0.7]
@@ -84,8 +85,9 @@ def deck(W, nboards, bh, gap, palette, contrast, ring_px, seed, screws=True, joi
                     screw(img, jx + (i % 2) * 2, i * bh + gap // 2 + (bh - gap) * fy, max(3.2, bh * 0.045))
     return Image.fromarray(img.astype(np.uint8), 'RGB')
 
-cedar = [(186, 128, 80), (174, 116, 72), (198, 140, 92), (166, 108, 66), (192, 136, 94)]
-hardwood = [(110, 62, 36), (98, 55, 32), (122, 70, 40), (90, 50, 30), (116, 66, 42)]
+# "cedar" = smoked oak, "hardwood" = dark walnut (names kept so CSS/filenames stay stable)
+cedar = [(122, 86, 56), (112, 78, 51), (130, 93, 62), (104, 73, 48), (118, 84, 57)]
+hardwood = [(74, 51, 35), (82, 57, 39), (66, 46, 32), (78, 54, 37), (70, 49, 34)]
 limed = [(232, 222, 206), (226, 214, 196), (236, 228, 214), (222, 210, 192)]
 navy = [(18, 44, 72), (14, 38, 64), (22, 50, 80), (16, 41, 69)]
 
@@ -93,12 +95,12 @@ def save(im, name, q=62):
     im.save(os.path.join(OUT, name), 'WEBP', quality=q, method=6)
     print(name, im.size, os.path.getsize(os.path.join(OUT, name)) // 1024, 'KB')
 
-save(deck(1200, 8, 96, 6, cedar, 0.16, 6.5, 1), 'tex-cedar-deck-boards.webp')
-save(deck(1200, 8, 96, 6, hardwood, 0.22, 5.5, 2, gapcol=(14, 9, 6)), 'tex-hardwood-deck-boards.webp')
+save(deck(1200, 8, 96, 4, cedar, 0.13, 3.6, 1, screws=False, gapcol=(20, 13, 8), joint=0.7), 'tex-cedar-deck-boards.webp')
+save(deck(1200, 8, 96, 4, hardwood, 0.2, 3.4, 2, screws=False, gapcol=(12, 8, 5), joint=0.72), 'tex-hardwood-deck-boards.webp')
 save(deck(1200, 8, 96, 4, limed, 0.06, 7, 3, screws=False, gapcol=(196, 182, 160), joint=0.82), 'tex-limed-deck-boards.webp', 58)
 save(deck(1200, 8, 96, 5, navy, 0.18, 6, 4, screws=False, gapcol=(4, 18, 33), joint=0.7), 'tex-navy-painted-boards.webp', 58)
 # hero: boards running away from the viewer (rotated)
-hero = deck(1200, 12, 100, 7, cedar, 0.16, 6.5, 7, joist=400).rotate(90, expand=True)
+hero = deck(1200, 12, 100, 6, cedar, 0.13, 3.6, 7, joist=400, screws=False, gapcol=(16, 10, 6)).rotate(90, expand=True)
 save(hero, 'tex-hero-deck-boards.webp', 64)
 
 # single-board surfaces (no gaps, joints or screws) for cards, steps, tags and the form
@@ -107,6 +109,6 @@ def plain(palette, contrast, ring_px, seed, q=60):
     base = np.array(palette[0], float)
     b = board(1200, 400, rng, base, contrast, ring_px)
     return Image.fromarray(np.clip(b, 0, 255).astype(np.uint8), 'RGB')
-save(plain(cedar, 0.16, 6.5, 11), 'tex-cedar-plank.webp')
+save(plain(cedar, 0.13, 3.6, 11), 'tex-cedar-plank.webp')
 save(plain(limed, 0.06, 7, 12), 'tex-limed-plank.webp', 58)
-save(plain(hardwood, 0.22, 5.5, 13), 'tex-hardwood-plank.webp')
+save(plain(hardwood, 0.2, 3.4, 13), 'tex-hardwood-plank.webp')

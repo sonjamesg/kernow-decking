@@ -7,8 +7,8 @@
  *   $FROM_EMAIL – must be an address ON YOUR DOMAIN (create it in Hostinger > Emails),
  *                 otherwise many providers will reject or spam-folder the message.
  */
-$TO_EMAIL   = '[EMAIL]';
-$FROM_EMAIL = 'no-reply@[DOMAIN]';
+$TO_EMAIL   = 'info@kernowdecking.com';
+$FROM_EMAIL = 'no-reply@kernowdecking.com';
 $SITE_NAME  = 'Kernow Decking Co.';
 $THANK_YOU  = 'thank-you.html';
 
