@@ -1,0 +1,31 @@
+/* hero.css: Sunset / illustrated hero layout. */
+/* ---------- Hero: content on a deck receding to a Cornish sunset ---------- */
+.scene{position:relative;overflow:hidden;isolation:isolate;color:#fff;background:#041E37;
+  --D:clamp(220px,24vw,400px);--imgH:max(var(--D),27.08vw);--F:calc(var(--imgH)*.2115);--sea:clamp(56px,7.5vw,130px);
+  --Hz:calc(var(--D) - var(--F) + var(--sea));--skyW:max(100vw,900px);--skyH:calc(var(--skyW)*.5625)}
+.scene-home{min-height:clamp(660px,94vh,920px)}
+.scene-home .hero-content{padding-bottom:calc(var(--Hz) - 1rem)}
+.scene-page{min-height:clamp(540px,70vh,660px);--D:clamp(190px,19vw,300px)}
+.sky{position:absolute;left:50%;width:var(--skyW);height:var(--skyH);bottom:calc(var(--Hz) - var(--skyH)*.4444);transform:translateX(-50%);background:url("../img/cornish-sunset-sea.svg") 0 0/100% 100% no-repeat;z-index:-3}
+.scene::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(4,30,55,.78) 0%,rgba(4,30,55,.45) 42%,rgba(4,30,55,0) 70%)}
+.deck{position:absolute;left:0;right:0;bottom:0;height:var(--D);z-index:-1;pointer-events:none}
+.deck img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.deck::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(15,8,3,.55),transparent 55%)}
+@media (prefers-reduced-motion:no-preference){
+  .deck img{animation:lay 1.5s cubic-bezier(.25,.7,.2,1) .15s both}
+  @keyframes lay{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+}
+.hero-content{position:relative;padding:clamp(2.5rem,7vh,5rem) 0 calc(var(--D) * .8)}
+.scene h1{color:#fff;font-size:clamp(2.2rem,5vw,4rem);font-weight:850;max-width:19ch;margin-bottom:.45em;text-shadow:0 2px 18px rgba(4,30,55,.55)}
+.scene-page h1{font-size:clamp(2rem,4.6vw,3.5rem);max-width:18ch}
+.scene h1 span{display:block;background:linear-gradient(90deg,var(--sunset),var(--gold-2));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+.hero-lead{font-size:clamp(1rem,1.9vw,1.15rem);max-width:58ch;color:rgba(255,255,255,.92);text-shadow:0 1px 10px rgba(4,30,55,.8)}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:.8rem;margin:1.6rem 0 1.6rem}
+.hero-badges{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:.5rem}
+.hero-badges li{font-size:.82rem;font-weight:650;padding:.35rem .75rem .35rem 1.55rem;border-radius:3px;position:relative;color:#fff;background:rgba(4,30,55,.55);border:1px solid rgba(255,255,255,.18)}
+.hero-badges li::before{content:"";position:absolute;left:.55rem;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#FFF2C8 0 1px,#E1B25C 1.8px,#8C5C18 4px)}
+.breadcrumbs ol{list-style:none;margin:0 0 1.2rem;padding:0;display:flex;flex-wrap:wrap;gap:.3rem;font-size:.82rem;font-weight:600}
+.breadcrumbs li{color:rgba(255,255,255,.75)}
+.breadcrumbs li+li::before{content:"›";margin-right:.35rem;color:var(--gold-2)}
+.breadcrumbs a{color:#fff}
+

@@ -1,0 +1,21 @@
+/* buttons.css: Brass primary and smoked-oak secondary buttons. */
+/* ---------- Buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.7rem;border-radius:4px;font-weight:750;font-size:.95rem;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .15s ease,box-shadow .2s ease,filter .2s;font-family:inherit;letter-spacing:.01em;line-height:1.2}
+.btn:hover{transform:translateY(-2px)}
+.btn-lg{padding:1.02rem 2.1rem;font-size:1rem}
+.btn-block{width:100%}
+.btn-brass{background:linear-gradient(180deg,#F6D58E 0%,#E3A548 38%,#C98A34 70%,#A86F22 100%);color:#1E1205;border-color:#8C5C18;box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -2px 0 rgba(0,0,0,.18),0 6px 16px rgba(0,0,0,.28)}
+.btn-brass::before,.btn-brass::after{content:"";position:absolute;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#FFF2C8 0 1px,#B9842F 1.8px,#7A4E12 3.6px,transparent 4px)}
+.btn-brass::before{left:8px}.btn-brass::after{right:8px}
+.btn-brass:hover{filter:brightness(1.05);color:#1E1205}
+.btn-glass,.btn-secondary{background-color:#3B2A1E;color:#F0E4C9;border:1px solid #B8955E;backdrop-filter:none;-webkit-backdrop-filter:none;color-scheme:only light}
+.btn-glass:hover,.btn-secondary:hover{background-color:#3B2A1E;color:#FFF0CF}
+.btn-navy{background:var(--navy);color:#fff;border-color:#02101F;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 14px rgba(4,30,55,.3)}
+.btn-navy:hover{color:var(--gold-2)}
+
+.eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:.74rem;font-weight:750;color:#8A5A1E;margin-bottom:.8rem;display:inline-flex;align-items:center;gap:.6rem}
+.eyebrow::before{content:"";width:22px;height:6px;border-radius:2px;background:linear-gradient(180deg,#F6D58E,#C98A34 60%,#8C5C18);box-shadow:0 1px 0 rgba(0,0,0,.2)}
+.bg-hardwood .eyebrow,.bg-navy .eyebrow,.scene .eyebrow{color:var(--sunset)}
+
+/* Header: see "Oak plank header" at the end of this file */
+

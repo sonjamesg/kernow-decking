@@ -1,0 +1,20 @@
+/* typography.css: Heading / nav / button type scale. */
+/* ---------- Typography (Offerman-inspired): Roboto Slab 700/800 for headings, nav, buttons; IBM Plex Sans 400/600 body ---------- */
+body{font-family:var(--sans);font-weight:400;line-height:1.7}
+b,strong{font-weight:600}
+h1,h2,.scene h1{font-family:var(--slab);font-weight:800;letter-spacing:-.01em;line-height:1.1}
+h2{font-size:clamp(1.8rem,3.6vw,2.6rem)}
+.scene h1{font-size:clamp(2.3rem,4.9vw,3.9rem);font-weight:800}
+.scene h1 span{font-style:normal;font-weight:800}
+h3,.h3,.board-card h3,.usp strong,.step-board h3,.faq-list summary{font-family:var(--slab);font-weight:700;letter-spacing:0}
+.board-card h3{font-size:1.2rem}.usp strong{font-size:1.08rem}.step-board h3{font-size:1.3rem}.faq-list summary{font-size:1.02rem}
+.burn{font-family:var(--slab);font-weight:800}
+.review blockquote{font-family:var(--sans);font-size:1.02rem;font-style:italic;line-height:1.65}
+.eyebrow,.f-h,.contact-list small,.bc-more,.ph-tag,.hero-badges li,.nv-m-head{font-family:var(--slab);font-weight:700;text-transform:uppercase;letter-spacing:.14em}
+.eyebrow{font-size:.74rem}
+.btn{font-family:var(--slab);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.hero-badges li{font-size:.7rem;letter-spacing:.1em}
+.quote-form label{font-family:var(--sans);font-weight:600}
+.contact-list a,.contact-list span{font-weight:600}
+.tick-list strong{font-weight:600}
+

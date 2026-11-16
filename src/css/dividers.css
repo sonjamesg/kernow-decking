@@ -1,0 +1,21 @@
+/* dividers.css: Two-board oak plank dividers used under the hero and above the footer. */
+
+/* Plank divider: two equal-height boards of the same oak as the nav, stacked
+   with a dark gap. Texture is cropped per board so internal seams never show. */
+.planks{display:flex;flex-direction:column;gap:var(--plank-gap);position:relative;z-index:1;height:auto;padding:0;border:0;background:#140C06;box-shadow:0 10px 22px rgba(10,5,2,.22)}
+.planks .plank{display:block;height:var(--plank-face-h);width:100%;position:relative;flex:none;
+  background-color:#3B2A1E;
+  background-image:var(--oak-bar-grad),var(--oak-bar-img);
+  background-repeat:no-repeat,repeat-x;
+  background-size:auto,var(--plank-tex-w) var(--plank-tex-h);
+  border-bottom:1px solid #B8955E;
+  box-shadow:0 1px 0 #0A0604}
+.planks .p1{background-position:0 0,0 var(--plank-pos-a)}
+.planks .p2{background-position:0 0,280px var(--plank-pos-b)}
+.planks .plank::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(255,232,196,.22);pointer-events:none}
+.planks .scr{position:absolute;width:8px;height:8px;background-repeat:no-repeat;background-size:contain;background-position:center;pointer-events:none}
+.planks .s1{left:8px;top:var(--plank-scr-inset);background-image:url("../img/brass-screw-a.svg")}
+.planks .s2{left:8px;bottom:var(--plank-scr-inset);background-image:url("../img/brass-screw-b.svg")}
+.planks .s3{right:8px;top:var(--plank-scr-inset);background-image:url("../img/brass-screw-c.svg")}
+.planks .s4{right:8px;bottom:var(--plank-scr-inset);background-image:url("../img/brass-screw-d.svg")}
+

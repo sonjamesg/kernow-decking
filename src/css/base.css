@@ -1,0 +1,25 @@
+/* base.css: Simple pages, scroll-reveal and small-screen tweaks. */
+/* Simple pages */
+.page .page-board{max-width:860px;padding:clamp(1.6rem,5vw,3rem)}
+.page h1{font-size:clamp(1.8rem,5vw,2.6rem)}
+.page h2{font-size:1.3rem;margin-top:1.8rem}
+
+/* Reveal */
+.js .reveal-up{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.js .reveal-up.in{opacity:1;transform:none}
+
+/* Small screens */
+@media (max-width:599px){
+  .board-card{display:grid;grid-template-columns:48px 1fr;gap:.15rem 1rem;padding:1.3rem 1.25rem;align-items:start}
+  .bc-icon{grid-row:span 3;width:48px;height:48px}
+  .board-card h3{margin:0 0 .25rem}
+  .board-card p{margin:0 0 .5rem}
+  .hero-ctas .btn{flex:1 1 100%}
+  .step-board{padding:1.2rem 1.4rem 1.2rem 1.6rem;gap:1rem}
+  .footer-grid{grid-template-columns:1fr}
+  .hero-badges{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}.js .reveal-up,.js .step-board.reveal{opacity:1!important;transform:none!important}}
+@media (max-width:599px){.section-head .eyebrow::before{display:none}.section-head .eyebrow{letter-spacing:.16em}}
+@media (min-width:1080px){.sub{pointer-events:none}.has-sub:hover .sub,.has-sub:focus-within .sub{pointer-events:auto}}
+

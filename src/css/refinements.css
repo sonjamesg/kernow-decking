@@ -1,0 +1,107 @@
+/* refinements.css: Later visual refinements (buttons, cards, frames, faq, contact). Keep after the first-pass component files. */
+/* =====================================================================
+   v4 "fine joinery" layer: smoked oak + walnut accents, brushed brass,
+   serif headings, thin brass rules, more whitespace. Text sits on flat surfaces.
+   ===================================================================== */
+:root{--gold:#B8955E;--gold-2:#D4B57E;--sunset:#E2C48E;--line:#E6DDD0;--shadow:0 1px 2px rgba(30,20,12,.06),0 14px 34px rgba(30,20,12,.10);--radius:3px;
+  --brass-grad:linear-gradient(180deg,#E6CF9F 0%,#C9A66B 45%,#A9864F 100%);
+  --brush:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,rgba(0,0,0,.035) 1px 3px)}
+body{color:#1B1712}
+h1,h2,.scene h1{font-family:var(--serif);font-weight:600;letter-spacing:-.005em;line-height:1.05}
+h2{font-size:clamp(2rem,4.2vw,3.1rem)}
+.scene h1{font-size:clamp(2.6rem,5.6vw,4.6rem);font-weight:600;text-shadow:0 2px 24px rgba(4,30,55,.5)}
+.scene h1 span{background:linear-gradient(90deg,#E9D3A6,#C9A66B);-webkit-background-clip:text;background-clip:text;font-style:italic;font-weight:500}
+h3,.h3{letter-spacing:.01em}
+.section{padding:clamp(4.5rem,9vw,8rem) 0}
+.section-head{margin-bottom:3.4rem}
+.section-head h2::after{content:"";display:block;width:64px;height:1px;margin:1.1rem auto 0;background:var(--brass)}
+.section-head.left h2::after{margin-left:0}
+.eyebrow{color:#7C5E33;font-weight:650;letter-spacing:.24em;font-size:.72rem}
+.eyebrow::before{width:34px;height:1px;border-radius:0;background:var(--brass);box-shadow:none}
+.bg-hardwood .eyebrow,.bg-navy .eyebrow,.scene .eyebrow{color:var(--brass-2)}
+.bg-hardwood{background:linear-gradient(180deg,#2E2118,#231912);color:#F1E8DA}
+.bg-hardwood p,.bg-navy p{color:#E9E1D4}
+.bg-cedar{background:var(--tex-hard) 0 0/900px auto,var(--hard)}
+/* buttons: raised brushed-brass plate + smoked-oak plank secondary */
+.btn{border-radius:2px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;padding:.85rem 1.8rem;min-height:48px;box-sizing:border-box}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(2px)}
+.btn-lg{font-size:.84rem;padding:1rem 2.15rem;min-height:52px}
+.btn-brass{color:#1C140C;border:1px solid #8A6A3C;background-color:#C9A66B;
+  background-image:url("../img/brass-screw-a.svg"),url("../img/brass-screw-c.svg"),var(--brush),linear-gradient(180deg,#F4E2B6 0%,#E6C889 14%,#D4B57E 40%,#C9A66B 58%,#B8955E 82%,#8F6E3E 100%);
+  background-repeat:no-repeat,no-repeat,repeat,no-repeat;
+  background-size:8px 8px,8px 8px,auto,auto;
+  background-position:10px 50%,calc(100% - 10px) 50%,0 0,0 0;
+  box-shadow:inset 0 1px 0 rgba(255,247,220,.75),inset 0 -2px 0 rgba(80,50,16,.4),inset 1px 0 0 rgba(255,236,204,.25),inset -1px 0 0 rgba(80,50,16,.22),0 1px 0 #140C06,0 7px 16px rgba(8,4,1,.32);
+  padding-left:2.1rem;padding-right:2.2rem;text-shadow:0 1px 0 rgba(255,247,220,.35)}
+.btn-brass::before{content:none;display:none;background:none}
+.btn-brass::after{content:"";display:block;position:static;top:auto;right:auto;left:auto;width:.42em;height:.42em;margin:0 0 0 .2em;border-radius:0;background:none;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg);transition:transform .2s ease;flex:none}
+.btn-brass:hover{filter:brightness(1.05);color:#1C140C}
+.btn-brass:hover::after{transform:rotate(45deg) translate(2px,-2px)}
+.btn-brass:active{transform:translateY(2px);filter:none;box-shadow:inset 0 1px 0 rgba(255,247,220,.45),inset 0 -1px 0 rgba(80,50,16,.35),0 1px 0 #140C06,0 2px 5px rgba(8,4,1,.25)}
+.btn-brass:active::after{transform:rotate(45deg)}
+.btn-glass,.btn-secondary{color:#F0E4C9;border:1px solid #B8955E;background-color:#3B2A1E;
+  background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-0.webp");
+  background-repeat:no-repeat,repeat-x;background-size:auto,2400px 100%;background-position:0 0,-120px 50%;
+  box-shadow:inset 0 1px 0 rgba(255,236,204,.22),inset 0 -2px 2px rgba(8,4,1,.38),0 1px 0 #0A0604,0 7px 16px rgba(8,4,1,.35);
+  text-shadow:0 1px 0 rgba(0,0,0,.55);backdrop-filter:none;-webkit-backdrop-filter:none;
+  forced-color-adjust:none;color-scheme:only light}
+.btn-glass:hover,.btn-glass:focus-visible,.btn-secondary:hover,.btn-secondary:focus-visible{
+  color:#FFF0CF;filter:brightness(1.08);background-color:#3B2A1E}
+.btn-glass:active,.btn-secondary:active{transform:translateY(2px);filter:none;background-color:#3B2A1E;box-shadow:inset 0 1px 0 rgba(255,236,204,.16),inset 0 -1px 1px rgba(8,4,1,.35),0 1px 0 #0A0604,0 2px 5px rgba(8,4,1,.25)}
+.btn-navy{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 0 #02101F,0 7px 16px rgba(4,30,55,.28)}
+.btn-navy:hover{color:var(--brass-2)}
+.btn-navy:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 1px 0 #02101F,0 2px 5px rgba(4,30,55,.25)}
+/* plank dividers: dark oak rules live in the main .planks block above */
+/* cards and boards: flat white with a slim oak edge + brass hairline */
+.board{background:linear-gradient(var(--brass),var(--brass)) 0 6px/100% 1px no-repeat,var(--plank-cedar) 0 0/100% 6px no-repeat,var(--card);padding-top:6px;box-shadow:var(--shadow)}
+.board-card{background:linear-gradient(var(--brass),var(--brass)) 0 6px/100% 1px no-repeat,var(--plank-cedar) 0 0/100% 6px no-repeat,var(--card);padding-top:calc(1.9rem + 7px);border-radius:var(--radius);box-shadow:0 1px 0 rgba(0,0,0,.25),0 18px 36px rgba(0,0,0,.28)}
+.board-card:hover{transform:translateY(-4px);box-shadow:0 1px 0 rgba(0,0,0,.25),0 26px 44px rgba(0,0,0,.34)}
+.board-card h3{font-family:var(--serif);font-size:1.45rem;font-weight:600}
+.bc-icon{background:transparent;border:1px solid var(--brass);box-shadow:none;border-radius:50%}
+.bc-icon .ico{stroke:var(--brass-dk)}
+.bc-more{color:#6E5230;letter-spacing:.12em;text-transform:uppercase;font-size:.72rem}
+.usp li{padding:calc(1.2rem + 7px) 1.4rem 1.2rem 1.5rem}
+.usp strong{font-family:var(--serif);font-size:1.3rem;font-weight:600}
+/* process: flat cream boards on an oak rail */
+.steps{gap:1px;background:var(--brass);padding:1px;border-radius:2px;box-shadow:0 24px 48px rgba(0,0,0,.3)}
+.step-board{background:var(--plank-cedar) 0 0/10px 100% no-repeat,#FCF9F4;padding-left:2.4rem}
+.burn{font-family:var(--serif);font-weight:600;color:var(--brass-dk);text-shadow:none;opacity:1;font-size:clamp(2.4rem,5vw,3.4rem)}
+.step-board h3{font-family:var(--serif);font-size:1.6rem;font-weight:600;color:var(--navy)}
+.step-board p{color:#3E352C;font-weight:500}
+/* frames: walnut with brass inner line */
+.framed{padding:10px;background:var(--plank-hard) center/cover,var(--hard);box-shadow:0 24px 48px rgba(30,20,12,.25)}
+.framed img{box-shadow:0 0 0 1px var(--brass)}
+.tick-list li::before{width:.55rem;height:.55rem;top:.55rem;left:.4rem;background:var(--brass);box-shadow:none;transform:rotate(45deg);border-radius:0}
+.why-copy h2::after{content:"";display:block;width:64px;height:1px;margin-top:1.1rem;background:var(--brass)}
+/* gallery: dark walnut ground, white caption panel */
+.gallery-grid{gap:6px;background:#140E09;padding:6px;border-radius:2px}
+.bg-cedar .section-head{border:0;border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);border-radius:0;box-shadow:none;background:#FCF9F4}
+/* faq: clean lines */
+.faq-list{gap:0;background:transparent;padding:0;border-top:1px solid var(--brass)}
+.faq-list details{background:transparent;border-bottom:1px solid var(--line);padding:0 .2rem}
+.faq-list summary{font-family:var(--serif);font-size:1.3rem;font-weight:600}
+.faq-list summary::after{background:transparent;border:1px solid var(--brass);color:var(--brass-dk);font-family:var(--sans);font-size:1rem}
+/* reviews */
+.review blockquote{font-family:var(--serif);font-size:1.25rem;line-height:1.5;color:#3E352C}
+.review.placeholder{outline:1px dashed rgba(184,149,94,.8)}
+.ph-tag{background:var(--brass)}
+/* contact */
+.contact-list li{background:rgba(255,255,255,.04);border:0;border-bottom:1px solid rgba(212,181,126,.25);border-radius:0;padding:.9rem .2rem}
+.contact-list small{color:var(--brass-2)}
+.ci-icon{background:transparent;border:1px solid var(--brass-2)}
+.ci-icon svg{stroke:var(--brass-2)}
+.ci-icon svg path[d^="M6.6"]{fill:var(--brass-2)}
+.quote-form input,.quote-form select,.quote-form textarea{border:1px solid #D6CABA;border-radius:2px;background:#fff}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(184,149,94,.2)}
+.quote-form .lbl b{color:var(--brass-dk)}
+.hero-badges li{background:rgba(4,30,55,.5);border:1px solid rgba(212,181,126,.45);border-radius:2px;letter-spacing:.04em}
+.hero-badges li::before{width:6px;height:6px;margin-top:-3px;background:var(--brass-2);transform:rotate(45deg);border-radius:0}
+.site-footer{border-top:1px solid var(--brass)}
+.footer-bottom{border-top-color:rgba(212,181,126,.25)}
+.f-h{color:var(--brass-2)!important}
+.mobile-bar{background:var(--hard);border-top:1px solid var(--brass)}
+.f-h{font-family:var(--sans);font-weight:700}
+.bg-hardwood .board-card p,.bg-navy .board-card p,.bg-hardwood .board p{color:var(--muted)}
+.bg-hardwood .board h2,.bg-hardwood .board h3{color:var(--navy)}
+

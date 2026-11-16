@@ -1,0 +1,178 @@
+/* header.css: Oak header, logo frame, logo-shrink-on-scroll, desktop nav and mobile menu boards. */
+/* =====================================================================
+   Oak plank header (live): smoked-oak plank bar + logo in a mitred plank frame
+   Textures: tex-oak-bar.webp, tex-oak-frame-h/-v.webp (tools/frame_textures.py), brass-screw-*.svg
+   ===================================================================== */
+.oakbar{--T:17px;--fh:124px;--bar:100px;
+  position:sticky;top:0;z-index:50;color:#E4CB96;
+  background:var(--oak-bar-grad),var(--oak-bar-img) var(--oak-bar-pos)/var(--oak-bar-size) repeat-x,var(--oak-bar-fallback);
+  border-bottom:1px solid #B8955E;box-shadow:0 1px 0 #140C06,0 12px 26px rgba(10,5,2,.28)}
+.oakbar::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(255,232,196,.18)}
+.oakbar .header-inner{display:flex;align-items:center;gap:1.25rem;height:var(--bar)}
+
+/* --- the framed logo --- */
+.oak-frame{position:relative;z-index:2;flex:none;align-self:flex-start;margin-top:8px;height:var(--fh);aspect-ratio:auto;display:block;line-height:0;
+  padding:var(--T);background:#120A05;border-radius:1px;
+  filter:drop-shadow(0 10px 12px rgba(8,4,1,.5)) drop-shadow(0 2px 2px rgba(8,4,1,.45));transition:transform .25s ease,filter .25s ease}
+.oak-frame:hover{transform:translateY(-1px);filter:drop-shadow(0 14px 16px rgba(8,4,1,.5)) drop-shadow(0 2px 2px rgba(8,4,1,.45))}
+.oak-frame:focus-visible{outline:2px solid #E4CB96;outline-offset:4px}
+/* Shrink the hanging header logo on scroll (transform only — no layout shift). */
+.oakbar{--logo-shrink:.6}
+.oakbar .oak-frame{transform-origin:top left}
+.oakbar.is-scrolled .oak-frame,
+.oakbar.is-scrolled .oak-frame:hover{transform:scale(var(--logo-shrink))}
+@media (min-width:1080px){.oakbar{--logo-shrink:.7}}
+@media (prefers-reduced-motion:reduce){
+  .oakbar .oak-frame{transition:none}
+}
+.oak-panel{position:relative;display:flex;align-items:center;justify-content:center;height:100%;padding:0 12px;background:#fff;
+  box-shadow:0 0 0 1px #8A6A3C,0 0 0 2px #D4B57E,inset 0 3px 6px rgba(40,24,12,.28),inset 0 0 0 1px rgba(40,24,12,.12)}
+.oak-panel img{height:calc(var(--fh) - 2*var(--T) - 10px);width:auto}
+.fr{position:absolute;display:block}
+.fr-t,.fr-b{left:0;right:0;height:var(--T);background-image:var(--fr-shade),url("../img/tex-oak-frame-h.webp");background-size:100% 100%,700px 100%}
+.fr-l,.fr-r{top:0;bottom:0;width:var(--T);background-image:var(--fr-shade),url("../img/tex-oak-frame-v.webp");background-size:100% 100%,100% 700px}
+/* moulding profile: lit outer arris, satin face, shadowed rebate on the inside edge */
+.fr-t{top:0;clip-path:polygon(.8px 0,calc(100% - .8px) 0,calc(100% - var(--T) - .4px) 100%,calc(var(--T) + .4px) 100%);
+  --fr-shade:linear-gradient(180deg,rgba(255,236,204,.34) 0,rgba(255,236,204,.10) 1.5px,rgba(255,236,204,.16) 35%,rgba(255,236,204,0) 60%,rgba(10,5,2,.42) 100%)}
+.fr-b{bottom:0;clip-path:polygon(calc(var(--T) + .4px) 0,calc(100% - var(--T) - .4px) 0,calc(100% - .8px) 100%,.8px 100%);background-position:0 0,-310px 0;
+  --fr-shade:linear-gradient(0deg,rgba(0,0,0,.45) 0,rgba(10,5,2,.18) 2px,rgba(255,236,204,.06) 40%,rgba(10,5,2,.10) 70%,rgba(10,5,2,.42) 100%)}
+.fr-l{left:0;clip-path:polygon(0 .8px,100% calc(var(--T) + .4px),100% calc(100% - var(--T) - .4px),0 calc(100% - .8px));
+  --fr-shade:linear-gradient(90deg,rgba(255,236,204,.26) 0,rgba(255,236,204,.06) 1.5px,rgba(255,236,204,.12) 35%,rgba(255,236,204,0) 60%,rgba(10,5,2,.42) 100%)}
+.fr-r{right:0;clip-path:polygon(0 calc(var(--T) + .4px),100% .8px,100% calc(100% - .8px),0 calc(100% - var(--T) - .4px));background-position:0 0,0 -260px;
+  --fr-shade:linear-gradient(270deg,rgba(0,0,0,.4) 0,rgba(10,5,2,.14) 2px,rgba(255,236,204,.06) 40%,rgba(10,5,2,.08) 70%,rgba(10,5,2,.42) 100%)}
+/* brushed-brass screws at each mitre */
+.oak-screws{position:absolute;inset:0;pointer-events:none;--s:8px;--o:calc(var(--T)/2 - var(--s)/2);
+  background:url("../img/brass-screw-a.svg") left var(--o) top var(--o)/var(--s) var(--s) no-repeat,
+             url("../img/brass-screw-b.svg") right var(--o) top var(--o)/var(--s) var(--s) no-repeat,
+             url("../img/brass-screw-c.svg") right var(--o) bottom var(--o)/var(--s) var(--s) no-repeat,
+             url("../img/brass-screw-d.svg") left var(--o) bottom var(--o)/var(--s) var(--s) no-repeat}
+
+/* --- menu: engraved brass lettering --- */
+.oakbar .main-nav ul{list-style:none;margin:0;padding:0}
+.oakbar .m-head{display:none}
+.oakbar .main-nav a:not(.btn){display:block;text-decoration:none;color:#E4CB96;font-family:var(--slab);font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;
+  text-shadow:0 -1px 0 rgba(0,0,0,.75),0 1px 0 rgba(255,228,180,.13);transition:color .2s}
+.oakbar .main-nav a:not(.btn):hover,.oakbar .main-nav a[aria-current="page"]{color:#FFF0CF}
+.oakbar .nav-phone,.oakbar .header-phone{display:inline-flex;align-items:center;gap:.5rem;color:#E4CB96;text-decoration:none;font-family:var(--slab);font-weight:700;letter-spacing:.06em;font-size:.92rem;text-shadow:0 -1px 0 rgba(0,0,0,.7)}
+.oakbar .nav-phone svg,.oakbar .header-phone svg{width:17px;height:17px;fill:#D4B57E;flex:none}
+.oakbar .nav-phone:hover{color:#FFF0CF}
+.oakbar .main-nav a.nav-phone{display:inline-flex}
+.oakbar .nav-cta{padding:.7rem 1.75rem;font-size:.74rem;letter-spacing:.14em;white-space:nowrap;min-height:48px;background-size:7px 7px,7px 7px,auto,auto;background-position:8px 50%,calc(100% - 8px) 50%,0 0,0 0}
+.oakbar .header-actions{display:flex;align-items:center;gap:.55rem;margin-left:auto}
+
+/* --- menu toggle: a small oak-framed button to match the logo frame --- */
+.nav-toggle{position:relative;height:46px;padding:0 .8rem 0 .7rem;display:inline-flex;align-items:center;gap:.55rem;cursor:pointer;color:#E4CB96;
+  border:5px solid transparent;border-radius:1px;
+  background:linear-gradient(180deg,#2A1C13,#1C120B) padding-box,linear-gradient(180deg,rgba(255,236,204,.22),rgba(10,5,2,.35)) border-box,url("../img/tex-oak-frame-h.webp") 0 0/300px 100% border-box;
+  box-shadow:inset 0 0 0 1px #8A6A3C,inset 0 2px 5px rgba(0,0,0,.5),0 4px 10px rgba(0,0,0,.35);font-family:var(--slab);font-weight:700;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase}
+.nt-bars{display:inline-flex;flex-direction:column;gap:4px;width:18px}
+.nt-bars span{display:block;height:2px;width:100%;border-radius:1px;background:linear-gradient(90deg,#B8955E,#F0D9A6,#B8955E);transition:transform .25s ease,opacity .2s}
+.nav-toggle[aria-expanded="true"] .nt-bars span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] .nt-bars span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] .nt-bars span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.nav-toggle:focus-visible,.oakbar .header-phone:focus-visible{outline:2px solid #F0D9A6;outline-offset:2px}
+
+/* --- desktop --- */
+@media (min-width:1080px){
+  :root{--header-h:100px}
+  .oakbar .header-actions{display:none}
+  .oakbar .main-nav{display:flex;align-items:center;gap:1.4rem;margin-left:auto}
+  .oakbar .main-nav>ul{display:flex;gap:.2rem}
+  .oakbar .main-nav>ul>li>a{position:relative;padding:.7rem .85rem}
+  .oakbar .main-nav>ul>li>a::before{content:"";position:absolute;left:.85rem;right:.85rem;bottom:.3rem;height:1px;background:linear-gradient(90deg,rgba(228,203,150,0),#E4CB96 20%,#E4CB96 80%,rgba(228,203,150,0));transform:scaleX(0);transition:transform .3s ease}
+  .oakbar .main-nav>ul>li>a:hover::before,.oakbar .has-sub:hover>a::before,.oakbar .has-sub:focus-within>a::before,.oakbar .main-nav>ul>li>a[aria-current="page"]::before{transform:scaleX(1)}
+  .oakbar .has-sub{position:relative}
+  .oakbar .has-sub>a::after{content:"";display:inline-block;margin-left:.5rem;width:5px;height:5px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-3px) rotate(45deg)}
+  .oakbar .sub{display:none;position:absolute;top:calc(100% + 18px);left:0;min-width:270px;padding:.55rem 0;background:#24170F;border-top:1px solid #B8955E;box-shadow:0 0 0 1px rgba(184,149,94,.18),0 22px 40px rgba(8,4,1,.45)}
+  .oakbar .sub::before{content:"";position:absolute;left:0;right:0;top:-19px;height:19px}
+  .oakbar .has-sub:hover .sub,.oakbar .has-sub:focus-within .sub{display:block}
+  .oakbar .sub a:not(.btn){font-family:var(--sans);text-transform:none;letter-spacing:.01em;font-weight:600;font-size:.9rem;color:#EADBC0;padding:.68rem 1.25rem;text-shadow:none}
+  .oakbar .sub a:not(.btn):hover,.oakbar .sub a[aria-current="page"]{background:rgba(184,149,94,.12);color:#fff}
+  .oakbar .nav-phone{padding-left:1.4rem;border-left:1px solid rgba(184,149,94,.4);height:30px}
+  .oakbar .nav-phone svg{width:17px;height:17px}
+}
+@media (min-width:1080px) and (max-width:1219px){.oakbar .main-nav>ul>li>a{padding:.7rem .6rem}.oakbar .main-nav>ul>li>a::before{left:.6rem;right:.6rem}.oakbar .main-nav a:not(.btn){letter-spacing:.12em}.oakbar .main-nav{gap:1rem}.oakbar .nav-phone{padding-left:1rem}}
+
+/* --- mobile & tablet --- */
+@media (max-width:1079px){
+   :root{--logo-hang:5.1rem}
+  .scene .hero-content{padding-top:var(--logo-hang)}
+  .oakbar{--T:7px;--fh:auto;--bar:76px;--logo-w:180px}
+  .oakbar .header-inner{gap:.55rem}
+  .oakbar .oak-frame{margin-top:6px;height:auto}
+  .oakbar .oak-panel{padding:3px 5px;height:auto}
+  .oakbar .oak-panel img{width:var(--logo-w);height:auto;max-width:100%}
+  .oak-screws{--s:6px}
+  .oakbar .header-phone{width:46px;height:46px;justify-content:center;border:5px solid transparent;border-radius:1px;
+    background:linear-gradient(180deg,#2A1C13,#1C120B) padding-box,linear-gradient(180deg,rgba(255,236,204,.22),rgba(10,5,2,.35)) border-box,url("../img/tex-oak-frame-h.webp") -120px 0/300px 100% border-box;
+    box-shadow:inset 0 0 0 1px #8A6A3C,inset 0 2px 5px rgba(0,0,0,.5),0 4px 10px rgba(0,0,0,.35)}
+  html.nav-locked .oakbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:100vh;background:rgba(3,12,24,.6);z-index:0}
+  .oakbar .header-phone svg{width:19px;height:19px}
+  .oakbar .main-nav{z-index:1;position:absolute;left:0;right:0;top:100%;max-height:calc(100vh - var(--header-h));max-height:calc(100dvh - var(--header-h));overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    padding:1.25rem max(1rem,calc((100% - 640px)/2)) 1.25rem;
+    background:#120A05;
+    border-bottom:1px solid #B8955E;
+    box-shadow:inset 0 1px 0 #B8955E,0 24px 40px rgba(8,4,1,.45);
+    transform:translateY(-8px);opacity:0;visibility:hidden;transition:transform .28s ease,opacity .22s ease,visibility .28s}
+  .oakbar .main-nav.open{transform:none;opacity:1;visibility:visible}
+  .oakbar .m-head{display:flex;align-items:center;gap:.8rem;margin:0 .15rem .55rem;color:#B8955E;font-family:var(--slab);font-weight:700;font-size:.66rem;letter-spacing:.28em;text-transform:uppercase}
+  .oakbar .m-head::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(184,149,94,.6),rgba(184,149,94,0))}
+  /* DECKING SERVICES stays a label, not a board */
+  .oakbar .has-sub>a{color:#B8955E!important;font-size:.7rem!important;letter-spacing:.24em!important;border:0!important;background:none!important;box-shadow:none!important;min-height:0!important;border-radius:0!important;padding:.1rem .15rem .45rem!important;margin:0!important}
+  .oakbar .has-sub>a::after{content:none}
+  .oakbar .sub{padding:0 0 .55rem;border:0}
+  /* Each link sits on its own smoked-oak deck board */
+  .oakbar .sub a:not(.btn),
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn),
+  .oakbar .nav-phone{
+    position:relative;display:flex;align-items:center;width:100%;box-sizing:border-box;
+    min-height:48px;margin:0 0 5px;padding:.7rem 2.05rem;border:0;border-radius:3px;
+    background-color:#2A1C13;
+    background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-0.webp");
+    background-repeat:no-repeat,repeat-x;
+    background-size:auto,2400px 100%;
+    background-position:0 0,-80px 0;
+    box-shadow:inset 0 1px 0 rgba(255,236,204,.22),inset 0 -2px 2px rgba(8,4,1,.38),inset 7px 0 8px -7px rgba(8,4,1,.5),inset -7px 0 8px -7px rgba(8,4,1,.5),0 2px 0 #0A0604;
+    text-shadow:0 1px 0 rgba(0,0,0,.55)}
+  .oakbar .sub a:not(.btn)::after,
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn)::after,
+  .oakbar .nav-phone::after{
+    content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+    background:url("../img/brass-screw-a.svg") left 8px center/8px 8px no-repeat,url("../img/brass-screw-c.svg") right 8px center/8px 8px no-repeat}
+  .oakbar .sub a:not(.btn){font-family:var(--sans);text-transform:none;letter-spacing:.01em;font-weight:500;font-size:1rem;color:#F1E6D3;padding-left:2.35rem}
+  .oakbar .sub a::before{content:"";position:absolute;left:1.7rem;top:50%;width:5px;height:5px;margin-top:-2.5px;background:#B8955E;transform:rotate(45deg);z-index:1}
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn){font-size:.86rem;letter-spacing:.18em}
+  .oakbar .nav-phone{margin:.35rem 0 .8rem;font-size:1.05rem;color:#F0D9A6}
+  .oakbar .main-nav a.nav-phone{display:flex}
+  /* staggered grain + screw rotation so neighbouring boards are not identical */
+  .oakbar .sub li:nth-child(2) a:not(.btn),.oakbar .main-nav>ul>li:nth-child(3)>a:not(.btn){background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-1.webp");background-position:0 0,-420px 0}
+  .oakbar .sub li:nth-child(3) a:not(.btn),.oakbar .main-nav>ul>li:nth-child(4)>a:not(.btn),.oakbar .nav-phone{background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-2.webp");background-position:0 0,-860px 0}
+  .oakbar .sub li:nth-child(4) a:not(.btn){background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-0.webp");background-position:0 0,-1280px 0}
+  .oakbar .sub li:nth-child(5) a:not(.btn),.oakbar .main-nav>ul>li:nth-child(2)>a:not(.btn){background-image:linear-gradient(180deg,rgba(255,236,204,.10),rgba(18,10,5,.22) 36%,rgba(8,4,1,.28) 100%),url("../img/tex-oak-menu-1.webp");background-position:0 0,-1640px 0}
+  .oakbar .sub li:nth-child(2) a::after,.oakbar .main-nav>ul>li:nth-child(3)>a::after{background-image:url("../img/brass-screw-b.svg"),url("../img/brass-screw-d.svg")}
+  .oakbar .sub li:nth-child(3) a::after,.oakbar .nav-phone::after{background-image:url("../img/brass-screw-c.svg"),url("../img/brass-screw-a.svg")}
+  .oakbar .sub li:nth-child(4) a::after,.oakbar .main-nav>ul>li:nth-child(4)>a::after{background-image:url("../img/brass-screw-d.svg"),url("../img/brass-screw-b.svg")}
+  .oakbar .sub li:nth-child(5) a::after,.oakbar .main-nav>ul>li:nth-child(2)>a::after{background-image:url("../img/brass-screw-a.svg"),url("../img/brass-screw-d.svg")}
+  /* pressed / current: slightly lifted face + brass edge */
+  .oakbar .sub a:not(.btn):active,
+  .oakbar .sub a[aria-current="page"],
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn):active,
+  .oakbar .main-nav>ul>li:not(.has-sub)>a[aria-current="page"],
+  .oakbar .nav-phone:active{
+    color:#FFF0CF;
+    box-shadow:inset 0 1px 0 rgba(255,236,204,.3),inset 0 -2px 2px rgba(8,4,1,.28),inset 0 0 0 1px #B8955E,0 2px 0 #0A0604}
+  .oakbar .sub a:not(.btn):focus-visible,
+  .oakbar .main-nav>ul>li:not(.has-sub)>a:not(.btn):focus-visible,
+  .oakbar .nav-phone:focus-visible{outline:2px solid #F0D9A6;outline-offset:2px}
+  .oakbar .nav-cta{display:flex;width:100%;padding:1rem;margin-top:.1rem;flex:none}
+}
+
+@media (max-width:379px){.oakbar{--logo-w:170px}}
+@media (max-width:399px){.oakbar .nt-label{display:none}.nav-toggle{padding:0 .75rem}}
+@media (min-width:600px) and (max-width:1079px){.oakbar{--T:8px;--bar:82px;--logo-w:190px}:root{--header-h:82px}}
+html.nav-locked,html.nav-locked body{overflow:hidden}
+html.nav-locked body{position:fixed;left:0;right:0;width:100%;padding-top:calc(var(--header-h) + 1px)}
+html.nav-locked .site-header{position:fixed;top:0!important;left:0;right:0}
+/* nav-options demo copy of the live header */
+.oak-demo{position:relative;top:auto}
+

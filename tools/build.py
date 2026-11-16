@@ -1,14 +1,134 @@
 # -*- coding: utf-8 -*-
 """Kernow Decking Co. static site generator.
 Usage:  python3 tools/build.py
-Regenerates every .html page in the site root, plus sitemap.xml, from tools/site_data.py and the
-details in tools/site-config.json. No dependencies beyond Python 3. The generated HTML is committed,
-so the site can be uploaded as-is without running this."""
+Assembles every .html page from src/partials/ plus tools/site_data.py and tools/site-config.json,
+and bundles and minifies src/css and src/js into assets/css/styles.css and assets/js/main.js.
+No dependencies beyond Python 3. The generated HTML and bundled assets are committed, so the site
+can be uploaded as-is without running this. See EDITING.md for where to change things."""
 import json, os, re
 from html import escape as e
 from site_data import SERVICES, HOME_FAQS
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+PARTIALS = os.path.join(ROOT, 'src', 'partials')
+SRC_CSS = os.path.join(ROOT, 'src', 'css')
+SRC_JS = os.path.join(ROOT, 'src', 'js')
+_VAR = re.compile(r'\{\{([A-Z][A-Z0-9_]*)\}\}')
+
+def _bundle_list(folder):
+    manifest = os.path.join(folder, 'BUNDLE.txt')
+    names = [ln.strip() for ln in open(manifest, encoding='utf-8') if ln.strip() and not ln.startswith('#')]
+    return [os.path.join(folder, n) for n in names]
+
+def render(name, **ctx):
+    """Fill {{VARS}} in a src/partials file. Values are inserted as given (already escaped if needed)."""
+    raw = open(os.path.join(PARTIALS, name), encoding='utf-8').read()
+    missing = [k for k in _VAR.findall(raw) if k not in ctx]
+    if missing:
+        raise KeyError('partial %s missing values for: %s' % (name, ', '.join(missing)))
+    return _VAR.sub(lambda m: str(ctx[m.group(1)]), raw)
+
+def _strip_css_comments(src):
+    out, i, n, in_s = [], 0, len(src), None
+    while i < n:
+        c = src[i]
+        if in_s:
+            out.append(c)
+            if c == '\\\\' and i + 1 < n:
+                out.append(src[i + 1]); i += 2; continue
+            if c == in_s:
+                in_s = None
+            i += 1
+            continue
+        if c in ('"', "'"):
+            in_s = c; out.append(c); i += 1; continue
+        if c == '/' and i + 1 < n and src[i + 1] == '*':
+            i += 2
+            while i + 1 < n and not (src[i] == '*' and src[i + 1] == '/'):
+                i += 1
+            i += 2
+            continue
+        out.append(c); i += 1
+    return ''.join(out)
+
+def minify_css(src):
+    text = _strip_css_comments(src)
+    text = re.sub(r'[ \t\n\r\f]+', ' ', text)
+    text = re.sub(r' ?([{}:;,>]) ?', r'\1', text)
+    return text.strip()
+
+def _strip_js_comments(src):
+    """Strip // and /* */ comments without touching strings or regex literals."""
+    out, i, n = [], 0, len(src)
+    in_s = None
+    prev_code = ' '
+    while i < n:
+        c = src[i]
+        if in_s:
+            out.append(c)
+            if c == '\\\\' and i + 1 < n:
+                out.append(src[i + 1]); i += 2; continue
+            if c == in_s:
+                in_s = None
+            i += 1
+            continue
+        if c in ('"', "'"):
+            in_s = c; out.append(c); prev_code = c; i += 1; continue
+        if c == '/' and i + 1 < n and src[i + 1] == '*':
+            i += 2
+            while i + 1 < n and not (src[i] == '*' and src[i + 1] == '/'):
+                i += 1
+            i += 2
+            out.append(' ')
+            continue
+        if c == '/' and i + 1 < n and src[i + 1] == '/':
+            # Could be a comment, or the start of a regex that happens to look like one
+            # (we don't have // regexes). Treat as a line comment.
+            while i < n and src[i] not in '\n\r':
+                i += 1
+            continue
+        if c == '/' and prev_code in '(,=:[!&|?{};~+%^\n\r\t ':
+            # Regex literal
+            out.append(c); i += 1
+            while i < n:
+                d = src[i]; out.append(d)
+                if d == '\\\\' and i + 1 < n:
+                    out.append(src[i + 1]); i += 2; continue
+                if d == '/':
+                    i += 1
+                    while i < n and src[i].isalpha():
+                        out.append(src[i]); i += 1
+                    break
+                i += 1
+            prev_code = '/'
+            continue
+        out.append(c)
+        if not c.isspace():
+            prev_code = c
+        i += 1
+    return ''.join(out)
+
+def minify_js(src):
+    text = _strip_js_comments(src)
+    text = re.sub(r'[ \t]*\n[ \t]*', '\n', text)
+    text = re.sub(r'\n{2,}', '\n', text)
+    text = re.sub(r'[ \t]{2,}', ' ', text)
+    return text.strip() + '\n'
+
+def bundle_assets():
+    """Concatenate src/css and src/js in manifest order, minify, write the public assets."""
+    css_parts = [_strip_css_comments(open(p, encoding='utf-8').read()) for p in _bundle_list(SRC_CSS)]
+    css = '/* Kernow Decking Co. — bundled from src/css; edit the source files and run python3 tools/build.py */\n' + minify_css('\n'.join(css_parts)) + '\n'
+    js_parts = [open(p, encoding='utf-8').read() for p in _bundle_list(SRC_JS)]
+    js = '/* Kernow Decking Co. — bundled from src/js; edit the source files and run python3 tools/build.py */\n' + minify_js('\n'.join(js_parts))
+    os.makedirs(os.path.join(ROOT, 'assets', 'css'), exist_ok=True)
+    os.makedirs(os.path.join(ROOT, 'assets', 'js'), exist_ok=True)
+    with open(os.path.join(ROOT, 'assets', 'css', 'styles.css'), 'w', encoding='utf-8') as f:
+        f.write(css)
+    with open(os.path.join(ROOT, 'assets', 'js', 'main.js'), 'w', encoding='utf-8') as f:
+        f.write(js)
+
 CFG = json.load(open(os.path.join(os.path.dirname(__file__), 'site-config.json')))
 TODAY = '2026-11-16'
 SITE = 'https://[DOMAIN]/'
@@ -197,73 +317,21 @@ def head(title, desc, slug, extra_ld=(), robots='index, follow', preload_hero=Fa
         pre = '<link rel="preload" as="image" href="assets/img/hero-deck-perspective-cornwall.webp">\n'
     else:
         pre = ''
-    return f'''<!doctype html>
-<html lang="en-GB">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light only">
-<meta name="supported-color-schemes" content="light">
-<title>{e(title)}</title>
-<meta name="description" content="{e(desc)}">
-<meta name="robots" content="{robots}">
-<link rel="canonical" href="{url(slug)}">
-<meta name="theme-color" content="#041E37">
-<meta name="geo.region" content="GB-CON">
-<meta name="geo.placename" content="Cornwall">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Kernow Decking Co.">
-<meta property="og:title" content="{e(title)}">
-<meta property="og:description" content="{e(desc)}">
-<meta property="og:url" content="{url(slug)}">
-<meta property="og:image" content="{SITE}assets/img/kernow-decking-cornwall-og.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Decking in Cornwall: a wooden deck looking out to a sunset sea and lighthouse">
-<meta property="og:locale" content="en_GB">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="assets/fonts/ibm-plex-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/roboto-slab-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-{pre}<link rel="stylesheet" href="assets/css/styles.css">
-{lds}
-</head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-'''
+    return render('head.html',
+        TITLE=e(title), DESC=e(desc), ROBOTS=robots,
+        CANONICAL=url(slug),
+        OG_IMAGE=SITE + 'assets/img/kernow-decking-cornwall-og.jpg',
+        PRE=pre, LDS=lds,
+    )
 
 def oak_header(current='', nav_id='main-nav', extra_cls=''):
     """Live site header: smoked-oak plank bar + logo in a mitred plank frame (also used as Option A on nav-options.html)."""
     def cur(s): return ' aria-current="page"' if s == current else ''
     svc_items = ''.join(f'<li><a href="{href(s["slug"])}"{cur(s["slug"])}>{e(s["short"])}</a></li>' for s in SERVICES)
-    return f'''<header class="site-header oakbar{extra_cls}">
-  <div class="container header-inner">
-    <a class="oak-frame" href="index.html" aria-label="Kernow Decking Co. – decking Cornwall, home">
-      <span class="fr fr-t" aria-hidden="true"></span><span class="fr fr-r" aria-hidden="true"></span><span class="fr fr-b" aria-hidden="true"></span><span class="fr fr-l" aria-hidden="true"></span>
-      <span class="oak-panel"><picture><source type="image/webp" srcset="assets/img/logo-360.webp 360w, assets/img/logo-720.webp 720w" sizes="(max-width:1079px) 180px, 155px"><img src="assets/img/logo-720.png" srcset="assets/img/logo-360.png 360w, assets/img/logo-720.png 720w" sizes="(max-width:1079px) 180px, 155px" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="720" height="465"></picture></span>
-      <span class="oak-screws" aria-hidden="true"></span>
-    </a>
-    <nav class="main-nav" id="{nav_id}" aria-label="Main">
-      <p class="m-head" aria-hidden="true">Menu</p>
-      <ul>
-        <li class="has-sub"><a href="index.html#services">Decking services</a>
-          <ul class="sub">{svc_items}</ul></li>
-        <li><a href="index.html#process">Process</a></li>
-        <li><a href="index.html#gallery">Gallery</a></li>
-        <li><a href="index.html#faq">FAQ</a></li>
-      </ul>
-      <a class="nav-phone" href="tel:[PHONE_INTL]" aria-label="Call Kernow Decking Co. on [PHONE]">{PHONE_SVG}<span>[PHONE]</span></a>
-      <a class="btn btn-brass nav-cta" href="index.html#quote">Get a free quote</a>
-    </nav>
-    <div class="header-actions">
-      <a class="header-phone" href="tel:[PHONE_INTL]" aria-label="Call Kernow Decking Co. on [PHONE]">{PHONE_SVG}</a>
-      <button class="nav-toggle" type="button" aria-controls="{nav_id}" aria-expanded="false" aria-label="Open menu"><span class="nt-bars" aria-hidden="true"><span></span><span></span><span></span></span><span class="nt-label">Menu</span></button>
-    </div>
-  </div>
-</header>
-'''
+    return render('header.html',
+        EXTRA_CLS=extra_cls, NAV_ID=nav_id, SVC_ITEMS=svc_items, PHONE_SVG=PHONE_SVG,
+    )
+
 
 def header(current):
     return oak_header(current)
@@ -273,27 +341,22 @@ def planks(cls=''):
     def board(n):
         screws = ''.join(f'<i class="scr s{i}"></i>' for i in range(1, 5))
         return f'<span class="plank p{n}">{screws}</span>'
-    return f'<div class="{klass}" aria-hidden="true">{board(1)}{board(2)}</div>\n'
+    return render('planks.html', CLASS=klass, BOARDS=board(1) + board(2))
 
 
 def photo_scene(content):
     p = 'assets/img/' + HERO_NAME
-    return f'''<section class="hero scene scene-home scene-photo">
-  <picture class="hero-photo">
-    <source type="image/webp" srcset="{p}-768.webp 768w, {p}-1280.webp 1280w, {p}-1920.webp 1920w" sizes="100vw">
-    <img src="{p}-1280.jpg" srcset="{p}-1280.jpg 1280w, {p}-1920.jpg 1920w" sizes="100vw" alt="{e(HERO_ALT)}" width="1920" height="1080" fetchpriority="high">
-  </picture>
-  <div class="container hero-content">{content}</div>
-</section>
-'''
+    return render('hero-photo.html',
+        SRCSET_WEBP=f'{p}-768.webp 768w, {p}-1280.webp 1280w, {p}-1920.webp 1920w',
+        IMG=f'{p}-1280.jpg',
+        SRCSET_JPG=f'{p}-1280.jpg 1280w, {p}-1920.jpg 1920w',
+        ALT=e(HERO_ALT), CONTENT=content,
+    )
+
 
 def scene(content, cls=''):
-    return f'''<section class="hero scene {cls}">
-  <div class="sky" aria-hidden="true"></div>
-  <div class="deck" aria-hidden="true"><img src="assets/img/hero-deck-perspective-cornwall.webp" alt="" width="1920" height="520" fetchpriority="high"></div>
-  <div class="container hero-content">{content}</div>
-</section>
-'''
+    return render('hero-scene.html', CLS=cls, CONTENT=content)
+
 
 def breadcrumb_html(items):
     lis = []
@@ -306,11 +369,11 @@ def breadcrumb_html(items):
 
 def page_hero(items, kicker, h1, lead, cta2=None):
     c2 = cta2 or ('Call [PHONE]', 'tel:[PHONE_INTL]')
-    return scene(f'''{breadcrumb_html(items)}
-    <p class="eyebrow">{e(kicker)}</p>
-    <h1>{e(h1)}</h1>
-    <p class="hero-lead">{e(lead)}</p>
-    <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free decking quote</a><a class="btn btn-glass btn-secondary btn-lg" href="{c2[1]}">{e(c2[0])}</a></div>''', 'scene-page')
+    return scene(render('page-hero.html',
+        BREADCRUMBS=breadcrumb_html(items), KICKER=e(kicker), H1=e(h1), LEAD=e(lead),
+        CTA2_HREF=c2[1], CTA2_LABEL=e(c2[0]),
+    ), 'scene-page')
+
 
 def card_text(s):
     t = s['desc'].split('. ')[1] if '. ' in s['desc'] else s['desc']
@@ -368,93 +431,15 @@ def faq_section(faqs, title, intro=''):
 
 def quote_section(source, title='Get a free decking quote', town=None):
     where = f'in {town}' if town else 'in Newquay or nearby in Cornwall'
-    return f'''<section class="section bg-hardwood contact" id="quote" aria-labelledby="quote-title">
-  <div class="container contact-grid">
-    <div class="contact-info">
-      <p class="eyebrow">Free, no-obligation quote</p>
-      <h2 id="quote-title">{e(title)}</h2>
-      <p>Tell us about your decking project {e(where)} and we'll get back to you, usually within one working day.</p>
-      <ul class="contact-list">
-        <li><span class="ci-icon">{PHONE_SVG}</span><div><small>Phone</small><a href="tel:[PHONE_INTL]">[PHONE]</a></div></li>
-        <li><span class="ci-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3z" fill="none"/><path d="m3 6 9 7 9-7"/></svg></span><div><small>Email</small><a href="mailto:[EMAIL]">[EMAIL]</a></div></li>
-        <li><span class="ci-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><div><small>Based in</small><span>[BASE_TOWN], Cornwall</span></div></li>
-        <li><span class="ci-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><small>Hours</small><span>Mon–Fri 8:00–17:30</span></div></li>
-      </ul>
-    </div>
-    <div class="oak-frame quote-frame">
-      <span class="fr fr-t" aria-hidden="true"></span><span class="fr fr-r" aria-hidden="true"></span><span class="fr fr-b" aria-hidden="true"></span><span class="fr fr-l" aria-hidden="true"></span>
-      <div class="oak-panel quote-panel">
-    <form class="quote-form" action="contact.php" method="post" novalidate data-email="[EMAIL]">
-      <p class="form-kicker">Your project</p>
-      <h3 class="form-title">Send an enquiry</h3>
-      <p class="form-micro">We usually reply within one working day.</p>
-      <div class="form-row two">
-        <label><span class="lbl">Name <b aria-hidden="true">*</b></span><input type="text" name="name" autocomplete="name" required maxlength="100"></label>
-        <label><span class="lbl">Phone <b aria-hidden="true">*</b></span><input type="tel" name="phone" autocomplete="tel" required maxlength="30" inputmode="tel"></label>
-      </div>
-      <div class="form-row two">
-        <label><span class="lbl">Email <b aria-hidden="true">*</b></span><input type="email" name="email" autocomplete="email" required maxlength="150"></label>
-        <label><span class="lbl">Postcode <b aria-hidden="true">*</b></span><input type="text" name="postcode" autocomplete="postal-code" required maxlength="10" placeholder="e.g. TR1 2AB"></label>
-      </div>
-      <div class="form-row"><label><span class="lbl">Project type <b aria-hidden="true">*</b></span>
-        <select name="project_type" required>
-          <option value="">Please choose…</option>
-          <option>New deck: design &amp; install</option><option>Composite decking</option><option>Hardwood / timber decking</option>
-          <option>Glass or steel balustrade</option><option>Deck repair or restoration</option><option>Deck maintenance / cleaning</option>
-          <option>Supply only (materials)</option><option>Something else</option>
-        </select></label></div>
-      <div class="form-row"><label><span class="lbl">Message <b aria-hidden="true">*</b></span>
-        <textarea name="message" rows="5" required maxlength="3000" placeholder="Approximate size, location, timescale, anything else we should know…"></textarea></label></div>
-      <div class="hp" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
-      <input type="hidden" name="ts" value="">
-      <input type="hidden" name="source" value="{e(source)}">
-      <label class="consent"><input type="checkbox" name="consent" value="yes" required> <span>I agree to Kernow Decking Co. contacting me about my enquiry. See our <a href="privacy.html">privacy notice</a>.</span></label>
-      <button class="btn btn-brass btn-lg btn-block" type="submit">Send my enquiry</button>
-      <p class="form-status" role="status" aria-live="polite"></p>
-    </form>
-      </div>
-      <span class="oak-screws" aria-hidden="true"></span>
-    </div>
-  </div>
-</section>
-'''
+    form = render('quote-form.html', SOURCE=e(source))
+    return render('quote-section.html', TITLE=e(title), WHERE=e(where), PHONE_SVG=PHONE_SVG, FORM=form)
+
 
 def footer():
     reviews_link = '<li><a href="index.html#reviews">Reviews</a></li>' if published_reviews() else ''
     svc = ''.join(f'<li><a href="{href(s["slug"])}">{e(s["short"])} Cornwall</a></li>' for s in SERVICES)
-    return f'''{planks('planks-footer')}<footer class="site-footer">
-  <div class="container footer-grid">
-    <div class="footer-brand">
-      <a class="oak-frame footer-frame" href="index.html" aria-label="Kernow Decking Co. – decking Cornwall, home">
-        <span class="fr fr-t" aria-hidden="true"></span><span class="fr fr-r" aria-hidden="true"></span><span class="fr fr-b" aria-hidden="true"></span><span class="fr fr-l" aria-hidden="true"></span>
-        <span class="oak-panel"><picture><source type="image/webp" srcset="assets/img/logo-360.webp 360w, assets/img/logo-720.webp 720w" sizes="(max-width:1079px) 180px, 155px"><img src="assets/img/logo-720.png" srcset="assets/img/logo-360.png 360w, assets/img/logo-720.png 720w" sizes="(max-width:1079px) 180px, 155px" alt="Kernow Decking Co. – Design, Supply, Install decking in Cornwall" width="720" height="465" loading="lazy"></picture></span>
-        <span class="oak-screws" aria-hidden="true"></span>
-      </a>
-      <p class="footer-eyebrow">Design · Supply · Install</p>
-      <p class="footer-tagline">Decking designed, supplied and installed for Cornish weather.</p>
-      <ul class="footer-social">
-        <li><a class="soc" href="{FB_URL}" target="_blank" rel="noopener" aria-label="Kernow Decking on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3l1-4h-4V9c0-.6.4-1 1-1z"/></svg></a></li>
-        <li><a class="soc" href="{IG_URL}" target="_blank" rel="noopener" aria-label="Kernow Decking on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm10 2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm-5 3.2A3.8 3.8 0 1 1 8.2 12 3.8 3.8 0 0 1 12 8.2zm0 1.8A2 2 0 1 0 14 12a2 2 0 0 0-2-2zM17.2 6.8a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/></svg></a></li>
-      </ul>
-      <ul class="footer-contact">
-        <li><a href="tel:[PHONE_INTL]"><span class="fc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg></span><span>[PHONE]</span></a></li>
-        <li><a href="mailto:[EMAIL]"><span class="fc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.5 5h17A1.5 1.5 0 0 1 22 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 17.5v-11A1.5 1.5 0 0 1 3.5 5z"/><path fill="none" stroke="#1C140C" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" d="M3.3 6.5 12 12.6 20.7 6.5"/></svg></span><span>[EMAIL]</span></a></li>
-        <li><span class="fc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="#1C140C"/></svg></span><span>[BASE_TOWN], Cornwall</span></li>
-      </ul>
-    </div>
-    <div class="footer-col"><h2 class="f-h">Decking services</h2><ul class="footer-links">{svc}<li><a href="index.html#quote">Free decking quote</a></li></ul></div>
-    <div class="footer-col"><h2 class="f-h">Explore</h2><ul class="footer-links"><li><a href="index.html#process">How we work</a></li><li><a href="index.html#gallery">Decking gallery</a></li><li><a href="index.html#faq">Decking FAQs</a></li>{reviews_link}<li><a href="index.html#quote">Contact us</a></li></ul></div>
-  </div>
-  <div class="container footer-bottom">
-    <p>© <span class="year">2026</span> Kernow Decking Co. · Decking Cornwall · Design • Supply • Install</p>
-    <p><a href="privacy.html">Privacy</a> · <a href="sitemap.xml">Sitemap</a></p>
-  </div>
-</footer>
-<div class="mobile-bar" aria-label="Quick contact"><a href="tel:[PHONE_INTL]" class="mb-call">Call us</a><a href="#quote" class="mb-quote">Free quote</a></div>
-<script src="assets/js/main.js" defer></script>
-</body>
-</html>
-'''
+    return render('footer.html', PLANKS=planks('planks-footer'), FB_URL=FB_URL, IG_URL=IG_URL, SVC_LINKS=svc, REVIEWS_LINK=reviews_link)
+
 
 # ---------------------------------------------------------------- pages
 def home():
@@ -520,16 +505,7 @@ def home():
            ('coastal-decking-steps-sunset-cornwall.webp', 'Timber decking with steps and handrails leading to the sea at sunset – coastal deck steps Cornwall', 'Coastal deck steps', 960, 720, ''),
            ('deck-repairs-cornwall.webp', 'Timber deck boards being replaced – deck repairs in Cornwall', 'Deck repairs', 960, 720, 'g-wide')]
     figs = '\n'.join(f'<figure class="g-item {c}"><a href="assets/img/{f}"><img src="assets/img/{f}" alt="{e(a)}" width="{w}" height="{h}" loading="lazy"></a><figcaption>{e(cap)}</figcaption></figure>' for f, a, cap, w, h, c in gal)
-    gallery = f'''<section class="section bg-cedar gallery" id="gallery" aria-labelledby="gallery-title">
-  <div class="container">
-    <header class="section-head"><p class="eyebrow on-wood">Decking gallery</p>
-      <h2 id="gallery-title" class="on-wood">Decking ideas for Cornish homes</h2>
-      <p class="placeholder-note">Placeholder images: these will be replaced with real Kernow Decking Co. projects.</p></header>
-    <!-- PLACEHOLDER GALLERY: replace the images with real project photos (keep descriptive, keyword-rich file names) -->
-    <div class="gallery-grid">{figs}</div>
-  </div>
-</section>
-'''
+    gallery = render('gallery.html', FIGURES=figs)
     genuine = published_reviews()
     reviews = reviews_section(genuine) if genuine else ''
     home_ld = [faq_ld(HOME_FAQS)]
@@ -631,6 +607,7 @@ def reviews_preview_page():
     )
 
 def main():
+    bundle_assets()
     pages = {'index.html': home(), 'nav-options.html': nav_options(),
              'privacy.html': privacy(), 'thank-you.html': thanks(), '404.html': notfound(),
              'reviews-preview.html': reviews_preview_page()}

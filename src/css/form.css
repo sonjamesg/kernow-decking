@@ -1,0 +1,26 @@
+/* form.css: Quote section layout (first pass; oak frame comes later in the cascade). */
+/* Quote */
+.contact-info>p{color:rgba(245,236,222,.88)}
+.contact-list{list-style:none;padding:0;margin:2rem 0 0;display:grid;gap:.7rem}
+.contact-list li{display:flex;gap:1rem;align-items:center;padding:.8rem 1rem;border-radius:4px;background:rgba(10,5,2,.35);border:1px solid rgba(255,255,255,.1)}
+.contact-list small{display:block;color:var(--sunset);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+.contact-list a,.contact-list span{color:#fff;font-weight:700;text-decoration:none;word-break:break-word}
+.ci-icon{width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 40% 35%,#FFF2C8 0 2px,#E1B25C 5px 12px,#9B6A22 21px)}
+.ci-icon svg{width:20px;height:20px;fill:none;stroke:#2A1709;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ci-icon svg path[d^="M6.6"]{fill:#2A1709;stroke:none}
+.quote-form{padding:clamp(1.5rem,4vw,2.4rem)}
+.form-row{display:grid;gap:1rem;margin-bottom:1rem}
+@media (min-width:600px){.form-row.two{grid-template-columns:1fr 1fr}}
+.quote-form label{display:flex;flex-direction:column;gap:.35rem;font-weight:700;font-size:.88rem;color:var(--navy)}
+.quote-form .lbl b{color:#A86F22}
+.quote-form input,.quote-form select,.quote-form textarea{font:inherit;font-weight:500;font-size:1rem;padding:.8rem .95rem;border:1.5px solid #C9B9A0;border-radius:4px;background:#FFFDF9;color:var(--ink);width:100%;transition:border-color .2s,box-shadow .2s}
+.quote-form textarea{resize:vertical;min-height:130px}
+.quote-form input:focus,.quote-form select:focus,.quote-form textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,138,52,.22)}
+.quote-form .invalid{border-color:#B23A2B!important;box-shadow:0 0 0 3px rgba(178,58,43,.15)}
+.quote-form .consent{flex-direction:row;align-items:flex-start;gap:.6rem;font-weight:500;color:var(--muted);font-size:.85rem;margin:.4rem 0 1.3rem}
+.quote-form .consent input{width:1.1rem;height:1.1rem;margin-top:.2rem;flex:none;accent-color:var(--navy)}
+.hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+.form-status{margin:1rem 0 0;font-weight:650;font-size:.95rem;min-height:1.2em}
+.form-status.ok{color:#1E6B3E}.form-status.err{color:#A3311F}
+.quote-form button[disabled]{opacity:.7;cursor:wait}
+

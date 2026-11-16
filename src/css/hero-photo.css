@@ -1,0 +1,15 @@
+/* hero-photo.css: Home hero when James’s real photo is used. */
+/* ---------- Home hero: James's photo with a navy/oak overlay on the text side ---------- */
+.scene-photo{min-height:clamp(620px,88vh,860px);display:flex;flex-direction:column;justify-content:center;background:#041E37}
+.hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:58% 50%;z-index:-3}
+.scene-photo::before{background:linear-gradient(90deg,rgba(4,30,55,.95) 0%,rgba(4,30,55,.9) 26%,rgba(20,18,16,.78) 46%,rgba(4,30,55,.42) 64%,rgba(4,30,55,0) 82%),linear-gradient(0deg,rgba(20,12,6,.5),transparent 34%)}
+.scene-photo .hero-content{padding-top:clamp(3rem,8vh,5.5rem);padding-bottom:clamp(3rem,8vh,5.5rem)}
+.scene-photo h1 span{filter:drop-shadow(0 2px 10px rgba(4,30,55,.85))}
+@media (max-width:759px){
+  /* Photo sits as a landscape band under the copy so the deck, sunset and lighthouse stay visible,
+     rather than a tall cover-crop that hides them behind the navy scrim. */
+  .scene-photo{justify-content:flex-start;min-height:0}
+  .hero-photo img{inset:auto 0 0 0;height:clamp(260px,70vw,340px);object-position:70% 55%}
+  .scene-photo::before{background:linear-gradient(180deg,#041E37 0%,#041E37 calc(100% - clamp(260px,70vw,340px) + 8px),rgba(4,30,55,.42) calc(100% - clamp(260px,70vw,340px) + 72px),rgba(4,30,55,.1) calc(100% - clamp(260px,70vw,340px) + 150px),rgba(4,30,55,0) 100%)}
+  .scene-photo .hero-content{padding-top:calc(var(--logo-hang));padding-bottom:clamp(260px,70vw,340px)}
+}

@@ -1,0 +1,28 @@
+    <form class="quote-form" action="contact.php" method="post" novalidate data-email="[EMAIL]">
+      <p class="form-kicker">Your project</p>
+      <h3 class="form-title">Send an enquiry</h3>
+      <p class="form-micro">We usually reply within one working day.</p>
+      <div class="form-row two">
+        <label><span class="lbl">Name <b aria-hidden="true">*</b></span><input type="text" name="name" autocomplete="name" required maxlength="100"></label>
+        <label><span class="lbl">Phone <b aria-hidden="true">*</b></span><input type="tel" name="phone" autocomplete="tel" required maxlength="30" inputmode="tel"></label>
+      </div>
+      <div class="form-row two">
+        <label><span class="lbl">Email <b aria-hidden="true">*</b></span><input type="email" name="email" autocomplete="email" required maxlength="150"></label>
+        <label><span class="lbl">Postcode <b aria-hidden="true">*</b></span><input type="text" name="postcode" autocomplete="postal-code" required maxlength="10" placeholder="e.g. TR1 2AB"></label>
+      </div>
+      <div class="form-row"><label><span class="lbl">Project type <b aria-hidden="true">*</b></span>
+        <select name="project_type" required>
+          <option value="">Please choose…</option>
+          <option>New deck: design &amp; install</option><option>Composite decking</option><option>Hardwood / timber decking</option>
+          <option>Glass or steel balustrade</option><option>Deck repair or restoration</option><option>Deck maintenance / cleaning</option>
+          <option>Supply only (materials)</option><option>Something else</option>
+        </select></label></div>
+      <div class="form-row"><label><span class="lbl">Message <b aria-hidden="true">*</b></span>
+        <textarea name="message" rows="5" required maxlength="3000" placeholder="Approximate size, location, timescale, anything else we should know…"></textarea></label></div>
+      <div class="hp" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+      <input type="hidden" name="ts" value="">
+      <input type="hidden" name="source" value="{{SOURCE}}">
+      <label class="consent"><input type="checkbox" name="consent" value="yes" required> <span>I agree to Kernow Decking Co. contacting me about my enquiry. See our <a href="privacy.html">privacy notice</a>.</span></label>
+      <button class="btn btn-brass btn-lg btn-block" type="submit">Send my enquiry</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+    </form>

@@ -1,0 +1,5 @@
+/* hero-fade.css: Photo-to-boards fade at the foot of every hero. */
+/* ---------- Photo-to-boards fade at the foot of every hero ---------- */
+.scene::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40px;z-index:0;pointer-events:none;
+  background:linear-gradient(0deg,#120A05 0%,rgba(18,10,5,.55) 40%,rgba(18,10,5,0) 100%)}
+

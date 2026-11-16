@@ -25,11 +25,14 @@ Opening hours (Mon–Fri 8:00–17:30) are a suggestion, so please confirm them.
 2. Run `python3 tools/build.py` — regenerates every page and `sitemap.xml` with the values filled in.
 (Or find-and-replace the tokens across all files.)
 
+## Editing
+See [EDITING.md](EDITING.md) for where copy, shared HTML, CSS and JavaScript live. Shared chrome lives in `src/partials/`; styles and scripts are split under `src/css/` and `src/js/` and bundled at build time. After any change, run `python3 tools/build.py`.
+
 ## Contact form
 `contact.php` sends enquiries over authenticated SMTP (PHPMailer, `smtp.hostinger.com:465` SSL) and redirects to `thank-you.html`. Credentials are read from `smtp-config.php`, which is gitignored. Copy `smtp-config.example.php` and set the mailbox password. If PHP isn't available (e.g. GitHub Pages) the form falls back to opening the visitor's email app (`mailto:`).
 
 ## Deploying to Hostinger
-Upload everything to `public_html` **except** `tools/`, `README.md`, `.git` and `smtp-config.php`. Place `smtp-config.php` one directory above `public_html` (recommended) or inside it — `.htaccess` blocks HTTP access if it is in the web root. The password file is not in git, so it has to be uploaded separately when the site first goes live. Then submit `https://yourdomain/sitemap.xml` in Google Search Console.
+Upload everything to `public_html` **except** `tools/`, `src/`, `README.md`, `EDITING.md`, `.git`, `reviews-preview.html` and `smtp-config.php`. Place `smtp-config.php` one directory above `public_html` (recommended) or inside it — `.htaccess` blocks HTTP access if it is in the web root. The password file is not in git, so it has to be uploaded separately when the site first goes live. Then submit `https://yourdomain/sitemap.xml` in Google Search Console.
 
 ## Home page hero photo
 Run `python3 tools/hero_photo.py /path/to/photo.jpg` then `python3 tools/build.py`. This writes responsive WebP (768/1280/1920) + JPG fallbacks named `decking-cornwall-newquay-sea-view-deck-*` and the Open Graph image; the build switches the home hero to the photo automatically when those files exist (otherwise it uses the illustrated deck and sunset).
@@ -44,6 +47,7 @@ Dark smoked oak and walnut accents, brushed brass, navy and cream. Headings, nav
 
 ## Tools (not needed on the server)
 - `tools/build.py` + `tools/site_data.py` — page generator and all copy (services, FAQs)
+- `src/partials/`, `src/css/`, `src/js/` — shared HTML, styles and scripts (bundled into `assets/` by the build)
 - `tools/textures.py` — generates the procedural timber-board textures
 - `tools/frame_textures.py` — generates the smoked-oak header bar and logo-frame plank textures
 - `tools/hero_deck.py` renders the perspective hero deck
