@@ -38,7 +38,7 @@ Run `python3 tools/hero_photo.py /path/to/photo.jpg` then `python3 tools/build.p
 `nav-options.html` (noindex, not linked, not in the sitemap) shows three header designs (A, B and C) for choosing. Delete it once one is picked.
 
 ## Design
-Dark smoked oak and walnut accents, brushed brass, navy and cream. Headings: Cormorant Garamond; body: Montserrat (both SIL Open Font License, self-hosted in `assets/fonts`). Text always sits on flat, high-contrast surfaces (WCAG AA).
+Dark smoked oak and walnut accents, brushed brass, navy and cream. Headings, nav and buttons: Roboto Slab 700/800 (the closest free match to the Unit Slab used by offermanwoodshop.com); body: IBM Plex Sans 400/600. Both are SIL Open Font License and self-hosted in `assets/fonts`. Text always sits on flat, high-contrast surfaces (WCAG AA).
 
 ## Tools (not needed on the server)
 - `tools/build.py` + `tools/site_data.py` — page generator and all copy (services, FAQs)
