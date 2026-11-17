@@ -568,7 +568,6 @@ def home():
         ('composite-decking-steps-cornwall', 'Built-in steps on a split-level composite deck in Cornwall, with a stainless cable balustrade', 'Composite decking steps', ''),
         ('timber-deck-garden-room-steps-cornwall', 'Pine timber deck and steps beside a garden room in Cornwall', 'Garden-room deck and steps', ''),
         ('composite-deck-raised-cable-balustrade-cornwall', 'Raised composite decking in Cornwall with a stainless cable balustrade beside garden steps', 'Raised composite deck', ''),
-        ('timber-deck-garden-room-corner-cornwall', 'Mitred corner and steps on a pine timber deck around a garden room in Cornwall', 'Garden-room deck corner', ''),
     ]
     def gal_sizes(cls):
         return '(min-width:820px) 50vw, 100vw' if 'g-big' in cls or 'g-wide' in cls else '(min-width:820px) 25vw, 50vw'
