@@ -188,7 +188,7 @@ def minify_js(src):
     text = re.sub(r'[ \t]{2,}', ' ', text)
     return text.strip() + '\n'
 
-ASSET_V = '20261117v20'
+ASSET_V = '20261117v21'
 
 def _bust_css_urls(css):
     """Append a version query to every file url() so Hostinger's long CDN cache cannot serve stale textures."""
@@ -741,35 +741,69 @@ def about_page():
         'Kernow Decking Co. is a decking company Cornwall homeowners rely on for proper work. '
         'Meet Neil, the founder and installer, based near Newquay.'
     )
-    body = f'''<section class="section bg-limed about-page" aria-labelledby="about-h1">
-  <div class="container">
-    {breadcrumb_html(crumbs)}
-    <div class="about-grid">
-      <div class="prose page-hero-lead">
-        <p class="eyebrow">About us</p>
-        <h1 id="about-h1">A decking company Cornwall can count on</h1>
-        <p>Kernow Decking Co. is a decking company Cornwall homeowners turn to for proper design, supply and installation. We are based near Newquay, and we work across the county. Neil, the founder, is also the installer you will meet on site.</p>
-        <h2>Meet Neil, our founder and installer</h2>
-        <p>Neil has spent [NEIL_YEARS] years working in landscaping and decking, from the first site visit through to the last board. As a result, he knows how a garden should feel when the job is finished, not only how the boards should sit. He still leads each project himself. So we never hand you from a salesperson to a crew you have never met.</p>
-        <p>He started the company to do the work properly. In other words, he keeps the frame square, chooses the right fixings, and leaves the site tidy. He lives and works near Newquay, on the north coast of <a href="https://www.visitcornwall.com/destinations/north-cornwall/newquay" rel="noopener">Cornwall</a>. Because of that, he can reach most of the county easily.</p>
-        <h2>How this decking company Cornwall gets the job done</h2>
-        <p>First, Neil visits your property and talks through what you want. Then he measures the space and sets out a clear, itemised quote. There is no pressure and no hidden extras. After you are happy to go ahead, he plans the build around your home, including holiday-let dates if you need them.</p>
-        <p>We install composite and timber decks, steps, and glass or cable balustrades. We also repair tired or unsafe decks when a repair is the honest choice. If a full rebuild would serve you better, he will say so. Finally, we stand behind the workmanship with a [GUARANTEE_YEARS]-year guarantee on our installations.</p>
-        <p>If you would like to see recent work, look through our <a href="gallery.html">decking gallery</a>. When you are ready, <a href="contact.html">ask for a free site survey and quote</a>.</p>
-      </div>
-      <aside class="about-photos">
-        {oak_photo_figure('timber-deck-pergola-night-cornwall', 'Lit timber deck and pergola at night, built by a decking company in Cornwall', sizes='(min-width:900px) 32vw, 90vw', extra_class='photo-natural')}
-        {oak_photo_figure('timber-deck-countryside-view-cornwall', 'Timber deck and dining set with a countryside view, by a decking company Cornwall homeowners can call', sizes='(min-width:900px) 32vw, 90vw', extra_class='photo-natural')}
-      </aside>
-    </div>
-  </div>
-</section>
-'''
+    hero = compact_hero(
+        crumbs, 'About us', 'A decking company Cornwall can count on',
+        'A decking company Cornwall homeowners can call, led by Neil and based near Newquay.'
+    )
+    photo = oak_photo_figure(
+        'timber-deck-pergola-night-cornwall',
+        'Lit timber deck and pergola at night, built by a decking company in Cornwall',
+        sizes='(min-width:860px) 36vw, 90vw', extra_class='photo-natural')
+    intro = (
+        '<section class="section about-intro" aria-labelledby="about-neil-h2">\n'
+        '  <div class="container about-intro-grid">\n'
+        '    <div class="prose">\n'
+        '      <h2 id="about-neil-h2">Meet Neil, our founder and installer</h2>\n'
+        '      <p>Neil has years of experience in landscaping and decking, from the first site visit through to the last board. He is the founder, and the installer you will meet on site. He still leads each project himself, so you never go from a salesperson to a crew you have not met.</p>\n'
+        '      <p>He started the company to do the work properly: a square frame, the right fixings, and a tidy site. He lives and works near Newquay, on the north coast of <a href="https://www.visitcornwall.com/destinations/north-cornwall/newquay" rel="noopener">Cornwall</a>, and can reach most of the county easily.</p>\n'
+        '      <p>We install composite and timber decks, steps, and glass or cable balustrades. We also repair tired or unsafe decks when a repair is the honest choice. If a full rebuild would serve you better, he will say so.</p>\n'
+        '    </div>\n'
+        f'    {photo}\n'
+        '  </div>\n'
+        '</section>\n'
+    )
+    values = (
+        '<section class="section about-values" aria-labelledby="about-values-h2">\n'
+        '  <div class="container">\n'
+        '    <h2 id="about-values-h2">How we work</h2>\n'
+        '    <ul class="about-values-grid">\n'
+        '      <li>\n'
+        '        <h3>Neil on site</h3>\n'
+        '        <p>He leads each project himself, from the first visit to the last board.</p>\n'
+        '      </li>\n'
+        '      <li>\n'
+        '        <h3>Honest advice</h3>\n'
+        '        <p>If a repair is enough, he will say so. If a rebuild would serve you better, he will say that too.</p>\n'
+        '      </li>\n'
+        '      <li>\n'
+        '        <h3>Clear quotes</h3>\n'
+        '        <p>A free site visit, then a fixed, itemised quote. No pressure and no hidden extras.</p>\n'
+        '      </li>\n'
+        '      <li>\n'
+        '        <h3>Proper work</h3>\n'
+        '        <p>The frame is kept square, the right fixings are used, and the site is left tidy.</p>\n'
+        '      </li>\n'
+        '    </ul>\n'
+        '  </div>\n'
+        '</section>\n'
+    )
+    cta = (
+        '<section class="section about-cta" aria-labelledby="about-cta-h2">\n'
+        '  <div class="container about-cta-row">\n'
+        '    <div class="about-cta-copy">\n'
+        '      <p class="eyebrow">Work with us</p>\n'
+        '      <h2 id="about-cta-h2">Ready to talk about your deck?</h2>\n'
+        '      <p>Look through our <a href="gallery.html">recent work</a>, or get in touch for a free site survey.</p>\n'
+        '    </div>\n'
+        '    <a class="btn btn-brass" href="contact.html">Get a free quote</a>\n'
+        '  </div>\n'
+        '</section>\n'
+    )
     og = SITE + 'assets/img/about-decking-company-cornwall-og.jpg'
     return (
         head(title, desc, 'about', [crumbs_ld(crumbs)],
              og_image=og, og_alt='Lit timber deck and pergola at night, built by a decking company in Cornwall')
-        + header('about') + '<main id="main">\n' + body + '</main>\n' + footer()
+        + header('about') + '<main id="main">\n' + hero + intro + values + cta + '</main>\n' + footer()
     )
 
 
