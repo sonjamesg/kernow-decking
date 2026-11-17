@@ -539,7 +539,7 @@ def home():
     <figure class="why-media framed">''' + picture('composite-deck-cable-rail-view-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, keeping the garden view open', sizes='(min-width:900px) 40vw, 90vw') + '''<figcaption>Cable balustrade, Cornwall</figcaption></figure>
     <div class="why-copy">
       <p class="eyebrow">Why choose Kernow Decking Co.</p>
-      <h2 id="why-title">Decks that stand up to the Atlantic</h2>
+      <h2 id="why-title">Decks that stand up to salt, wind and weather.</h2>
       <p>A deck in Cornwall has to cope with more than sunshine. We build every deck with the local conditions in mind.</p>
       <ul class="tick-list">
         <li><strong>Built for coastal conditions.</strong> Marine-grade stainless fixings near the sea, good drainage and ventilation underneath.</li>
