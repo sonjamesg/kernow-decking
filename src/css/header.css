@@ -12,7 +12,7 @@
 
 /* --- the framed logo --- */
 .oak-frame{position:relative;z-index:2;flex:none;align-self:flex-start;margin-top:8px;height:var(--fh);aspect-ratio:auto;display:block;line-height:0;
-  padding:var(--T);background:#120A05;border-radius:1px;
+  padding:var(--T, 17px);background-color:#3B2A1E;background:#3B2A1E;border-radius:1px;
   filter:drop-shadow(0 10px 12px rgba(8,4,1,.5)) drop-shadow(0 2px 2px rgba(8,4,1,.45));transition:transform .25s ease,filter .25s ease}
 .oak-frame:hover{transform:translateY(-1px);filter:drop-shadow(0 14px 16px rgba(8,4,1,.5)) drop-shadow(0 2px 2px rgba(8,4,1,.45))}
 .oak-frame:focus-visible{outline:2px solid #E4CB96;outline-offset:4px}
@@ -29,8 +29,8 @@
   box-shadow:0 0 0 1px #8A6A3C,0 0 0 2px #D4B57E,inset 0 3px 6px rgba(40,24,12,.28),inset 0 0 0 1px rgba(40,24,12,.12)}
 .oak-panel img{height:calc(var(--fh) - 2*var(--T) - 10px);width:auto}
 .fr{position:absolute;display:block}
-.fr-t,.fr-b{left:0;right:0;height:var(--T);background-image:var(--fr-shade),url("../img/tex-oak-frame-h.webp");background-size:100% 100%,700px 100%}
-.fr-l,.fr-r{top:0;bottom:0;width:var(--T);background-image:var(--fr-shade),url("../img/tex-oak-frame-v.webp");background-size:100% 100%,100% 700px}
+.fr-t,.fr-b{left:0;right:0;height:var(--T, 17px);background-color:#3B2A1E;background-image:var(--fr-shade),url("../img/tex-oak-frame-h.webp");background-size:100% 100%,700px 100%}
+.fr-l,.fr-r{top:0;bottom:0;width:var(--T, 17px);background-color:#3B2A1E;background-image:var(--fr-shade),url("../img/tex-oak-frame-v.webp");background-size:100% 100%,100% 700px}
 /* moulding profile: lit outer arris, satin face, shadowed rebate on the inside edge */
 .fr-t{top:0;clip-path:polygon(.8px 0,calc(100% - .8px) 0,calc(100% - var(--T) - .4px) 100%,calc(var(--T) + .4px) 100%);
   --fr-shade:linear-gradient(180deg,rgba(255,236,204,.34) 0,rgba(255,236,204,.10) 1.5px,rgba(255,236,204,.16) 35%,rgba(255,236,204,0) 60%,rgba(10,5,2,.42) 100%)}

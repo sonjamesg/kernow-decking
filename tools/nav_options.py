@@ -4,7 +4,7 @@ from html import escape as e
 def nav_markup(opt, services, phone='[PHONE]', phone_intl='[PHONE_INTL]'):
     drop = ''.join(f'<li><a href="{s["slug"]}.html">{e(s["short"])}</a></li>' for s in services)
     items = f'''<li class="nv-sub"><a href="index.html#services">Decking services</a><ul class="nv-drop">{drop}</ul></li>
-        <li><a href="index.html#process">Process</a></li><li><a href="index.html#gallery">Gallery</a></li><li><a href="index.html#faq">FAQ</a></li>'''
+        <li><a href="index.html#process">Process</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="faq.html">FAQ</a></li>'''
     mob = ''.join(f'<li class="nv-m-sub"><a href="{s["slug"]}.html">{e(s["short"])}</a></li>' for s in services)
     return f'''<header class="nv nv-{opt}">
   <div class="nv-inner">
@@ -12,14 +12,14 @@ def nav_markup(opt, services, phone='[PHONE]', phone_intl='[PHONE_INTL]'):
     <nav class="nv-nav" aria-label="Option {opt.upper()} menu"><ul>{items}</ul></nav>
     <div class="nv-actions">
       <a class="nv-phone" href="tel:{phone_intl}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg><span>{phone}</span></a>
-      <a class="btn btn-brass nv-cta" href="index.html#quote">Free quote</a>
+      <a class="btn btn-brass nv-cta" href="contact.html">Free quote</a>
       <button class="nv-toggle" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>
     </div>
   </div>
   <div class="nv-mobile" hidden>
     <ul><li class="nv-m-head">Decking services</li>{mob}
-      <li><a href="index.html#process">Process</a></li><li><a href="index.html#gallery">Gallery</a></li><li><a href="index.html#faq">FAQ</a></li></ul>
-    <a class="btn btn-brass btn-block" href="index.html#quote">Get a free quote</a>
+      <li><a href="index.html#process">Process</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="faq.html">FAQ</a></li></ul>
+    <a class="btn btn-brass btn-block" href="contact.html">Get a free quote</a>
   </div>
 </header>'''
 

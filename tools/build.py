@@ -188,10 +188,21 @@ def minify_js(src):
     text = re.sub(r'[ \t]{2,}', ' ', text)
     return text.strip() + '\n'
 
+ASSET_V = '20261117v18'
+
+def _bust_css_urls(css):
+    """Append a version query to every file url() so Hostinger's long CDN cache cannot serve stale textures."""
+    def repl(m):
+        q, path = m.group(1), m.group(2)
+        if path.startswith('data:') or '?' in path:
+            return m.group(0)
+        return f'url({q}{path}?v={ASSET_V}{q})'
+    return re.sub(r'url\((["\']?)([^)"\']+)\1\)', repl, css)
+
 def bundle_assets():
     """Concatenate src/css and src/js in manifest order, minify, write the public assets."""
     css_parts = [_strip_css_comments(open(p, encoding='utf-8').read()) for p in _bundle_list(SRC_CSS)]
-    css = '/* Kernow Decking Co. — bundled from src/css; edit the source files and run python3 tools/build.py */\n' + minify_css('\n'.join(css_parts)) + '\n'
+    css = '/* Kernow Decking Co. — bundled from src/css; edit the source files and run python3 tools/build.py */\n' + _bust_css_urls(minify_css('\n'.join(css_parts))) + '\n'
     js_parts = [open(p, encoding='utf-8').read() for p in _bundle_list(SRC_JS)]
     js = '/* Kernow Decking Co. — bundled from src/js; edit the source files and run python3 tools/build.py */\n' + minify_js('\n'.join(js_parts))
     os.makedirs(os.path.join(ROOT, 'assets', 'css'), exist_ok=True)
@@ -202,7 +213,7 @@ def bundle_assets():
         f.write(js)
 
 CFG = json.load(open(os.path.join(os.path.dirname(__file__), 'site-config.json')))
-TODAY = '2026-11-16'
+TODAY = '2026-11-17'
 SITE = 'https://[DOMAIN]/'
 HERO_NAME = 'decking-cornwall-newquay-sea-view-deck'
 def _social_url(name, placeholder):
@@ -241,7 +252,7 @@ BUSINESS = {
  "sameAs": [u for u in (FB_URL, IG_URL) if u and u.rstrip('/') not in {x.rstrip('/') for x in _PLACEHOLDER_SOCIAL}],
  "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "17:30"}],
  "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Decking services in Cornwall", "itemListElement": [
-   {"@type": "Offer", "itemOffered": {"@type": "Service", "name": s['h1'], "url": url(s['slug'])}} for s in SERVICES]}
+   {"@type": "Offer", "itemOffered": {"@type": "Service", "name": s['h1']}} for s in SERVICES]}
 }
 
 if not BUSINESS['sameAs']:
@@ -396,15 +407,17 @@ def head(title, desc, slug, extra_ld=(), robots='index, follow', preload_hero=Fa
         CANONICAL=url(slug),
         OG_IMAGE=og_image or (SITE + 'assets/img/kernow-decking-cornwall-og.jpg'),
         OG_ALT=e(og_alt or HOME_OG_ALT),
-        PRE=pre, LDS=lds,
+        PRE=pre, LDS=lds, ASSET_V=ASSET_V,
     )
+
+MAIN_NAV = [('index', 'Home'), ('about', 'About'), ('gallery', 'Gallery'), ('faq', 'FAQ'), ('contact', 'Contact')]
 
 def oak_header(current='', nav_id='main-nav', extra_cls=''):
     """Live site header: smoked-oak plank bar + logo in a mitred plank frame (also used as Option A on nav-options.html)."""
     def cur(s): return ' aria-current="page"' if s == current else ''
-    svc_items = ''.join(f'<li><a href="{href(s["slug"])}"{cur(s["slug"])}>{e(s["short"])}</a></li>' for s in SERVICES)
+    nav_items = ''.join(f'<li><a href="{href(slug)}"{cur(slug)}>{label}</a></li>' for slug, label in MAIN_NAV)
     return render('header.html',
-        EXTRA_CLS=extra_cls, NAV_ID=nav_id, SVC_ITEMS=svc_items, PHONE_SVG=PHONE_SVG,
+        EXTRA_CLS=extra_cls, NAV_ID=nav_id, NAV_ITEMS=nav_items, PHONE_SVG=PHONE_SVG,
     )
 
 
@@ -469,7 +482,7 @@ def service_cards(exclude=None, town=None):
   <span class="bc-more">Find out more <span aria-hidden="true">→</span></span>
 </a>''')
     if not exclude and not town:
-        out.append(f'''<a class="board-card" href="#quote">
+        out.append(f'''<a class="board-card" href="contact.html">
   <span class="bc-icon">{icon("supply")}</span>
   <h3>Decking supply</h3>
   <p>Boards, framing, fixings, lighting and balustrade kits supplied in Newquay and Cornwall for DIY and trade projects.</p>
@@ -498,7 +511,7 @@ def faq_section(faqs, title, intro=''):
     return f'''<section class="section bg-limed faq" id="faq" aria-labelledby="faq-title">
   <div class="container faq-grid">
     <header class="section-head left"><p class="eyebrow">FAQ</p><h2 id="faq-title">{e(title)}</h2>
-      <p>{e(intro) if intro else ''} Can't see your question? Call <a href="tel:[PHONE_INTL]">[PHONE]</a> or <a href="#quote">send us a message</a>.</p></header>
+      <p>{e(intro) if intro else ''} Can't see your question? Call <a href="tel:[PHONE_INTL]">[PHONE]</a> or <a href="contact.html">send us a message</a>.</p></header>
     <div class="faq-list">{items}</div>
   </div>
 </section>
@@ -513,17 +526,79 @@ def quote_section(source, title='Get a free decking quote', town=None):
 def footer():
     reviews_link = '<li><a href="index.html#reviews">Reviews</a></li>' if published_reviews() else ''
     svc = ''.join(f'<li><a href="{href(s["slug"])}">{e(s["short"])} Cornwall</a></li>' for s in SERVICES)
-    return render('footer.html', PLANKS=planks('planks-footer'), FB_URL=FB_URL, IG_URL=IG_URL, SVC_LINKS=svc, REVIEWS_LINK=reviews_link)
+    return render('footer.html', PLANKS=planks('planks-footer'), FB_URL=FB_URL, IG_URL=IG_URL, SVC_LINKS=svc, REVIEWS_LINK=reviews_link, ASSET_V=ASSET_V)
 
 
 # ---------------------------------------------------------------- pages
+GALLERY_PHOTOS = [
+    ('timber-deck-pergola-night-cornwall', 'Decking projects Cornwall: a lit timber deck and pergola at night', 'g-big'),
+    ('composite-deck-cable-balustrade-cornwall', 'Composite deck in Cornwall with a stainless steel cable balustrade along the house', ''),
+    ('timber-deck-glass-balustrade-cornwall', 'Long pine timber deck, one of our decking projects in Cornwall, with a glass balustrade', ''),
+    ('timber-deck-garden-room-cornwall', 'Pine timber decking around a garden room in Cornwall, with wrap-around steps', ''),
+    ('composite-deck-steps-cable-rails-cornwall', 'Split-level composite decking in Cornwall with built-in steps and a stainless steel cable balustrade', ''),
+    ('timber-deck-countryside-view-cornwall', 'Pine timber deck and dining set looking out to the countryside, a decking project in Cornwall', ''),
+    ('timber-deck-glass-rail-long-cornwall', 'Long pine timber deck in Cornwall with a glass balustrade, dining table and garden beyond', ''),
+    ('composite-deck-cable-rail-view-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, keeping the garden view open', ''),
+    ('composite-deck-step-lights-cornwall', 'Dark composite deck in Cornwall with built-in step lights and garden seating', ''),
+    ('timber-deck-lounge-cornwall', 'Timber decking in Cornwall with outdoor lounge seating and agapanthus', ''),
+    ('composite-deck-lit-steps-garden-cornwall', 'Dark composite deck in Cornwall with lit steps, a brick house and garden planting', ''),
+    ('composite-deck-fascia-cable-rail-cornwall', 'Raised composite deck in Cornwall with wood-effect fascia boards and a stainless steel cable balustrade', ''),
+    ('timber-deck-with-bench-cornwall', 'Light pine timber decking in Cornwall with a garden bench, planters and a chiminea', ''),
+    ('composite-deck-stainless-cable-balustrade-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, with steps and a built-in bench', ''),
+    ('timber-garden-deck-cornwall', 'Pine timber garden deck in Cornwall, enclosed by fencing with a bench and planters', ''),
+    ('composite-decking-steps-cornwall', 'Built-in steps on a split-level composite deck in Cornwall, with a stainless cable balustrade', ''),
+    ('timber-deck-garden-room-steps-cornwall', 'Pine timber deck and steps beside a garden room in Cornwall', ''),
+    ('timber-deck-garden-room-corner-cornwall', 'Mitred corner and steps on a pine timber deck around a garden room in Cornwall', ''),
+    ('composite-deck-raised-cable-balustrade-cornwall', 'Raised composite decking in Cornwall with a stainless cable balustrade beside garden steps', ''),
+    ('composite-deck-walkway-cable-balustrade-cornwall', 'Composite decking walkway in Cornwall with a stainless steel cable balustrade and open views', ''),
+    ('composite-deck-corner-cable-balustrade-cornwall', 'Corner of a composite deck in Cornwall with a stainless steel cable balustrade', ''),
+    ('timber-deck-garden-seating-cornwall', 'Timber deck in Cornwall with an outdoor sofa, coffee table and garden planting', ''),
+    ('timber-walkway-cable-rail-cornwall', 'Pale timber walkway in Cornwall with a stainless steel cable balustrade through planting', ''),
+    ('timber-walkway-cable-rail-landing-cornwall', 'Timber walkway and landing in Cornwall with a stainless cable balustrade', ''),
+    ('timber-walkway-cable-rail-house-cornwall', 'Raised timber walkway in Cornwall beside a house, with a stainless cable balustrade', ''),
+    ('timber-walkway-cable-rail-close-cornwall', 'Close view of a timber walkway and cable balustrade on a decking project in Cornwall', ''),
+    ('timber-walkway-cable-rail-curve-cornwall', 'Curved timber walkway in Cornwall with a stainless steel cable balustrade and planting', ''),
+    ('timber-walkway-cable-rail-hedge-cornwall', 'Timber walkway in Cornwall running beside a hedge, with a stainless cable balustrade', ''),
+    ('timber-walkway-cable-rail-wide-cornwall', 'Wide view of a pale timber deck and cable balustrade in Cornwall', ''),
+]
+
+
+def gallery_figures():
+    def gal_sizes(cls):
+        return '(min-width:820px) 50vw, 100vw' if 'g-big' in cls or 'g-wide' in cls else '(min-width:820px) 25vw, 50vw'
+    return '\n'.join(
+        f'<figure class="g-item{(" "+c) if c else ""}"><a href="assets/img/{stem}.jpg">{picture(stem, a, sizes=gal_sizes(c))}</a></figure>'
+        for stem, a, c in GALLERY_PHOTOS
+    )
+
+
+def teasers():
+    return (
+        '<section class="section bg-limed teasers" aria-label="Find out more">'
+        '<div class="container teaser-row">'
+        '<article class="teaser"><p class="eyebrow">Our work</p>'
+        '<h2>See our work</h2>'
+        '<p>Browse recent decks, steps and balustrades we have installed for homes around Newquay and across Cornwall.</p>'
+        '<a class="btn btn-navy" href="gallery.html">See our work <span aria-hidden="true">&rarr;</span></a>'
+        '</article>'
+        '<article class="teaser"><p class="eyebrow">Free site survey</p>'
+        '<h2>Get a free quote</h2>'
+        '<p>Tell us about your project and we will come back to you, usually within one working day, with a clear next step.</p>'
+        '<a class="btn btn-brass" href="contact.html">Get a free quote <span aria-hidden="true">&rarr;</span></a>'
+        '</article></div></section>\n'
+    )
+
+
 def home():
-    crumbs = [('Home', 'index')]
-    hero = (photo_scene if HERO_PHOTO else lambda c: scene(c, 'scene-home'))('''<p class="eyebrow">Decking Newquay &amp; Cornwall · Design • Supply • Install</p>
-    <h1>Proper decking in Cornwall. <span>Built to last.</span></h1>
-    <p class="hero-lead">Kernow Decking Co. designs, supplies and installs composite and hardwood decking, glass balustrades and garden decks from our base in Newquay, built for Cornwall’s Atlantic weather and the best of every view.</p>
-    <div class="hero-ctas"><a class="btn btn-brass btn-lg" href="#quote">Get a free quote</a><a class="btn btn-glass btn-secondary btn-lg" href="#services">Our decking services</a></div>
-    <ul class="hero-badges"><li>Free site survey</li><li>Composite &amp; hardwood</li><li>Glass &amp; steel balustrades</li><li>Based in Newquay</li></ul>''')
+    hero = (photo_scene if HERO_PHOTO else lambda c: scene(c, 'scene-home'))(
+        '<p class="eyebrow">Decking Newquay &amp; Cornwall &middot; Design &bull; Supply &bull; Install</p>'
+        '<h1>Proper decking in Cornwall. <span>Built to last.</span></h1>'
+        '<p class="hero-lead">Kernow Decking Co. designs, supplies and installs composite and hardwood decking, glass balustrades and garden decks from our base in Newquay, built for Cornwall’s Atlantic weather and the best of every view.</p>'
+        '<div class="hero-ctas"><a class="btn btn-brass btn-lg" href="contact.html">Get a free quote</a>'
+        '<a class="btn btn-glass btn-secondary btn-lg" href="gallery.html">See our work</a></div>'
+        '<ul class="hero-badges"><li>Free site survey</li><li>Composite &amp; hardwood</li>'
+        '<li>Glass &amp; steel balustrades</li><li>Based in Newquay</li></ul>'
+    )
     intro = f'''<section class="section bg-limed intro" aria-labelledby="intro-title">
   <div class="container intro-grid">
     <div>
@@ -531,7 +606,7 @@ def home():
       <h2 id="intro-title">Local deck builders who know Cornish weather</h2>
       <p>Cornwall is one of the most beautiful places in Britain to sit outside, and one of the toughest on outdoor timber. Salt air, driving rain, Atlantic gales and steep gardens all shape how a deck should be designed and built.</p>
       <p>We are a Cornish decking company offering design, supply and installation under one roof. Whether you want low-maintenance <a href="composite-decking-cornwall.html">composite decking</a>, natural <a href="hardwood-decking-cornwall.html">hardwood decking</a>, a sea-view terrace with <a href="balustrades-cornwall.html">glass balustrades</a> or <a href="deck-repairs-cornwall.html">repairs to an existing deck</a>, we will design it around your home, your garden and your view.</p>
-      <p>Searching for <strong>decking near me</strong>? We are based in [BASE_TOWN]. <a href="#quote">Send us your postcode</a> for a free site survey and quote.</p>
+      <p>Searching for <strong>decking near me</strong>? We are based in [BASE_TOWN]. <a href="contact.html">Send us your postcode</a> for a free site survey and quote.</p>
     </div>
     <ul class="usp">
       <li class="board"><strong>Design, supply &amp; install</strong><span>One team and one clear, itemised price.</span></li>
@@ -551,9 +626,16 @@ def home():
   </div>
 </section>
 '''
-    why = '''<section class="section bg-limed why" id="why" aria-labelledby="why-title">
-  <div class="container why-grid">
-    ''' + oak_photo_figure('composite-deck-cable-rail-view-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, keeping the garden view open', sizes='(min-width:900px) 40vw, 90vw', extra_class='why-media') + '''
+    why = (
+        '<section class="section bg-limed why" id="why" aria-labelledby="why-title">'
+        '<div class="container why-grid">'
+        + oak_photo_figure(
+            'timber-deck-pergola-night-cornwall',
+            'Lit timber deck and pergola at night, decking Cornwall',
+            sizes='(min-width:900px) 40vw, 90vw',
+            extra_class='why-media photo-natural',
+        )
+        + '''
     <div class="why-copy">
       <p class="eyebrow">Why choose Kernow Decking Co.</p>
       <h2 id="why-title">Decks that stand up to salt, wind and weather.</h2>
@@ -566,48 +648,29 @@ def home():
         <li><strong>Holiday-let friendly.</strong> We can plan work around your bookings.</li>
         <li><strong>Workmanship guarantee.</strong> [GUARANTEE_YEARS]-year guarantee on our installations.</li>
       </ul>
-      <a class="btn btn-navy" href="#quote">Book a free site survey</a>
+      <a class="btn btn-navy" href="contact.html">Book a free site survey</a>
     </div>
   </div>
 </section>
 '''
-    gal = [
-        ('composite-deck-cable-balustrade-cornwall', 'Composite deck in Cornwall with a stainless steel cable balustrade along the house', 'Composite deck & cable balustrade', 'g-big'),
-        ('timber-deck-glass-balustrade-cornwall', 'Long pine timber deck in Cornwall with a glass balustrade, dining table and chairs', 'Timber deck & glass balustrade', ''),
-        ('timber-deck-garden-room-cornwall', 'Pine timber decking around a garden room in Cornwall, with wrap-around steps', 'Pine deck around a garden room', ''),
-        ('composite-deck-steps-cable-rails-cornwall', 'Split-level composite decking in Cornwall with built-in steps and a stainless steel cable balustrade', 'Split-level deck with steps', ''),
-        ('composite-deck-cable-rail-view-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, keeping the garden view open', 'Cable balustrade and garden view', ''),
-        ('composite-deck-step-lights-cornwall', 'Dark composite deck in Cornwall with built-in step lights and garden seating', 'Composite deck with lit steps', ''),
-        ('composite-deck-fascia-cable-rail-cornwall', 'Raised composite deck in Cornwall with wood-effect fascia boards and a stainless steel cable balustrade', 'Composite fascia and cable rail', ''),
-        ('timber-deck-with-bench-cornwall', 'Light pine timber decking in Cornwall with a garden bench, planters and a chiminea', 'Pine deck with a garden bench', ''),
-        ('composite-deck-stainless-cable-balustrade-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, with steps and a built-in bench', 'Stainless cable balustrade', ''),
-        ('timber-garden-deck-cornwall', 'Pine timber garden deck in Cornwall, enclosed by fencing with a bench and planters', 'Pine garden deck', ''),
-        ('composite-decking-steps-cornwall', 'Built-in steps on a split-level composite deck in Cornwall, with a stainless cable balustrade', 'Composite decking steps', ''),
-        ('timber-deck-garden-room-steps-cornwall', 'Pine timber deck and steps beside a garden room in Cornwall', 'Garden-room deck and steps', ''),
-        ('composite-deck-raised-cable-balustrade-cornwall', 'Raised composite decking in Cornwall with a stainless cable balustrade beside garden steps', 'Raised composite deck', ''),
-    ]
-    def gal_sizes(cls):
-        return '(min-width:820px) 50vw, 100vw' if 'g-big' in cls or 'g-wide' in cls else '(min-width:820px) 25vw, 50vw'
-    figs = '\n'.join(
-        f'<figure class="g-item{(" "+c) if c else ""}"><a href="assets/img/{stem}.jpg">{picture(stem, a, sizes=gal_sizes(c))}</a></figure>'
-        for stem, a, cap, c in gal
     )
-    gallery = render('gallery.html', FIGURES=figs)
     genuine = published_reviews()
     reviews = reviews_section(genuine) if genuine else ''
-    home_ld = [faq_ld(HOME_FAQS)]
+    home_ld = []
     if genuine:
         home_ld.extend(reviews_ld(genuine))
-    body = (head('Decking Cornwall | Newquay Deck Builders | Kernow Decking Co.',
-                 'Decking in Newquay and Cornwall by Kernow Decking Co.: composite and hardwood decking, garden decks, glass balustrades and deck repairs, designed, supplied and installed. Free quotes.',
-                 'index', home_ld, preload_hero=True)
-            + header('index') + '<main id="main">\n' + hero + planks() + intro + services + planks() + process_section() + why
-            + gallery + reviews + faq_section(HOME_FAQS, 'Decking in Cornwall: your questions answered')
-            + quote_section('Home page') + '</main>\n' + footer())
-    return body
+    return (
+        head(
+            'Decking Cornwall | Newquay Deck Builders | Kernow Decking Co.',
+            'Decking in Newquay and Cornwall by Kernow Decking Co.: composite and hardwood decking, garden decks, glass balustrades and deck repairs, designed, supplied and installed. Free quotes.',
+            'index', home_ld, preload_hero=True,
+        )
+        + header('index') + '<main id="main">\n' + hero + planks() + intro + services + planks()
+        + process_section() + why + reviews + teasers() + '</main>\n' + footer()
+    )
+
 
 def service_page(s):
-    crumbs = [('Home', 'index'), ('Decking services', 'index'), (s['short'], s['slug'])]
     crumbs_schema = [('Home', 'index'), (s['short'], s['slug'])]
     secs = '\n'.join(f'<h2>{e(h)}</h2>' + ''.join(f'<p>{e(p)}</p>' for p in ps) for h, ps in s['sections'])
     content = f'''<section class="section bg-limed svc-body" aria-label="{e(s["h1"])}">
@@ -615,12 +678,12 @@ def service_page(s):
     <div class="prose">
       <p class="lead">{e(s["lead"])}</p>
       {secs}
-      <p><a class="btn btn-navy" href="#quote">Get a free quote for {e(s["short"].lower())}</a></p>
+      <p><a class="btn btn-navy" href="contact.html">Get a free quote for {e(s["short"].lower())}</a></p>
     </div>
     <aside class="svc-aside">
       {oak_photo_figure(s["img"], s["img_alt"], sizes="(min-width:900px) 28vw, 90vw", caption=s.get("img_caption") or s["short"])}
       <div class="board aside-board"><h2 class="h3">{e(s["short"])} near you</h2><p>We are a local decking team based in [BASE_TOWN], Cornwall. Searching for {e(s["short"].lower())} near you? Send us your postcode for a free site survey and quote.</p>
-        <p><a class="btn btn-brass" href="#quote">Get a free quote</a></p></div>
+        <p><a class="btn btn-brass" href="contact.html">Get a free quote</a></p></div>
     </aside>
   </div>
 </section>
@@ -631,12 +694,171 @@ def service_page(s):
 </section>
 '''
     og = SITE + 'assets/img/' + s.get('og', 'kernow-decking-cornwall-og.jpg')
-    return (head(s['title'], s['desc'], s['slug'], [crumbs_ld(crumbs_schema), service_ld(s['h1'], s['serviceType'], s['slug'], None), faq_ld(s['faqs'])], og_image=og, og_alt=s['img_alt'])
-            + header(s['slug']) + '<main id="main">\n'
-            + page_hero(crumbs_schema, s['kicker'], s['h1'], s['desc'])
-            + planks() + content + others + process_section()
-            + faq_section(s['faqs'], f'{s["short"]} in Cornwall: FAQs')
-            + quote_section(s['h1'], f'Get a free {s["short"].lower()} quote') + '</main>\n' + footer())
+    return (
+        head(s['title'], s['desc'], s['slug'],
+             [crumbs_ld(crumbs_schema), service_ld(s['h1'], s['serviceType'], s['slug'], None), faq_ld(s['faqs'])],
+             robots='noindex, follow', og_image=og, og_alt=s['img_alt'])
+        + header(s['slug']) + '<main id="main">\n'
+        + page_hero(crumbs_schema, s['kicker'], s['h1'], s['desc'])
+        + planks() + content + others + process_section()
+        + faq_section(s['faqs'], f'{s["short"]} in Cornwall: FAQs')
+        + '</main>\n' + footer()
+    )
+
+
+def about_page():
+    crumbs = [('Home', 'index'), ('About', 'about')]
+    title = 'Decking company Cornwall – meet Neil | Kernow Decking'
+    desc = (
+        'Kernow Decking Co. is a decking company Cornwall homeowners rely on for proper work. '
+        'Meet Neil, the founder and installer, based near Newquay.'
+    )
+    body = f'''<section class="section bg-limed about-page" aria-labelledby="about-h1">
+  <div class="container">
+    {breadcrumb_html(crumbs)}
+    <div class="about-grid">
+      <div class="prose page-hero-lead">
+        <p class="eyebrow">About us</p>
+        <h1 id="about-h1">A decking company Cornwall can count on</h1>
+        <p>Kernow Decking Co. is a decking company Cornwall homeowners turn to for proper design, supply and installation. We are based near Newquay, and we work across the county. Neil, the founder, is also the installer you will meet on site.</p>
+        <h2>Meet Neil, our founder and installer</h2>
+        <p>Neil has spent [NEIL_YEARS] years working in landscaping and decking, from the first site visit through to the last board. As a result, he knows how a garden should feel when the job is finished, not only how the boards should sit. He still leads each project himself. So we never hand you from a salesperson to a crew you have never met.</p>
+        <p>He started the company to do the work properly. In other words, he keeps the frame square, chooses the right fixings, and leaves the site tidy. He lives and works near Newquay, on the north coast of <a href="https://www.visitcornwall.com/destinations/north-cornwall/newquay" rel="noopener">Cornwall</a>. Because of that, he can reach most of the county easily.</p>
+        <h2>How this decking company Cornwall gets the job done</h2>
+        <p>First, Neil visits your property and talks through what you want. Then he measures the space and sets out a clear, itemised quote. There is no pressure and no hidden extras. After you are happy to go ahead, he plans the build around your home, including holiday-let dates if you need them.</p>
+        <p>We install composite and timber decks, steps, and glass or cable balustrades. We also repair tired or unsafe decks when a repair is the honest choice. If a full rebuild would serve you better, he will say so. Finally, we stand behind the workmanship with a [GUARANTEE_YEARS]-year guarantee on our installations.</p>
+        <p>If you would like to see recent work, look through our <a href="gallery.html">decking gallery</a>. When you are ready, <a href="contact.html">ask for a free site survey and quote</a>.</p>
+      </div>
+      <aside class="about-photos">
+        {oak_photo_figure('timber-deck-pergola-night-cornwall', 'Lit timber deck and pergola at night, built by a decking company in Cornwall', sizes='(min-width:900px) 32vw, 90vw', extra_class='photo-natural')}
+        {oak_photo_figure('timber-deck-countryside-view-cornwall', 'Timber deck and dining set with a countryside view, by a decking company Cornwall homeowners can call', sizes='(min-width:900px) 32vw, 90vw', extra_class='photo-natural')}
+      </aside>
+    </div>
+  </div>
+</section>
+'''
+    og = SITE + 'assets/img/about-decking-company-cornwall-og.jpg'
+    return (
+        head(title, desc, 'about', [crumbs_ld(crumbs)],
+             og_image=og, og_alt='Lit timber deck and pergola at night, built by a decking company in Cornwall')
+        + header('about') + '<main id="main">\n' + body + '</main>\n' + footer()
+    )
+
+
+def gallery_page():
+    crumbs = [('Home', 'index'), ('Gallery', 'gallery')]
+    title = 'Decking projects Cornwall – our work | Kernow Decking'
+    desc = (
+        'Browse decking projects Cornwall homeowners can compare: timber and composite decks, steps, '
+        'balustrades and garden rooms, from our Newquay base.'
+    )
+    intro = '''<section class="section bg-limed" aria-labelledby="gallery-h1">
+  <div class="container prose page-hero-lead">
+    {crumbs}
+    <p class="eyebrow">Our work</p>
+    <h1 id="gallery-h1">Decking projects Cornwall: recent work from the team</h1>
+    <p>This decking projects Cornwall gallery shows real jobs completed by Kernow Decking Co. You will see timber and composite decks, steps, cable and glass balustrades, garden rooms and night lighting. The photos come from homes around Newquay and across the county. So you can get a true feel for the finish before you get in touch.</p>
+    <h2>What you will find in this decking projects Cornwall gallery</h2>
+    <p>First, look at the larger project photos at the top. They show how a new deck sits with the house, the garden and the view. Then move through the grid for closer details: fascia boards, wrap-around steps, mitred corners and built-in lights. Because every site is different, you will also see raised walkways, long pine decks and compact corner decks.</p>
+    <p>In addition, several shots show how a stainless cable balustrade keeps a garden view open, while others show glass rails and timber handrails. If you are choosing boards, compare the composite decks with the pine and hardwood decks side by side. After that, if a layout feels close to your own garden, <a href="contact.html">send us a few notes and your postcode</a>. We will tell you honestly what would work.</p>
+    <p>We are a local team, led by Neil. You can read more on our <a href="about.html">about page</a>. For planning questions, see our <a href="faq.html">decking FAQ</a>, including <a href="https://www.cornwall.gov.uk/planning/" rel="noopener">guidance from Cornwall Council</a> on when permission may be needed. When you have finished looking, get in touch for a free site survey.</p>
+  </div>
+</section>
+'''.format(crumbs=breadcrumb_html(crumbs))
+    gallery = '<section class="section bg-cedar gallery" id="gallery" aria-labelledby="gallery-h1"><div class="container"><div class="gallery-grid">' + gallery_figures() + '</div></div></section>\n'
+    og = SITE + 'assets/img/decking-projects-cornwall-og.jpg'
+    return (
+        head(title, desc, 'gallery', [crumbs_ld(crumbs)],
+             og_image=og, og_alt='Decking projects Cornwall: a composite deck with a stainless steel cable balustrade')
+        + header('gallery') + '<main id="main">\n' + intro + gallery + teasers() + '</main>\n' + footer()
+    )
+
+
+def faq_page():
+    crumbs = [('Home', 'index'), ('FAQ', 'faq')]
+    title = 'Decking FAQ Cornwall – your questions | Kernow Decking'
+    desc = (
+        'Straight answers in this decking FAQ Cornwall homeowners ask most: cost, materials, planning, '
+        'timescales, repairs and where we work from our Newquay base.'
+    )
+    intro = (
+        'Here are clear answers to the decking questions we hear most often. '
+        'If your query is not listed, call or send a message and we will help.'
+    )
+    lead = f'''<section class="section bg-limed" aria-labelledby="faq-h1">
+  <div class="container prose page-hero-lead">
+    {breadcrumb_html(crumbs)}
+    <p class="eyebrow">Help and advice</p>
+    <h1 id="faq-h1">Decking FAQ Cornwall: straight answers from the team</h1>
+    <p>This decking FAQ Cornwall page collects the questions homeowners ask us before a site visit. We have kept the answers short and honest. In addition, we have noted where you may need to check rules, such as planning, with the right authority rather than take our word alone.</p>
+    <h2>How to use this decking FAQ Cornwall guide</h2>
+    <p>First, scan the list below for cost, materials, timing and repairs. Then open any item that matches your project. Because every garden is different, a visit is still the best way to get a firm price. After you have read the answers, you can <a href="contact.html">request a free decking quote</a> or look at our <a href="gallery.html">recent work</a>.</p>
+    <p>We are based in Newquay and work across Cornwall. For planning, most low garden decks do not need permission, yet raised decks and some listed or conservation sites may. Therefore you should confirm anything unusual with <a href="https://www.cornwall.gov.uk/planning/" rel="noopener">Cornwall Council planning</a> before work begins. We will flag concerns when we see them on site.</p>
+  </div>
+</section>
+'''
+    og = SITE + 'assets/img/decking-faq-cornwall-og.jpg'
+    faq_photo = oak_photo_figure(
+        'timber-deck-countryside-view-cornwall',
+        'Timber deck looking over the countryside, used on our decking FAQ Cornwall page',
+        sizes='(min-width:900px) 40vw, 90vw', extra_class='photo-natural')
+    first, rest = HOME_FAQS[:4], HOME_FAQS[4:]
+    return (
+        head(title, desc, 'faq', [crumbs_ld(crumbs), faq_ld(HOME_FAQS)],
+             og_image=og, og_alt='Timber deck looking over the countryside, used on our decking FAQ Cornwall page')
+        + header('faq') + '<main id="main">\n' + lead
+        + '<section class="section bg-limed" style="padding-top:0"><div class="container" style="max-width:42rem">' + faq_photo + '</div></section>'
+        + faq_section(first, 'Cost, materials and timing', intro)
+        + faq_section(rest, 'Repairs, supply and where we work', '')
+        + teasers() + '</main>\n' + footer()
+    )
+
+def contact_page():
+    crumbs = [('Home', 'index'), ('Contact', 'contact')]
+    title = 'Decking quote Cornwall – free survey | Kernow Decking'
+    desc = (
+        'Request a decking quote in Cornwall from Kernow Decking Co. Tell us about your project for a free '
+        'site survey. We cover Newquay and across Cornwall.'
+    )
+    # meta must contain exact keyphrase "decking quote Cornwall"
+    desc = (
+        'Ask for a decking quote Cornwall homeowners can rely on. Book a free site survey. '
+        'We work from Newquay and across Cornwall.'
+    )
+    lead = f'''<section class="section bg-limed" aria-labelledby="contact-h1">
+  <div class="container prose page-hero-lead">
+    {breadcrumb_html(crumbs)}
+    <p class="eyebrow">Contact us</p>
+    <h1 id="contact-h1">Decking quote Cornwall: book a free site survey</h1>
+    <p>Use this page to request a decking quote Cornwall homeowners can rely on, with no obligation and no hard sell. We are based in Newquay and we work across Cornwall. Tell us about the space, the boards you like, and when you would like to start. Then we will come back to you, usually within one working day.</p>
+    <h2>What happens after your decking quote Cornwall enquiry</h2>
+    <p>First, we read your message and check the postcode. If we can help, we will call or email to arrange a free site survey. On that visit Neil will measure up and talk through options. He will then send a fixed, itemised quote. Because he breaks the price down, you can see what you are paying for before you decide.</p>
+    <p>You can also call us on <a href="tel:[PHONE_INTL]">[PHONE]</a> or email <a href="mailto:[EMAIL]">[EMAIL]</a>. Our hours are [HOURS]. In the meantime, you may like to look at our <a href="gallery.html">gallery of recent work</a> or read <a href="about.html">about Neil and the company</a>. For general questions, see the <a href="faq.html">FAQ page</a>. Planning advice is also published by <a href="https://www.cornwall.gov.uk/planning/" rel="noopener">Cornwall Council</a>.</p>
+  </div>
+</section>
+'''
+    photo = oak_photo_figure(
+        'timber-deck-pergola-night-cornwall',
+        'Lit timber deck and pergola at night, a project that began with a decking quote in Cornwall',
+        sizes='(min-width:900px) 36vw, 90vw',
+        extra_class='photo-natural',
+    )
+    # The quote section already has phone, email, hours, base town. Override the area wording.
+    form = quote_section('Contact page', 'Get a free decking quote', town=None)
+    form = form.replace('in Newquay or nearby in Cornwall', 'in Newquay and across Cornwall')
+    og = SITE + 'assets/img/contact-decking-quote-cornwall-og.jpg'
+    photo_alt = 'Lit timber deck and pergola at night, after a decking quote Cornwall enquiry'
+    photo = oak_photo_figure(
+        'timber-deck-pergola-night-cornwall', photo_alt,
+        sizes='(min-width:900px) 36vw, 90vw', extra_class='photo-natural')
+    return (
+        head(title, desc, 'contact', [crumbs_ld(crumbs)], og_image=og, og_alt=photo_alt)
+        + header('contact') + '<main id="main">\n' + lead
+        + '<section class="section bg-limed"><div class="container" style="max-width:42rem">' + photo + '</div></section>'
+        + form + '</main>\n' + footer()
+    )
+
+
 
 def simple_page(slug, title, body, robots='noindex'):
     return (head(f'{title} | Kernow Decking Co.', f'{title} – Kernow Decking Co., decking Cornwall.', slug, robots=robots)
@@ -656,12 +878,24 @@ def thanks():
     return simple_page('thank-you', 'Thank you', '<p class="eyebrow">Enquiry sent</p><h1>Thank you, we have your decking enquiry</h1><p>We will be in touch soon, usually within one working day. If it is urgent, call us on <a href="tel:[PHONE_INTL]">[PHONE]</a>.</p><p><a class="btn btn-navy" href="index.html">Back to the home page</a></p>')
 
 def notfound():
-    return simple_page('404', 'Page not found', '<p class="eyebrow">404</p><h1>Sorry, that board has gone missing</h1><p>The page you were looking for could not be found. Try our <a href="index.html">decking Cornwall home page</a>, our <a href="composite-decking-cornwall.html">composite decking</a> or <a href="deck-repairs-cornwall.html">deck repairs</a> pages.</p><p><a class="btn btn-navy" href="index.html">Back to the home page</a></p>')
+    return simple_page('404', 'Page not found', '<p class="eyebrow">404</p><h1>Sorry, that board has gone missing</h1><p>The page you were looking for could not be found. Try our <a href="index.html">home page</a>, the <a href="gallery.html">project gallery</a> or the <a href="contact.html">contact page</a>.</p><p><a class="btn btn-navy" href="index.html">Back to the home page</a></p>')
 
 def apply_cfg(html):
     for k, v in CFG.items():
         if k.startswith('[') and v:
             html = html.replace(k, v)
+    # Empty year tokens must not appear on the live site.
+    if '[NEIL_YEARS]' in html:
+        html = html.replace('spent [NEIL_YEARS] years working', 'years of experience')
+        html = html.replace('[NEIL_YEARS]', '')
+    if '[GUARANTEE_YEARS]' in html:
+        html = html.replace(
+            'with a [GUARANTEE_YEARS]-year guarantee on our installations',
+            'on our installations')
+        html = html.replace(
+            '[GUARANTEE_YEARS]-year guarantee on our installations.',
+            'We stand behind the workmanship on our installations.')
+        html = html.replace('[GUARANTEE_YEARS]', '')
     return html
 
 def write(name, html):
@@ -696,15 +930,17 @@ def reviews_preview_page():
 
 def main():
     bundle_assets()
-    pages = {'index.html': home(), 'nav-options.html': nav_options(),
+    pages = {'index.html': home(), 'about.html': about_page(), 'gallery.html': gallery_page(),
+             'faq.html': faq_page(), 'contact.html': contact_page(),
+             'nav-options.html': nav_options(),
              'privacy.html': privacy(), 'thank-you.html': thanks(), '404.html': notfound(),
              'reviews-preview.html': reviews_preview_page()}
     for s in SERVICES: pages[s['slug'] + '.html'] = service_page(s)
     for n, h in pages.items(): write(n, h)
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    order = [('index', '1.0')] + [(s['slug'], '0.9') for s in SERVICES]
-    for slug, p in order:
-        sm.append(f'  <url><loc>{url(slug)}</loc><lastmod>{TODAY}</lastmod><priority>{p}</priority></url>')
+    order = [('index', '1.0'), ('about', '0.8'), ('gallery', '0.8'), ('faq', '0.7'), ('contact', '0.8')]
+    for slug, pri in order:
+        sm.append(f'  <url><loc>{url(slug)}</loc><lastmod>{TODAY}</lastmod><priority>{pri}</priority></url>')
     sm.append('</urlset>')
     write('sitemap.xml', '\n'.join(sm) + '\n')
     print(len(pages), 'pages written')
