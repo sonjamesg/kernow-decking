@@ -18,7 +18,7 @@ Filled in via `tools/site-config.json`: domain `kernowdecking.com`, email `info@
 > **⚠️ TEMPORARY PHONE NUMBER:** `07700 900461` (+447700900461) is an Ofcom drama/fiction number that does not connect. It **must be replaced** with the real business number in `tools/site-config.json` (`[PHONE]` and `[PHONE_INTL]`), then rebuild, before launch.
 
 Still to fill in: `[POSTCODE]`, `[GUARANTEE_YEARS]`, `[FACEBOOK_URL]`, `[INSTAGRAM_URL]` (social links stay hidden until set), plus review text `[REVIEW 1–3]` / `[CUSTOMER NAME]` / `[TOWN]`.
-Opening hours (Mon–Fri 8:00–17:30) are a suggestion, so please confirm them. Gallery/project photos are labelled "Example image" stock photos; replace them with your own work.
+Opening hours (Mon–Fri 8:00–17:30) are a suggestion, so please confirm them. The homepage hero is still a stand-in; gallery and service pages now use James’s project photos.
 
 ### Fill them in (recommended)
 1. Edit `tools/site-config.json` with your real values.

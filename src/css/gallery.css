@@ -7,7 +7,7 @@
 @media (min-width:820px){.gallery-grid{grid-template-columns:repeat(4,1fr);grid-auto-rows:210px}.g-big{grid-row:span 2}}
 .g-item{margin:0;position:relative;overflow:hidden;background:#2a1a0e;aspect-ratio:4/3}
 @media (min-width:820px){.g-item{aspect-ratio:auto}}
-.g-item a{display:block;height:100%}
+.g-item a,.g-item picture{display:block;width:100%;height:100%}
 .g-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
 .g-item:hover img{transform:scale(1.05)}
 .g-item figcaption{position:absolute;left:0;right:0;bottom:0;padding:1.6rem .9rem .7rem;color:#fff;font-weight:650;font-size:.85rem;background:linear-gradient(0deg,rgba(20,10,4,.85),transparent);pointer-events:none}

@@ -5,7 +5,6 @@
 .section-head p{color:var(--muted);font-size:1.04rem}
 .section-head.left{text-align:left;margin:0}
 .section-head.light p{color:rgba(245,236,222,.85)}
-.placeholder-note{display:inline-block;background:#FFF4DF;border:1px dashed var(--gold);color:#6B4518!important;padding:.45rem .9rem;border-radius:4px;font-size:.86rem!important;font-weight:650}
 
 /* Intro + USPs */
 .intro-grid,.why-grid,.svc-grid,.faq-grid,.contact-grid,.near-grid{display:grid;gap:2.5rem}
@@ -56,7 +55,7 @@
 
 /* Why */
 .framed{margin:0;position:relative;padding:12px;background:var(--plank-cedar) center/cover,var(--cedar);border-radius:4px;box-shadow:0 3px 0 rgba(0,0,0,.25),0 22px 40px rgba(40,20,5,.28)}
-.framed img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px;box-shadow:0 0 0 3px var(--gap)}
+.framed picture{display:block}.framed img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px;box-shadow:0 0 0 3px var(--gap)}
 .framed figcaption{position:absolute;right:20px;bottom:20px;background:rgba(20,10,4,.7);color:#fff;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .5rem;border-radius:3px}
 .why-copy>p{color:var(--muted)}
 .tick-list{list-style:none;padding:0;margin:1.3rem 0 2rem;display:grid;gap:.8rem}

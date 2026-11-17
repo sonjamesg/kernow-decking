@@ -11,6 +11,61 @@ from site_data import SERVICES, HOME_FAQS
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
+IMG_DIR = os.path.join(ROOT, 'assets', 'img')
+
+def photo_widths(stem):
+    """Pixel widths of responsive variants for a project photo stem, smallest first."""
+    ws = []
+    prefix = stem + '-'
+    if os.path.isdir(IMG_DIR):
+        for name in os.listdir(IMG_DIR):
+            if name.startswith(prefix) and name.endswith('.jpg'):
+                mid = name[len(prefix):-4]
+                if mid.isdigit():
+                    ws.append(int(mid))
+    return sorted(set(ws))
+
+def photo_size(stem):
+    """width, height of the canonical (largest) JPG, used for width/height attributes."""
+    path = os.path.join(IMG_DIR, stem + '.jpg')
+    with open(path, 'rb') as f:
+        data = f.read(256 * 1024)
+    # JPEG SOF
+    i = 0
+    while i < len(data) - 9:
+        if data[i] != 0xFF:
+            i += 1
+            continue
+        m = data[i+1]
+        if m in (0xC0, 0xC1, 0xC2):
+            h = (data[i+5] << 8) | data[i+6]
+            w = (data[i+7] << 8) | data[i+8]
+            return w, h
+        if m == 0xD8 or m == 0x01 or (0xD0 <= m <= 0xD9):
+            i += 2
+            continue
+        if i + 3 >= len(data):
+            break
+        seglen = (data[i+2] << 8) | data[i+3]
+        i += 2 + seglen
+    raise RuntimeError('could not read JPEG size for %s' % stem)
+
+def picture(stem, alt, loading='lazy', sizes='(min-width:820px) 25vw, 50vw'):
+    """Responsive <picture> with WebP + JPG. Lightbox links should use assets/img/{stem}.jpg."""
+    w, h = photo_size(stem)
+    widths = photo_widths(stem) or [w]
+    srcset_w = ', '.join(f'assets/img/{stem}-{tw}.webp {tw}w' for tw in widths)
+    srcset_j = ', '.join(f'assets/img/{stem}-{tw}.jpg {tw}w' for tw in widths)
+    mid = widths[len(widths)//2]
+    return (
+        f'<picture>'
+        f'<source type="image/webp" srcset="{srcset_w}" sizes="{sizes}">'
+        f'<img src="assets/img/{stem}-{mid}.jpg" srcset="{srcset_j}" sizes="{sizes}" '
+        f'alt="{e(alt)}" width="{w}" height="{h}" loading="{loading}">'
+        f'</picture>'
+    )
+
+
 PARTIALS = os.path.join(ROOT, 'src', 'partials')
 SRC_CSS = os.path.join(ROOT, 'src', 'css')
 SRC_JS = os.path.join(ROOT, 'src', 'js')
@@ -309,7 +364,9 @@ def icon(name):
 
 PHONE_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>'
 
-def head(title, desc, slug, extra_ld=(), robots='index, follow', preload_hero=False):
+HOME_OG_ALT = 'Decking in Cornwall: a wooden deck looking out to a sunset sea and lighthouse'
+
+def head(title, desc, slug, extra_ld=(), robots='index, follow', preload_hero=False, og_image=None, og_alt=None):
     lds = '\n'.join(ld(x) for x in [BUSINESS, *extra_ld])
     if preload_hero and HERO_PHOTO:
         pre = (f'<link rel="preload" as="image" type="image/webp" imagesrcset="assets/img/{HERO_NAME}-768.webp 768w, assets/img/{HERO_NAME}-1280.webp 1280w, assets/img/{HERO_NAME}-1920.webp 1920w" imagesizes="100vw">\n')
@@ -320,7 +377,8 @@ def head(title, desc, slug, extra_ld=(), robots='index, follow', preload_hero=Fa
     return render('head.html',
         TITLE=e(title), DESC=e(desc), ROBOTS=robots,
         CANONICAL=url(slug),
-        OG_IMAGE=SITE + 'assets/img/kernow-decking-cornwall-og.jpg',
+        OG_IMAGE=og_image or (SITE + 'assets/img/kernow-decking-cornwall-og.jpg'),
+        OG_ALT=e(og_alt or HOME_OG_ALT),
         PRE=pre, LDS=lds,
     )
 
@@ -478,7 +536,7 @@ def home():
 '''
     why = '''<section class="section bg-limed why" id="why" aria-labelledby="why-title">
   <div class="container why-grid">
-    <figure class="why-media framed"><img src="assets/img/coastal-decking-steps-sunset-cornwall.webp" alt="Coastal timber decking with steps and handrails built to face the Atlantic – decking Cornwall" width="960" height="720" loading="lazy"><figcaption>Example image</figcaption></figure>
+    <figure class="why-media framed">''' + picture('composite-deck-cable-rail-view-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, keeping the garden view open', sizes='(min-width:900px) 40vw, 90vw') + '''<figcaption>Cable balustrade, Cornwall</figcaption></figure>
     <div class="why-copy">
       <p class="eyebrow">Why choose Kernow Decking Co.</p>
       <h2 id="why-title">Decks that stand up to the Atlantic</h2>
@@ -496,15 +554,28 @@ def home():
   </div>
 </section>
 '''
-    gal = [('multi-level-garden-decking-cornwall.webp', 'Multi-level garden decking with steps and built-in planters – multi-level decking ideas for Cornwall', 'Multi-level garden decking', 1200, 900, 'g-big'),
-           ('composite-decking-glass-balustrade-cornwall.webp', 'Long composite deck with a glass balustrade – composite decking in Cornwall', 'Composite decking & glass balustrade', 1100, 825, ''),
-           ('decking-installation-hardwood-cornwall.webp', 'Freshly laid hardwood deck boards – decking installation in Cornwall', 'Decking installation', 1200, 900, ''),
-           ('hardwood-deck-boards-grain-cornwall.webp', 'Close-up of rich brown hardwood deck boards and grain – hardwood decking Cornwall', 'Hardwood board grain', 853, 640, ''),
-           ('timber-deck-steel-balustrade-cornwall.webp', 'Timber deck walkway with stainless steel balustrade towards the sea – coastal decking Cornwall', 'Steel balustrade decking', 720, 540, ''),
-           ('deck-board-gaps-grain-cornwall.webp', 'Close-up of timber deck boards with even drainage gaps and natural grain – decking Cornwall', 'Board spacing & grain', 850, 638, ''),
-           ('coastal-decking-steps-sunset-cornwall.webp', 'Timber decking with steps and handrails leading to the sea at sunset – coastal deck steps Cornwall', 'Coastal deck steps', 960, 720, ''),
-           ('deck-repairs-cornwall.webp', 'Timber deck boards being replaced – deck repairs in Cornwall', 'Deck repairs', 960, 720, 'g-wide')]
-    figs = '\n'.join(f'<figure class="g-item {c}"><a href="assets/img/{f}"><img src="assets/img/{f}" alt="{e(a)}" width="{w}" height="{h}" loading="lazy"></a><figcaption>{e(cap)}</figcaption></figure>' for f, a, cap, w, h, c in gal)
+    gal = [
+        ('composite-deck-cable-balustrade-cornwall', 'Composite deck in Cornwall with a stainless steel cable balustrade along the house', 'Composite deck & cable balustrade', 'g-big'),
+        ('timber-deck-glass-balustrade-cornwall', 'Long pine timber deck in Cornwall with a glass balustrade, dining table and chairs', 'Timber deck & glass balustrade', ''),
+        ('timber-deck-garden-room-cornwall', 'Pine timber decking around a garden room in Cornwall, with wrap-around steps', 'Pine deck around a garden room', ''),
+        ('composite-deck-steps-cable-rails-cornwall', 'Split-level composite decking in Cornwall with built-in steps and a stainless steel cable balustrade', 'Split-level deck with steps', ''),
+        ('composite-deck-cable-rail-view-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, keeping the garden view open', 'Cable balustrade and garden view', ''),
+        ('composite-deck-step-lights-cornwall', 'Dark composite deck in Cornwall with built-in step lights and garden seating', 'Composite deck with lit steps', ''),
+        ('composite-deck-fascia-cable-rail-cornwall', 'Raised composite deck in Cornwall with wood-effect fascia boards and a stainless steel cable balustrade', 'Composite fascia and cable rail', ''),
+        ('timber-deck-with-bench-cornwall', 'Light pine timber decking in Cornwall with a garden bench, planters and a chiminea', 'Pine deck with a garden bench', ''),
+        ('composite-deck-stainless-cable-balustrade-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, with steps and a built-in bench', 'Stainless cable balustrade', ''),
+        ('timber-garden-deck-cornwall', 'Pine timber garden deck in Cornwall, enclosed by fencing with a bench and planters', 'Pine garden deck', ''),
+        ('composite-decking-steps-cornwall', 'Built-in steps on a split-level composite deck in Cornwall, with a stainless cable balustrade', 'Composite decking steps', ''),
+        ('timber-deck-garden-room-steps-cornwall', 'Pine timber deck and steps beside a garden room in Cornwall', 'Garden-room deck and steps', ''),
+        ('composite-deck-raised-cable-balustrade-cornwall', 'Raised composite decking in Cornwall with a stainless cable balustrade beside garden steps', 'Raised composite deck', ''),
+        ('timber-deck-garden-room-corner-cornwall', 'Mitred corner and steps on a pine timber deck around a garden room in Cornwall', 'Garden-room deck corner', ''),
+    ]
+    def gal_sizes(cls):
+        return '(min-width:820px) 50vw, 100vw' if 'g-big' in cls or 'g-wide' in cls else '(min-width:820px) 25vw, 50vw'
+    figs = '\n'.join(
+        f'<figure class="g-item{(" "+c) if c else ""}"><a href="assets/img/{stem}.jpg">{picture(stem, a, sizes=gal_sizes(c))}</a><figcaption>{e(cap)}</figcaption></figure>'
+        for stem, a, cap, c in gal
+    )
     gallery = render('gallery.html', FIGURES=figs)
     genuine = published_reviews()
     reviews = reviews_section(genuine) if genuine else ''
@@ -531,7 +602,7 @@ def service_page(s):
       <p><a class="btn btn-navy" href="#quote">Get a free quote for {e(s["short"].lower())}</a></p>
     </div>
     <aside class="svc-aside">
-      <figure class="framed"><img src="assets/img/{s["img"]}" alt="{e(s["img_alt"])}" loading="lazy" width="960" height="720"><figcaption>Example image</figcaption></figure>
+      <figure class="framed">{picture(s["img"], s["img_alt"], sizes="(min-width:900px) 28vw, 90vw")}<figcaption>{e(s.get("img_caption") or s["short"])}</figcaption></figure>
       <div class="board aside-board"><h2 class="h3">{e(s["short"])} near you</h2><p>We are a local decking team based in [BASE_TOWN], Cornwall. Searching for {e(s["short"].lower())} near you? Send us your postcode for a free site survey and quote.</p>
         <p><a class="btn btn-brass" href="#quote">Get a free quote</a></p></div>
     </aside>
@@ -543,7 +614,8 @@ def service_page(s):
   {service_cards(exclude=s["slug"])}</div>
 </section>
 '''
-    return (head(s['title'], s['desc'], s['slug'], [crumbs_ld(crumbs_schema), service_ld(s['h1'], s['serviceType'], s['slug'], None), faq_ld(s['faqs'])])
+    og = SITE + 'assets/img/' + s.get('og', 'kernow-decking-cornwall-og.jpg')
+    return (head(s['title'], s['desc'], s['slug'], [crumbs_ld(crumbs_schema), service_ld(s['h1'], s['serviceType'], s['slug'], None), faq_ld(s['faqs'])], og_image=og, og_alt=s['img_alt'])
             + header(s['slug']) + '<main id="main">\n'
             + page_hero(crumbs_schema, s['kicker'], s['h1'], s['desc'])
             + planks() + content + others + process_section()
