@@ -37,7 +37,7 @@ function respond(bool $ok, string $msg, bool $wantsJson, string $thankYou): void
         http_response_code(400);
         header('Content-Type: text/html; charset=utf-8');
         echo '<!doctype html><meta charset="utf-8"><title>Form error</title><p style="font-family:sans-serif">'
-           . htmlspecialchars($msg, ENT_QUOTES, 'UTF-8') . ' <a href="index.html#quote">Go back</a></p>';
+           . htmlspecialchars($msg, ENT_QUOTES, 'UTF-8') . ' <a href="contact.html">Go back</a></p>';
     }
     exit;
 }
@@ -69,7 +69,7 @@ function load_smtp_config(): array {
 }
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-    header('Location: index.html#quote', true, 303);
+    header('Location: contact.html', true, 303);
     exit;
 }
 
