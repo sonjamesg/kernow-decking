@@ -66,6 +66,23 @@ def picture(stem, alt, loading='lazy', sizes='(min-width:820px) 25vw, 50vw'):
     )
 
 
+
+def oak_photo_figure(stem, alt, sizes, caption=None, extra_class=''):
+    """Project photo in the same mitred oak plank frame as the header logo."""
+    classes = ' '.join(c for c in ('framed', 'oak-frame', 'photo-frame', extra_class) if c)
+    cap = f'<figcaption>{e(caption)}</figcaption>' if caption else ''
+    return (
+        f'<figure class="{classes}">'
+        '<span class="fr fr-t" aria-hidden="true"></span>'
+        '<span class="fr fr-r" aria-hidden="true"></span>'
+        '<span class="fr fr-b" aria-hidden="true"></span>'
+        '<span class="fr fr-l" aria-hidden="true"></span>'
+        f'<span class="oak-panel">{picture(stem, alt, sizes=sizes)}</span>'
+        '<span class="oak-screws" aria-hidden="true"></span>'
+        f'{cap}</figure>'
+    )
+
+
 PARTIALS = os.path.join(ROOT, 'src', 'partials')
 SRC_CSS = os.path.join(ROOT, 'src', 'css')
 SRC_JS = os.path.join(ROOT, 'src', 'js')
@@ -536,7 +553,7 @@ def home():
 '''
     why = '''<section class="section bg-limed why" id="why" aria-labelledby="why-title">
   <div class="container why-grid">
-    <figure class="why-media framed">''' + picture('composite-deck-cable-rail-view-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, keeping the garden view open', sizes='(min-width:900px) 40vw, 90vw') + '''<figcaption>Cable balustrade, Cornwall</figcaption></figure>
+    ''' + oak_photo_figure('composite-deck-cable-rail-view-cornwall', 'Stainless steel cable balustrade on a composite deck in Cornwall, keeping the garden view open', sizes='(min-width:900px) 40vw, 90vw', extra_class='why-media') + '''
     <div class="why-copy">
       <p class="eyebrow">Why choose Kernow Decking Co.</p>
       <h2 id="why-title">Decks that stand up to salt, wind and weather.</h2>
@@ -601,7 +618,7 @@ def service_page(s):
       <p><a class="btn btn-navy" href="#quote">Get a free quote for {e(s["short"].lower())}</a></p>
     </div>
     <aside class="svc-aside">
-      <figure class="framed">{picture(s["img"], s["img_alt"], sizes="(min-width:900px) 28vw, 90vw")}<figcaption>{e(s.get("img_caption") or s["short"])}</figcaption></figure>
+      {oak_photo_figure(s["img"], s["img_alt"], sizes="(min-width:900px) 28vw, 90vw", caption=s.get("img_caption") or s["short"])}
       <div class="board aside-board"><h2 class="h3">{e(s["short"])} near you</h2><p>We are a local decking team based in [BASE_TOWN], Cornwall. Searching for {e(s["short"].lower())} near you? Send us your postcode for a free site survey and quote.</p>
         <p><a class="btn btn-brass" href="#quote">Get a free quote</a></p></div>
     </aside>

@@ -69,9 +69,7 @@ h3,.h3{letter-spacing:.01em}
 .burn{font-family:var(--serif);font-weight:600;color:var(--brass-dk);text-shadow:none;opacity:1;font-size:clamp(2.4rem,5vw,3.4rem)}
 .step-board h3{font-family:var(--serif);font-size:1.6rem;font-weight:600;color:var(--navy)}
 .step-board p{color:#3E352C;font-weight:500}
-/* frames: walnut with brass inner line */
-.framed{padding:10px;background:var(--plank-hard) center/cover,var(--hard);box-shadow:0 24px 48px rgba(30,20,12,.25)}
-.framed img{box-shadow:0 0 0 1px var(--brass)}
+/* photo frames now use the header's mitred oak plank frame (.photo-frame) */
 .tick-list li::before{width:.55rem;height:.55rem;top:.55rem;left:.4rem;background:var(--brass);box-shadow:none;transform:rotate(45deg);border-radius:0}
 .why-copy h2::after{content:"";display:block;width:64px;height:1px;margin-top:1.1rem;background:var(--brass)}
 /* gallery: dark walnut ground */

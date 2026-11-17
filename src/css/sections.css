@@ -54,9 +54,44 @@
 .js .step-board.reveal.in:nth-child(2){transition-delay:.15s}.js .step-board.reveal.in:nth-child(3){transition-delay:.3s}
 
 /* Why */
-.framed{margin:0;position:relative;padding:12px;background:var(--plank-cedar) center/cover,var(--cedar);border-radius:4px;box-shadow:0 3px 0 rgba(0,0,0,.25),0 22px 40px rgba(40,20,5,.28)}
-.framed picture{display:block}.framed img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px;box-shadow:0 0 0 3px var(--gap)}
-.framed figcaption{position:absolute;right:20px;bottom:20px;background:rgba(20,10,4,.7);color:#fff;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .5rem;border-radius:3px}
+.why,.svc-body{overflow-x:clip}
+.photo-frame.oak-frame{
+  --T:12px;--fh:auto;--s:8px;
+  height:auto;width:100%;max-width:100%;min-width:0;margin:0;align-self:start;flex:none;
+  aspect-ratio:auto;box-sizing:border-box;line-height:0;
+  filter:none;
+  box-shadow:0 10px 16px rgba(8,4,1,.4),0 2px 3px rgba(8,4,1,.35);
+}
+.photo-frame.oak-frame:hover,
+.oakbar.is-scrolled .photo-frame.oak-frame,
+.oakbar.is-scrolled .photo-frame.oak-frame:hover{transform:none;filter:none}
+.photo-frame .oak-panel{
+  display:block;height:auto;padding:0;background:#120A05;line-height:0;overflow:hidden;
+  box-shadow:0 0 0 1px #8A6A3C,0 0 0 2px #D4B57E;
+}
+.photo-frame .oak-panel::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(40,24,12,.35),inset 0 3px 8px rgba(8,4,1,.35),inset 0 -1px 4px rgba(255,236,204,.1);
+}
+.photo-frame .oak-panel picture{display:block;width:100%}
+.photo-frame .oak-panel img{
+  width:100%;max-width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;
+  display:block;border-radius:0;box-shadow:none;
+}
+.photo-frame .oak-screws{--s:8px}
+.photo-frame figcaption{
+  position:absolute;right:calc(var(--T) + 10px);bottom:calc(var(--T) + 10px);z-index:3;
+  background:rgba(20,10,4,.7);color:#fff;font-size:.7rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;padding:.2rem .5rem;border-radius:3px;pointer-events:none;line-height:1.3;
+}
+@media (min-width:700px){
+  .photo-frame.oak-frame{--T:16px}
+  .photo-frame .oak-screws{--s:9px}
+}
+@media (min-width:920px){
+  .photo-frame.oak-frame{--T:18px}
+  .photo-frame .oak-screws{--s:10px}
+}
 .why-copy>p{color:var(--muted)}
 .tick-list{list-style:none;padding:0;margin:1.3rem 0 2rem;display:grid;gap:.8rem}
 .tick-list li{position:relative;padding-left:2rem;color:var(--muted)}
