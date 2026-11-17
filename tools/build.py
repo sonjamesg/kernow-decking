@@ -572,7 +572,7 @@ def home():
     def gal_sizes(cls):
         return '(min-width:820px) 50vw, 100vw' if 'g-big' in cls or 'g-wide' in cls else '(min-width:820px) 25vw, 50vw'
     figs = '\n'.join(
-        f'<figure class="g-item{(" "+c) if c else ""}"><a href="assets/img/{stem}.jpg">{picture(stem, a, sizes=gal_sizes(c))}</a><figcaption>{e(cap)}</figcaption></figure>'
+        f'<figure class="g-item{(" "+c) if c else ""}"><a href="assets/img/{stem}.jpg">{picture(stem, a, sizes=gal_sizes(c))}</a></figure>'
         for stem, a, cap, c in gal
     )
     gallery = render('gallery.html', FIGURES=figs)
