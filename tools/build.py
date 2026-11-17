@@ -188,7 +188,7 @@ def minify_js(src):
     text = re.sub(r'[ \t]{2,}', ' ', text)
     return text.strip() + '\n'
 
-ASSET_V = '20261117v19'
+ASSET_V = '20261117v20'
 
 def _bust_css_urls(css):
     """Append a version query to every file url() so Hostinger's long CDN cache cannot serve stale textures."""
@@ -791,35 +791,9 @@ def gallery_page():
         '</div></div></section>\n'
     )
     about = (
-        '<section class="section about-work" aria-labelledby="about-work-h2">\n'
+        '<section class="section gallery-note" aria-label="About this gallery">\n'
         '  <div class="container">\n'
-        '    <header class="section-head">\n'
-        '      <p class="eyebrow">About our work</p>\n'
-        '      <h2 id="about-work-h2">What you will find in this decking projects Cornwall gallery</h2>\n'
-        '    </header>\n'
-        '    <div class="about-work-grid">\n'
-        '      <article class="about-work-card">\n'
-        '        <span class="aw-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="10" width="18" height="11"/><path d="M3 10 12 3l9 7"/><path d="M9 21v-6h6v6"/></svg></span>\n'
-        '        <h3>Full projects</h3>\n'
-        '        <p>First, look at the larger photos. They show how a new deck sits with the house, the garden and the view.</p>\n'
-        '      </article>\n'
-        '      <article class="about-work-card">\n'
-        '        <span class="aw-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8 11h6M11 8v6"/></svg></span>\n'
-        '        <h3>Closer details</h3>\n'
-        '        <p>Then move through the grid for fascia boards, wrap-around steps, mitred corners and built-in lights.</p>\n'
-        '      </article>\n'
-        '      <article class="about-work-card">\n'
-        '        <span class="aw-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="5"/><rect x="3" y="10" width="18" height="5"/><rect x="3" y="16" width="18" height="5"/></svg></span>\n'
-        '        <h3>Boards and rails</h3>\n'
-        '        <p>Because every site is different, you will also see raised walkways, long pine decks and compact corner decks.</p>\n'
-        '      </article>\n'
-        '    </div>\n'
-        '    <div class="about-work-copy prose">\n'
-        '      <p>In addition, several shots show how a stainless cable balustrade keeps a garden view open. Others show glass rails and timber handrails. If you are choosing boards, compare the composite decks with the pine and hardwood decks side by side.</p>\n'
-        '      <p>The photos come from homes around Newquay and across the county. So you can get a true feel for the finish before you get in touch. Each photo is from a job we have installed. We have not used stock images here.</p>\n'
-        '      <p>Take your time as you scroll. Then make a short list of the details you like, such as step lights or a glass rail. That list will help on the site visit. Bring it with you, and Neil can talk through each idea in turn. After that, if a layout feels close to your own garden, <a href="contact.html">send us a few notes and your postcode</a>. We will tell you honestly what would work.</p>\n'
-        '      <p>We are a local team, led by Neil. You can read more on our <a href="about.html">about page</a>. For planning questions, see our <a href="faq.html">decking FAQ</a>. It includes <a href="https://www.cornwall.gov.uk/planning/" rel="noopener">guidance from Cornwall Council</a> on when permission may be needed. When you have finished looking, get in touch for a free site survey.</p>\n'
-        '    </div>\n'
+        '    <p>These photographs show decking projects Cornwall homeowners can browse. They are decks Neil and the team have installed near Newquay and across Cornwall. Look through the gallery at your own pace, then <a href="contact.html">get in touch for a free site survey</a> if something feels close to what you have in mind.</p>\n'
         '  </div>\n'
         '</section>\n'
     )
@@ -876,12 +850,12 @@ def contact_page():
     crumbs = [('Home', 'index'), ('Contact', 'contact')]
     title = 'Decking quote Cornwall – free survey | Kernow Decking'
     desc = (
-        'Ask for a decking quote Cornwall homeowners can rely on. Book a free site survey. '
-        'We work from Newquay and across Cornwall.'
+        'Get a decking quote Cornwall homeowners can rely on. '
+        'Tell us about your project and we will arrange a free site survey, from our Newquay base.'
     )
     hero = compact_hero(
-        crumbs, 'Contact us', 'Decking quote Cornwall',
-        'Ask for a decking quote Cornwall homeowners can rely on, then book a free site survey.'
+        crumbs, 'Contact us', 'Get a decking quote in Cornwall',
+        'Tell us about your project and we will arrange a free site survey.'
     )
     form = render('quote-form.html', SOURCE='Contact page')
     photo_alt = 'Lit timber deck and pergola at night, after a decking quote Cornwall enquiry'

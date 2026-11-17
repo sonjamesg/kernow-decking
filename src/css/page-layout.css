@@ -8,11 +8,15 @@
   background-color:#041E37;
   color:#F5EBDD;
   color-scheme:light only;
-  padding:4.6rem 0 1.15rem;
+  padding:5rem 0 0;
 }
 @media (min-width:700px){
-  .compact-hero{padding:2.6rem 0 1.1rem}
+  .compact-hero{padding:5rem 0 0}
 }
+@media (min-width:1080px){
+  .compact-hero{padding:2.9rem 0 0}
+}
+.compact-hero .container{padding-bottom:1.4rem}
 .compact-hero .breadcrumbs{margin:0 0 .65rem}
 .compact-hero .breadcrumbs ol{margin:0;font-size:.75rem;font-weight:650;gap:.25rem}
 .compact-hero .breadcrumbs a{color:#F0D9A6;text-decoration:none}
@@ -33,14 +37,14 @@
   margin:0 0 .35em;
   text-shadow:none;
 }
-@media (min-width:800px){
-  .compact-hero h1{max-width:28ch;white-space:nowrap}
+@media (min-width:900px){
+  .compact-hero h1{max-width:36ch}
 }
 .compact-hero .hero-lead{
   margin:0;
-  max-width:62rem;
+  max-width:38rem;
   font-size:1.02rem;
-  line-height:1.5;
+  line-height:1.55;
   color:rgba(245,236,222,.9);
   text-shadow:none;
 }
@@ -59,41 +63,25 @@
   background-color:#140E09;
   overflow-x:clip;
 }
-.about-work.section{
-  padding:2.3rem 0 3.1rem;
-  background:var(--limed);
-  background-color:#FAF7F2;
-  color-scheme:light only;
+.gallery-note.section{
+  padding:.2rem 0 2.4rem;
+  background:#140E09;
+  background-color:#140E09;
   overflow-x:clip;
 }
-.about-work .section-head{margin:0 auto 1.6rem;max-width:40rem}
-.about-work .section-head h2{margin:0 0 .35rem;font-size:clamp(1.35rem,2.6vw,1.75rem)}
-.about-work-grid{display:grid;gap:1rem}
-@media (min-width:800px){
-  .about-work-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem}
+.gallery-note p{
+  margin:0 auto;
+  max-width:40rem;
+  font-size:.88rem;
+  line-height:1.65;
+  color:rgba(245,236,222,.72);
 }
-.about-work-card{
-  background:#FCF9F4;
-  background-color:#FCF9F4;
-  border:1px solid #E7DCCB;
-  border-top:3px solid #3B2A1E;
-  padding:1.1rem 1.05rem 1.15rem;
-  box-shadow:0 6px 14px rgba(20,10,4,.06);
-  min-width:0;
+.gallery-note a{
+  color:#F0D9A6;
+  text-decoration:underline;
+  text-underline-offset:2px;
 }
-.about-work-card .aw-icon{
-  width:2.1rem;height:2.1rem;margin:0 0 .65rem;
-  display:grid;place-items:center;
-  border:1px solid #B8955E;
-  color:#7A4A1E;
-  background:#fff;
-}
-.about-work-card .aw-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.about-work-card h3{margin:0 0 .35rem;font-size:1.02rem;color:var(--navy)}
-.about-work-card p{margin:0;color:var(--muted);font-size:.95rem}
-.about-work-copy{max-width:44rem;margin:1.5rem auto 0}
-.about-work-copy p{margin:0 0 .85rem;color:var(--muted)}
-.about-work-copy p:last-child{margin:0}
+.gallery-note a:hover{color:#fff}
 
 /* FAQ accordion */
 .faq-follow.section{
@@ -174,7 +162,7 @@
 
 /* Contact: form first, info card second */
 .contact-page.section{
-  padding:1.15rem 0 2.6rem;
+  padding:1.7rem 0 2.6rem;
   background:var(--limed);
   background-color:#FAF7F2;
   color-scheme:light only;
