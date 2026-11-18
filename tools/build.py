@@ -188,7 +188,7 @@ def minify_js(src):
     text = re.sub(r'[ \t]{2,}', ' ', text)
     return text.strip() + '\n'
 
-ASSET_V = '20261117v21'
+ASSET_V = '20261118v22'
 
 def _bust_css_urls(css):
     """Append a version query to every file url() so Hostinger's long CDN cache cannot serve stale textures."""

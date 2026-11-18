@@ -38,7 +38,13 @@
       fetch(form.getAttribute('action'), { method: 'POST', body: data, headers: { 'Accept': 'application/json' }, signal: ctrl ? ctrl.signal : undefined })
         .then(function (r) { var ct = r.headers.get('content-type') || ''; if (!r.ok && ct.indexOf('application/json') === -1) throw new Error('no-php'); if (ct.indexOf('application/json') === -1) throw new Error('no-php'); return r.json(); })
         .then(function (j) {
-          if (j && j.ok) { form.reset(); if (ts) ts.value = String(Math.floor(Date.now() / 1000)); setStatus('Thank you! Your enquiry has been sent. We\'ll be in touch soon.', 'ok'); }
+          if (j && j.ok) {
+            form.reset();
+            if (ts) ts.value = String(Math.floor(Date.now() / 1000));
+            setStatus('Thank you! Your enquiry has been sent. We\'ll be in touch soon.', 'ok');
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({ event: 'generate_lead' });
+          }
           else setStatus((j && j.error) || 'Sorry, something went wrong. Please try again or call us.', 'err');
         })
         .catch(function () { mailtoFallback(data); })
